@@ -43,11 +43,6 @@
   .header { margin-bottom: 24px; }
   .header h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
   .header p { font-size: 13px; color: var(--text2); }
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-  .stat-card { background: var(--bg); border-radius: var(--radius); padding: 12px 14px; border: 1px solid var(--border); }
-  .stat-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-  .stat-val { font-size: 18px; font-weight: 600; color: var(--text); }
-  .stat-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
   .phase-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .ptab {
     font-size: 12px; padding: 6px 16px;
@@ -141,10 +136,9 @@
 <div class="container">
 
   <div class="header">
-    <h1>Fatboy's Weekly Calorie Plan</h1>
-    <p>Created 01 May 2026</p>
+    <h1>📋 My Weekly Calorie Plan</h1>
+    <p>Created on 01 May &nbsp;·&nbsp; Today is <span id="todayDate"></span></p>
   </div>
-
 
   <div class="phase-tabs" id="phaseTabs"></div>
   <div class="phase-desc" id="pdesc"></div>
@@ -197,6 +191,9 @@
 </div>
 
 <script>
+// Dynamic date
+document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const TYPES = ['Rest\n+ walk','Run\n10–12k','Short hike\nor easy','Run\n10–12k','Cycling\n30–50k','Hike\n10–15k','Long run\n21–26k'];
 const COLORS = ['#888780','#185FA5','#0F6E56','#185FA5','#0F6E56','#0F6E56','#D85A30'];
@@ -419,6 +416,29 @@ function renderChart() {
 }
 
 function renderAll() { renderTabs(); renderDesc(); renderVS(); renderGrid(); renderDetail(); renderChart(); }
+
+// Auto-select phase based on today's date (week 1 started 1 May 2025)
+(function() {
+  const start = new Date('2025-05-01');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  start.setHours(0,0,0,0);
+  const daysDiff = Math.floor((today - start) / 86400000);
+  if (daysDiff < 0) {
+    phase = 0; // before 1 May → "Now"
+  } else {
+    const weekNum = Math.floor(daysDiff / 7) + 1; // week 1 = days 0–6
+    if (weekNum <= 2) phase = 1;
+    else if (weekNum <= 4) phase = 2;
+    else if (weekNum <= 6) phase = 3;
+    else phase = 3; // stay on final phase after week 6
+  }
+
+  // Auto-select today's day of week (Mon=0 … Sun=6, JS getDay Sun=0)
+  const jsDay = today.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  activeDay = jsDay === 0 ? 6 : jsDay - 1; // convert to Mon=0…Sun=6
+})();
+
 renderAll();
 </script>
 </body>
