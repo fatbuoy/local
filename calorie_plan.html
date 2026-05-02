@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Weekly Calorie Plan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f4;
+    --bg3: #efefed;
+    --text: #1a1916;
+    --text2: #6b6a63;
+    --border: #e2e1db;
+    --border2: #d0cfc8;
+    --blue: #185FA5;
+    --green: #0F6E56;
+    --grey: #888780;
+    --orange: #D85A30;
+    --pb: #854F0B;
+    --pb-bg: #FFF3E0;
+    --alc: #3B6D11;
+    --alc-bg: #EAF3DE;
+    --info-bg: #EBF2FB;
+    --info: #185FA5;
+    --warn-bg: #FEF3C7;
+    --warn: #92400E;
+    --success-bg: #ECFDF5;
+    --success: #065F46;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0efea;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px 16px 40px;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+  .header { margin-bottom: 24px; }
+  .header h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .header p { font-size: 13px; color: var(--text2); }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--bg); border-radius: var(--radius); padding: 12px 14px; border: 1px solid var(--border); }
+  .stat-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .stat-val { font-size: 18px; font-weight: 600; color: var(--text); }
+  .stat-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+  .phase-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .ptab {
+    font-size: 12px; padding: 6px 16px;
+    border-radius: 20px; border: 1.5px solid var(--border2);
+    background: var(--bg); color: var(--text2); cursor: pointer;
+    font-family: inherit; transition: all 0.15s;
+  }
+  .ptab:hover { border-color: var(--blue); color: var(--blue); }
+  .ptab.on { background: var(--info-bg); color: var(--info); border-color: var(--blue); font-weight: 600; }
+  .phase-desc {
+    background: var(--bg2); border-radius: var(--radius);
+    padding: 12px 16px; margin-bottom: 16px;
+    font-size: 13px; color: var(--text2); line-height: 1.65;
+    border: 1px solid var(--border);
+  }
+  .phase-desc strong { color: var(--text); font-weight: 600; }
+  .vs-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .vs-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; text-align: center; }
+  .vs-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .vs-val { font-size: 17px; font-weight: 600; color: var(--text); }
+  .vs-sub { font-size: 10px; color: var(--text2); margin-top: 2px; }
+  .dgrid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 8px; margin-bottom: 16px; }
+  .dc {
+    background: var(--bg); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 10px 8px; cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .dc:hover { border-color: var(--border2); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .dc.on { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(24,95,165,0.12); }
+  .dn { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .dt { font-size: 10px; color: var(--text2); line-height: 1.35; min-height: 30px; margin-bottom: 6px; }
+  .dk { font-size: 15px; font-weight: 600; color: var(--text); }
+  .dku { font-size: 10px; color: var(--text2); font-weight: 400; }
+  .alc-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--alc); margin-left: 3px; vertical-align: middle; }
+  .bt { height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 7px; }
+  .bf { height: 3px; border-radius: 2px; }
+  .det {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px;
+  }
+  .dh { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .dtitle { font-size: 15px; font-weight: 600; color: var(--text); }
+  .dsub { font-size: 12px; color: var(--text2); }
+  .mr { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .mc { background: var(--bg2); border-radius: var(--radius-sm); padding: 9px 11px; }
+  .mcl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+  .mcv { font-size: 16px; font-weight: 600; color: var(--text); }
+  .mcu { font-size: 10px; color: var(--text2); font-weight: 400; }
+  .mrow {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px; gap: 8px;
+  }
+  .mrow:last-child { border-bottom: none; }
+  .mn { color: var(--text); font-weight: 600; font-size: 12px; min-width: 100px; flex-shrink: 0; }
+  .mf { color: var(--text2); font-size: 11px; flex: 1; line-height: 1.5; }
+  .mk { color: var(--text2); font-size: 11px; white-space: nowrap; }
+  .badge {
+    display: inline-block; font-size: 10px; padding: 2px 7px;
+    border-radius: 20px; margin-left: 5px; font-weight: 600;
+  }
+  .badge-pb { background: var(--pb-bg); color: var(--pb); }
+  .badge-alc { background: var(--alc-bg); color: var(--alc); }
+  .badge-wild { background: var(--warn-bg); color: var(--warn); }
+  .tip {
+    border-left: 3px solid var(--blue); padding: 10px 14px;
+    font-size: 12px; color: var(--text2); line-height: 1.65;
+    margin-bottom: 16px; background: var(--info-bg); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .chart-section { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px; }
+  .chart-legend { display: flex; gap: 14px; font-size: 11px; color: var(--text2); margin-bottom: 10px; flex-wrap: wrap; }
+  .ld { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+  .chart-wrap { position: relative; width: 100%; height: 200px; }
+  .pnote { font-size: 11px; color: var(--text2); margin-top: 8px; text-align: center; }
+  .key-section { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 16px; }
+  .key-section h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  .key-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .key-item { font-size: 12px; color: var(--text2); padding: 6px 10px; background: var(--bg2); border-radius: var(--radius-sm); line-height: 1.5; }
+  .key-item strong { color: var(--text); display: block; font-size: 11px; margin-bottom: 2px; }
+  .footer { font-size: 11px; color: var(--text2); text-align: center; margin-top: 24px; line-height: 1.7; }
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .dgrid { grid-template-columns: repeat(4, 1fr); }
+    .mr { grid-template-columns: repeat(2, 1fr); }
+    .key-grid { grid-template-columns: 1fr; }
+    .vs-row { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>📋 My Weekly Calorie Plan</h1>
+    <p>Male · 47 yrs · 65 kg → 63 kg target · 172 cm · Vegetarian marathon runner · Hal Higdon Senior plan</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Current weight</div>
+      <div class="stat-val">65 kg</div>
+      <div class="stat-sub">Target: 63 kg</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Weekly running</div>
+      <div class="stat-val">42–55 km</div>
+      <div class="stat-sub">Easy / Progression weeks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Breakfast anchor</div>
+      <div class="stat-val">Oats 50g</div>
+      <div class="stat-sub">+ PB 15–30g (scaled)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Diet</div>
+      <div class="stat-val">Vegetarian</div>
+      <div class="stat-sub">No standalone eggs · dairy ok</div>
+    </div>
+  </div>
+
+  <div class="phase-tabs" id="phaseTabs"></div>
+  <div class="phase-desc" id="pdesc"></div>
+  <div class="vs-row" id="vsrow"></div>
+  <div class="dgrid" id="dg"></div>
+  <div class="det" id="det"></div>
+  <div class="tip" id="tipbox"></div>
+
+  <div class="chart-section">
+    <div class="chart-legend">
+      <span><span class="ld" style="background:#185FA5"></span>Run days</span>
+      <span><span class="ld" style="background:#0F6E56"></span>Hike / cycle</span>
+      <span><span class="ld" style="background:#888780"></span>Rest / walk</span>
+      <span><span class="ld" style="background:#D85A30"></span>Long run</span>
+      <span><span class="ld" style="background:#B4B2A9"></span>Current baseline</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="wc"></canvas>
+    </div>
+    <p class="pnote" id="pn"></p>
+  </div>
+
+  <div class="key-section">
+    <h3>🥜 Peanut butter scaling guide</h3>
+    <div class="key-grid">
+      <div class="key-item"><strong>Mon — Wildcard breakfast</strong>No PB target. Poha, upma, cheela, thepla — whatever the kitchen offers.</div>
+      <div class="key-item"><strong>Tue / Thu — Run 10–12 km</strong>PB 20g + banana. ~390 kcal breakfast. Banana pre-run or post-run.</div>
+      <div class="key-item"><strong>Wed — Easy / short hike</strong>PB 15g base. Lighter day, standard bowl.</div>
+      <div class="key-item"><strong>Fri — Cycling 30–50 km</strong>PB 25g + banana. ~460 kcal. On-bike: dates + peanut chikki.</div>
+      <div class="key-item"><strong>Sat — Hike 10–15 km, 800–1400m</strong>PB 25g + banana. Trail snacks: peanuts, chikki, dates — carry more than you think.</div>
+      <div class="key-item"><strong>Sun — Long run 21–26 km</strong>PB 30g + banana. ~510 kcal. Maximum version. Choc milk recovery within 30 min.</div>
+    </div>
+  </div>
+
+  <div class="key-section">
+    <h3>🍷 Alcohol reintroduction guide</h3>
+    <div class="key-grid">
+      <div class="key-item"><strong>Best slots</strong>Friday evening (post-cycling, next hard session is hike not run). Sunday evening (long run done, next run is Tuesday).</div>
+      <div class="key-item"><strong>Protect</strong>Saturday night — pre-long-run sleep and glycogen storage matter. Keep Saturday alcohol-free.</div>
+      <div class="key-item"><strong>Quantity</strong>1–2 drinks, 2–3 evenings per week. Fits within snack budget (~150–200 kcal per drink).</div>
+      <div class="key-item"><strong>Phase in</strong>Weeks 1–2: Fri + Sun only. Weeks 3+: add Wed evening if desired (easy day, no impact on Thu run).</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Built for a 47yr vegetarian marathon runner · Hal Higdon Senior plan · targeting 63 kg<br>
+    Gradual step-up from 1,800 kcal baseline over 6 weeks · Small deficit preserved on Mondays<br>
+    <em>The belly responds to lower cortisol from better fuelling, not more restriction.</em>
+  </div>
+</div>
+
+<script>
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TYPES = ['Rest\n+ walk','Run\n10–12k','Short hike\nor easy','Run\n10–12k','Cycling\n30–50k','Hike\n10–15k','Long run\n21–26k'];
+const COLORS = ['#888780','#185FA5','#0F6E56','#185FA5','#0F6E56','#0F6E56','#D85A30'];
+
+const phases = [
+  {
+    label: 'Now · 1,800 kcal',
+    desc: '<strong>Where you are now.</strong> 1,800 kcal/day flat — clean food, good habits. But undifferentiated across the week: your hardest days get the same fuel as your rest day. No alcohol. This is the starting point, not the destination.',
+    kcals: [1750,1850,1780,1850,1850,1850,1900],
+    alc: [false,false,false,false,false,false,false],
+    details: [
+      { breakfast:'Oats 50g + PB 15g', lunch:'Dal + sabzi + 1–2 roti or small rice', dinner:'Rice or pasta, sabzi, small dal', snacks:'Hummus, cottage cheese, nuts, seeds, carrots, dates', pb:15 },
+      { breakfast:'Oats 50g + PB 15g', lunch:'Dal + sabzi + 1–2 roti or small rice', dinner:'Rice or pasta, sabzi, small dal', snacks:'Hummus, cottage cheese, nuts, seeds, dates', pb:15 },
+      { breakfast:'Oats 50g + PB 15g', lunch:'Dal + sabzi + roti', dinner:'Sabzi + roti + dal', snacks:'Nuts, carrot, hummus', pb:15 },
+      { breakfast:'Oats 50g + PB 15g', lunch:'Dal + rice + sabzi', dinner:'Pasta/burrito, sabzi', snacks:'Cottage cheese, nuts, dates', pb:15 },
+      { breakfast:'Oats 50g + PB 15g', lunch:'Rice + dal + sabzi', dinner:'Pasta, sabzi', snacks:'Chikki, nuts, hummus', pb:15 },
+      { breakfast:'Oats 50g + PB 15g + banana', lunch:'Roti + dal + sabzi', dinner:'Rice + dal + sabzi', snacks:'Trail mix, dates, cottage cheese', pb:15 },
+      { breakfast:'Oats 50g + PB 15g + banana', lunch:'Rice + dal + sabzi + curd', dinner:'Roti + dal + sabzi', snacks:'Hummus, nuts, dates, cottage cheese', pb:15 },
+    ],
+    tips: [
+      'Rest day at current intake — this is fine for Monday. The problem is every other day looks the same.',
+      'Run day on the same calories as rest day. Your body is shortchanging recovery — this is the first thing to fix.',
+      'Easy day. Current intake acceptable. Small deficit is fine here.',
+      'Second run day, same under-fuelling as Tuesday. Post-run lunch is doing all the repair work on an empty tank.',
+      'Cycling on 1,850 kcal is a meaningful under-fuel — you may be bonking in the last 10 km without realising it.',
+      'Hike with 1,400m ascent on ~1,850 kcal. Most significant mismatch in your week. Actual expenditure ~2,800 kcal.',
+      'Long run on 1,900 kcal. You feel satisfied at 500 kcal post-run lunch — but that\'s appetite suppressed by cortisol, not genuine recovery.'
+    ]
+  },
+  {
+    label: 'Weeks 1–2 · 2,100',
+    desc: '<strong>One simple change: differentiate your days.</strong> Rest day stays similar. Run / hike / cycle days get a slightly larger lunch and one extra snack. No dramatic shifts — just stop treating Sunday the same as Monday. Alcohol reintroduced lightly on 2 evenings.',
+    kcals: [1850,2100,1950,2100,2150,2250,2300],
+    alc: [false,false,false,false,true,false,true],
+    details: [
+      { breakfast:'Wildcard — poha, upma, cheela, thepla', lunch:'Dal + sabzi + 2 roti + small curd', dinner:'Rice + sabzi + dal', snacks:'Hummus, nuts, carrots, dates', pb:0, wild:true },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Rice (1 cup) + dal + sabzi + curd — slightly larger', dinner:'Pasta or roti + paneer/rajma + sabzi', snacks:'Cottage cheese + fruit, handful peanuts', pb:20 },
+      { breakfast:'Oats 50g + PB 15g', lunch:'Dal + sabzi + 2 roti + raita', dinner:'Rice + moong dal + sabzi', snacks:'Nuts, banana, hummus', pb:15 },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Rice (1 cup) + dal + sabzi + curd', dinner:'Burrito or enchilada + side salad', snacks:'Peanut butter on toast, dates', pb:20 },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Rice + dal + sabzi + curd — proper portion', dinner:'Pasta + paneer/legumes + sabzi', snacks:'Chikki, peanuts on bike', pb:20, alc:'1 glass wine (~120 kcal)' },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Thepla + dal + sabzi + curd', dinner:'Large rice + dal + sabzi + raita', snacks:'Trail peanuts + dates, cottage cheese', pb:20 },
+      { breakfast:'Oats 50g + PB 25g + banana', lunch:'Rice + dal + sabzi + curd (allow a full plate)', dinner:'Khichdi or pasta + paneer + sabzi', snacks:'Chocolate milk post-run, PB roti, dates', pb:25, alc:'1 beer or wine Sunday evening (~150 kcal)' },
+    ],
+    tips: [
+      'Monday stays close to current. Wildcard breakfast keeps it interesting. No alcohol on rest day.',
+      'First real change: PB up to 20g, banana added, lunch slightly larger. Just don\'t stop yourself from a second roti.',
+      'Wednesday easy day — modest step up. Focus on not restricting yourself at lunch.',
+      'Run day: same as Tuesday. Wife\'s Mexican/Italian dinner works perfectly as post-run carb reload.',
+      'Cycling day: first alcohol reintroduction — a glass of wine with Friday dinner. Fits into a post-ride evening naturally.',
+      'Hike day: still under true expenditure but moving in right direction. No alcohol — protect Saturday night for Sunday.',
+      'Long run: PB up to 25g, allow a full plate at post-run lunch. One drink Sunday evening is fine — run is done, next run is Tuesday.'
+    ]
+  },
+  {
+    label: 'Weeks 3–4 · 2,400',
+    desc: '<strong>Portion size as the lever.</strong> The guilt about bigger portions should be fading. Lunch and dinner on active days move to 650–700 kcal. This is just a normal meal for someone who ran 12 km this morning. Alcohol 2–3× per week in the evenings.',
+    kcals: [1950,2400,2150,2400,2500,2650,2750],
+    alc: [false,false,true,false,true,false,true],
+    details: [
+      { breakfast:'Wildcard', lunch:'Dal + sabzi + 2 roti + curd + small rice', dinner:'Rice + rajma + sabzi + raita', snacks:'Hummus, nuts, carrots, dates', pb:0, wild:true },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Rice (1.5 cup) + dal + sabzi + curd', dinner:'Pasta / lasagna + side dal or paneer', snacks:'Greek yoghurt + fruit, roasted peanuts', pb:20 },
+      { breakfast:'Oats 50g + PB 15g', lunch:'2–3 roti + dal + sabzi + curd', dinner:'Rice + moong + sabzi + raita', snacks:'Banana, peanuts', pb:15, alc:'1 glass wine (~120 kcal)' },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Rice (1.5 cup) + dal + sabzi + curd', dinner:'Veggie burger or enchilada + beans + side', snacks:'PB on roti, cottage cheese, dates', pb:20 },
+      { breakfast:'Oats 50g + PB 25g + banana', lunch:'Large rice + dal + sabzi + curd', dinner:'Pasta + paneer or chhole + sabzi', snacks:'On-bike dates + peanuts, post-ride lassi', pb:25, alc:'1–2 drinks Fri evening (~200 kcal)' },
+      { breakfast:'Oats 50g + PB 25g + banana', lunch:'2–3 roti + dal + sabzi + raita', dinner:'Large rice + dal makhani or rajma + sabzi', snacks:'Trail peanuts + chikki + dates, chocolate milk', pb:25 },
+      { breakfast:'Oats 50g + PB 30g + banana', lunch:'Large rice + dal + sabzi + curd — full plate, no guilt', dinner:'Khichdi or pasta, paneer / chhole, sabzi', snacks:'Choc milk recovery, peanut roti, fruit', pb:30, alc:'1 drink Sunday eve (~130 kcal)' },
+    ],
+    tips: [
+      'Monday rest day now slightly higher — a fuller dinner. Still your deficit anchor day.',
+      'Run day hitting 2,400 kcal — this is what your body actually needs after a 12 km morning. Notice if energy levels improve.',
+      'Wednesday: a glass of wine with dinner is fine on an easy day. Does not impact Thursday run meaningfully.',
+      'Thursday: mirror Tuesday. Wife\'s veggie burger or enchilada — beans + whole grain = excellent runner fuel.',
+      'Friday cycling + drinks: bigger post-ride lunch is the priority. 1–2 drinks in the evening are fine.',
+      'Saturday hike: much closer to actual expenditure now. No alcohol — protect Sunday.',
+      'Sunday: 30g PB, full post-run plate. Feeling guilty about a generous lunch after 25 km should feel genuinely irrational by now.'
+    ]
+  },
+  {
+    label: 'Weeks 5–6 · 2,700',
+    desc: '<strong>Maintenance athlete eating.</strong> You\'ve reached a sustainable level for your training load. Small deficit on Monday, properly fuelled Tue–Sun. The belly reduction comes from here: cortisol down, recovery up, metabolism recalibrated. Alcohol fits naturally 2–3× per week.',
+    kcals: [2050,2650,2350,2650,2800,3000,3200],
+    alc: [false,false,true,false,true,false,true],
+    details: [
+      { breakfast:'Wildcard', lunch:'Dal + sabzi + 2–3 roti + curd', dinner:'Rice + chhole + sabzi + raita', snacks:'Hummus, nuts, seeds, carrots, dates', pb:0, wild:true },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Rice (1.5 cup) + dal + sabzi + curd + extra roti', dinner:'Pasta or veggie lasagna + side paneer / bean', snacks:'Cottage cheese + fruit, roasted peanuts 30g', pb:20 },
+      { breakfast:'Oats 50g + PB 15g', lunch:'2–3 roti + dal + sabzi + curd', dinner:'Rice + moong dal + sabzi + raita', snacks:'Banana, peanut chikki', pb:15, alc:'1 glass wine (~120 kcal)' },
+      { breakfast:'Oats 50g + PB 20g + banana', lunch:'Rice (1.5 cup) + dal + sabzi + curd', dinner:'Burrito bowl or enchilada + beans + rice', snacks:'PB on roti, cottage cheese, dates, peanuts', pb:20 },
+      { breakfast:'Oats 50g + PB 25g + banana', lunch:'Large rice + dal + sabzi + curd', dinner:'Pasta + paneer or chhole + sabzi', snacks:'On-bike peanuts + dates, post-ride lassi', pb:25, alc:'1–2 drinks (~200 kcal)' },
+      { breakfast:'Oats 50g + PB 25g + banana', lunch:'Large rice + dal + sabzi + curd + extra roti', dinner:'Large rice + dal makhani + sabzi + raita', snacks:'Trail peanuts + chikki + dates, choc milk, cottage cheese', pb:25 },
+      { breakfast:'Oats 50g + PB 30g + banana', lunch:'Large rice + dal + sabzi + curd — eat until satisfied', dinner:'Khichdi or pasta, paneer / rajma, sabzi', snacks:'Choc milk recovery, PB roti, fruit', pb:30, alc:'1 drink Sunday eve (~130 kcal)' },
+    ],
+    tips: [
+      'Monday is your intentional low day. Even here you\'re eating 250 kcal more than 6 weeks ago — and it\'s all quality food.',
+      'Tuesday: 2,650 kcal on a 12 km run day. This is correct, not indulgent. Your running economy will improve.',
+      'Wednesday wine: having a glass with dinner on an easy day is completely compatible with your goals. Enjoy it.',
+      'Thursday: same as Tuesday. You should be noticing by now that Thursday runs feel better — legs less heavy, pace more natural.',
+      'Friday: 2,800 kcal on a cycling day. On-bike peanuts doing real work. Post-ride lassi is excellent recovery.',
+      'Saturday: 3,000 kcal on your biggest elevation day. Still a small gap on a 1,400m day — carry trail food, don\'t ration it.',
+      'Sunday: 3,200 kcal long run day. The belly responds to 6 weeks of lower cortisol and better recovery. Give it the full time.'
+    ]
+  }
+];
+
+let phase = 0, activeDay = 0;
+
+function setPhase(p) {
+  phase = p; activeDay = 0;
+  document.querySelectorAll('.ptab').forEach((b,i) => b.classList.toggle('on', i===p));
+  renderAll();
+}
+
+function setDay(i) { activeDay = i; renderAll(); }
+
+function renderTabs() {
+  document.getElementById('phaseTabs').innerHTML = phases.map((p,i) =>
+    `<button class="ptab${i===phase?' on':''}" onclick="setPhase(${i})">${p.label}</button>`
+  ).join('');
+}
+
+function renderDesc() {
+  document.getElementById('pdesc').innerHTML = phases[phase].desc;
+}
+
+function renderVS() {
+  const p = phases[phase];
+  const avg = Math.round(p.kcals.reduce((a,b)=>a+b,0)/7);
+  const deficit = Math.round(3000*7 - p.kcals.reduce((a,b)=>a+b,0));
+  const alcDays = p.alc.filter(Boolean).length;
+  document.getElementById('vsrow').innerHTML = `
+    <div class="vs-card"><div class="vs-label">Avg daily</div><div class="vs-val">${avg.toLocaleString()}</div><div class="vs-sub">kcal</div></div>
+    <div class="vs-card"><div class="vs-label">Weekly deficit</div><div class="vs-val">${deficit>0?'−':'+'}${Math.abs(deficit).toLocaleString()}</div><div class="vs-sub">kcal vs est. TDEE</div></div>
+    <div class="vs-card"><div class="vs-label">Alcohol days</div><div class="vs-val">${alcDays}</div><div class="vs-sub">evenings per week</div></div>`;
+}
+
+function renderGrid() {
+  const p = phases[phase];
+  const mx = Math.max(...p.kcals), mn = 1700;
+  document.getElementById('dg').innerHTML = DAYS.map((d,i) => {
+    const pct = Math.round((p.kcals[i]-mn)/(mx-mn)*100);
+    const alcDot = p.alc[i] ? '<span class="alc-dot" title="drink evening"></span>' : '';
+    return `<div class="dc${i===activeDay?' on':''}" onclick="setDay(${i})">
+      <div class="dn">${d}${alcDot}</div>
+      <div class="dt">${TYPES[i].replace(/\n/g,'<br>')}</div>
+      <div class="dk">${p.kcals[i].toLocaleString()}<span class="dku"> k</span></div>
+      <div class="bt"><div class="bf" style="width:${pct}%;background:${COLORS[i]}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderDetail() {
+  const p = phases[phase];
+  const d = p.details[activeDay];
+  const pbBadge = d.pb ? `<span class="badge badge-pb">PB ${d.pb}g</span>` : '';
+  const wildBadge = d.wild ? `<span class="badge badge-wild">wildcard</span>` : '';
+  const alcBadge = d.alc ? `<span class="badge badge-alc">+ ${d.alc}</span>` : '';
+  const bfNote = d.pb ? Math.round(177 + d.pb*5.94 + (d.breakfast.includes('banana') ? 90 : 0)) : 480;
+  const lk = Math.round(p.kcals[activeDay]*0.28);
+  const dk2 = Math.round(p.kcals[activeDay]*0.30);
+  const sk = Math.round(p.kcals[activeDay]*0.25);
+  const totalCarb = Math.round(p.kcals[activeDay]*0.135);
+  const totalProt = Math.round(p.kcals[activeDay]*0.048);
+  const totalFat = Math.round(p.kcals[activeDay]*0.030);
+  document.getElementById('det').innerHTML = `
+    <div class="dh">
+      <span class="dtitle">${DAYS[activeDay]} — ${TYPES[activeDay].replace(/\n/g,' ')}</span>
+      <span class="dsub">Target: ${p.kcals[activeDay].toLocaleString()} kcal</span>
+    </div>
+    <div class="mr">
+      <div class="mc"><div class="mcl">Calories</div><div class="mcv">${p.kcals[activeDay].toLocaleString()}<span class="mcu"> kcal</span></div></div>
+      <div class="mc"><div class="mcl">Carb</div><div class="mcv">${totalCarb}<span class="mcu">g</span></div></div>
+      <div class="mc"><div class="mcl">Protein</div><div class="mcv">${totalProt}<span class="mcu">g</span></div></div>
+      <div class="mc"><div class="mcl">Fat</div><div class="mcv">${totalFat}<span class="mcu">g</span></div></div>
+    </div>
+    <div class="mrow"><span class="mn">Breakfast${pbBadge}${wildBadge}</span><span class="mf">${d.breakfast}</span><span class="mk">~${bfNote} kcal</span></div>
+    <div class="mrow"><span class="mn">Lunch</span><span class="mf">${d.lunch}</span><span class="mk">~${lk} kcal</span></div>
+    <div class="mrow"><span class="mn">Dinner</span><span class="mf">${d.dinner}</span><span class="mk">~${dk2} kcal</span></div>
+    <div class="mrow"><span class="mn">Snacks${alcBadge}</span><span class="mf">${d.snacks}${d.alc ? ' + '+d.alc : ''}</span><span class="mk">~${sk} kcal</span></div>`;
+  document.getElementById('tipbox').textContent = p.tips[activeDay];
+}
+
+let ci = null;
+function renderChart() {
+  if (ci) ci.destroy();
+  const p = phases[phase];
+  const avg = Math.round(p.kcals.reduce((a,b)=>a+b,0)/7);
+  const deficit = Math.round(3000*7 - p.kcals.reduce((a,b)=>a+b,0));
+  const loss = (deficit/7700).toFixed(2);
+  document.getElementById('pn').textContent =
+    phases[phase].label + ' · avg ' + avg.toLocaleString() + ' kcal/day · est. deficit ~' +
+    Math.abs(deficit).toLocaleString() + ' kcal/week → ~' + loss + ' kg loss/week';
+  ci = new Chart(document.getElementById('wc'), {
+    type: 'bar',
+    data: {
+      labels: DAYS,
+      datasets: [
+        {
+          label: 'Target', data: p.kcals,
+          backgroundColor: COLORS.map((c,i) => i===activeDay ? c : c+'88'),
+          borderColor: COLORS, borderWidth: 1.5, borderRadius: 4
+        },
+        {
+          label: 'Current baseline', data: [1750,1850,1780,1850,1850,1850,1900],
+          backgroundColor: 'rgba(180,178,169,0.25)', borderColor: '#B4B2A9',
+          borderWidth: 1, borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toLocaleString() + ' kcal' } }
+      },
+      scales: {
+        y: { min: 1600, ticks: { callback: v => v.toLocaleString(), font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { grid: { display: false }, ticks: { autoSkip: false, font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+function renderAll() { renderTabs(); renderDesc(); renderVS(); renderGrid(); renderDetail(); renderChart(); }
+renderAll();
+</script>
+</body>
+</html>
