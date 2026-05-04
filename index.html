@@ -37,14 +37,44 @@ body {
   padding-bottom: 40px;
 }
 
-/* ── HEADER ── */
-.header { background: var(--navy); padding: 22px 16px 18px; margin-bottom: 18px; }
-.header-title { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: -0.4px; margin-bottom: 3px; }
-.header-date { font-size: 12px; color: #7fa8cc; }
+/* ── HEADER — slim single row ── */
+.header {
+  background: var(--navy);
+  padding: 13px 16px 11px;
+  margin-bottom: 14px;
+}
+.header-row1 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.3px;
+  flex-shrink: 0;
+}
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.header-date { font-size: 11px; color: #7fa8cc; }
+.header-sep { font-size: 11px; color: #2d5a8a; }
 .header-phase-badge {
-  display: inline-block; margin-top: 10px; padding: 3px 11px;
-  background: var(--navy2); border: 1px solid var(--navy3);
-  border-radius: 999px; font-size: 11px; color: #a8cfed; font-weight: 500;
+  display: inline-block;
+  padding: 2px 9px;
+  background: var(--navy2);
+  border: 1px solid var(--navy3);
+  border-radius: 999px;
+  font-size: 11px;
+  color: #a8cfed;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 /* ── CONTAINER ── */
@@ -53,92 +83,101 @@ body {
 /* ── SECTION LABEL ── */
 .sec-lbl {
   font-size: 10px; font-weight: 600; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 7px;
 }
 
-/* ── PHASE TABS — horizontal scroll ── */
-.phase-tabs {
-  display: flex; gap: 6px; flex-wrap: nowrap;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; margin-bottom: 16px; padding-bottom: 2px;
+/* ── TODAY HERO BANNER ── */
+.today-hero {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 15px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
-.phase-tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex-shrink: 0; padding: 6px 13px; border: 1px solid #d0cec8;
-  border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer;
-  background: var(--white); color: var(--muted); transition: all 0.15s;
-  font-family: inherit; white-space: nowrap; -webkit-tap-highlight-color: transparent;
-}
-.tab:hover { border-color: #999; color: #444; }
-.tab.active { background: var(--navy); color: #e6f1fb; border-color: var(--navy); }
-
-/* ── META CARDS — 2 col mobile, 4 col desktop ── */
-.meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 18px; }
-.mc { background: var(--white); border: 1px solid var(--border2); border-radius: 10px; padding: 11px 13px; }
-.mc-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; font-weight: 500; }
-.mc-val { font-size: 18px; font-weight: 600; color: var(--text); }
-.mc-sub { font-size: 10px; color: var(--faint); margin-top: 1px; }
-
-/* ── DAY STRIP — horizontal scroll on mobile ── */
-.day-strip-wrap {
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; margin: 0 -14px 16px; padding: 0 14px 6px;
-}
-.day-strip-wrap::-webkit-scrollbar { display: none; }
-.day-strip { display: flex; gap: 7px; width: max-content; }
-
-.day-card {
-  width: 88px; flex-shrink: 0;
-  border: 1px solid var(--border); border-radius: 12px;
-  padding: 9px 8px 0 8px; background: var(--white); cursor: pointer;
-  display: flex; flex-direction: column; min-height: 112px;
-  transition: transform 0.15s, border-color 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.day-card:hover { transform: translateY(-2px); border-color: #aaa; }
-.day-card.sel { border-color: var(--blue); border-width: 2px; box-shadow: 0 0 0 3px rgba(24,95,165,0.12); }
-.day-name { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-.day-pill {
-  display: inline-block; font-size: 9px; font-weight: 600;
-  padding: 2px 6px; border-radius: 999px; margin-bottom: 4px;
-  letter-spacing: 0.02em; width: fit-content;
+.today-left {}
+.today-label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+.today-activity { font-size: 19px; font-weight: 600; color: var(--text); line-height: 1.1; }
+.today-sub { font-size: 12px; color: #888; margin-top: 3px; }
+.today-right { text-align: right; flex-shrink: 0; }
+.today-kcal { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+.today-kcal-lbl { font-size: 10px; color: var(--faint); margin-top: 2px; }
+.today-pill {
+  display: inline-block; margin-top: 6px;
+  font-size: 10px; font-weight: 600; padding: 3px 9px;
+  border-radius: 999px; letter-spacing: 0.02em;
 }
 .pill-walk    { background: #f0ede8; color: #5a5750; }
 .pill-run     { background: #deeaf7; color: #0c447c; }
 .pill-hike    { background: #faeeda; color: #633806; }
 .pill-cycle   { background: #e2f0d6; color: #27500a; }
 .pill-longrun { background: #eeedfe; color: #3c3489; }
-.day-act { font-size: 9.5px; color: #999; line-height: 1.3; margin-bottom: 4px; flex: 1; }
-.day-kcal { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 7px; }
-.cal-bar-wrap { padding-bottom: 9px; }
-.cal-bar-bg { height: 4px; border-radius: 2px; background: var(--bar-bg); overflow: hidden; }
-.cal-bar-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+
+/* ── DAY STRIP ── */
+.day-strip-wrap {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* Bleed to edges, but preserve space for selection glow */
+  margin: 0 -14px 14px;
+  padding: 4px 14px 8px;
+}
+.day-strip-wrap::-webkit-scrollbar { display: none; }
+.day-strip { display: flex; gap: 7px; width: max-content; }
+
+.day-card {
+  width: 82px; flex-shrink: 0;
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  padding: 9px 7px 0 7px;
+  background: var(--white); cursor: pointer;
+  display: flex; flex-direction: column;
+  min-height: 108px;
+  transition: border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.day-card:hover { border-color: #bbb; }
+.day-card.sel {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(24,95,165,0.15);
+}
+.day-name { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.day-pill-sm {
+  display: inline-block; font-size: 8.5px; font-weight: 600;
+  padding: 1.5px 6px; border-radius: 999px; margin-bottom: 4px;
+  letter-spacing: 0.02em; width: fit-content;
+}
+.day-act { font-size: 9px; color: #999; line-height: 1.3; margin-bottom: 4px; flex: 1; }
+.day-kcal { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.cal-bar-wrap { padding-bottom: 8px; }
+.cal-bar-bg { height: 3px; border-radius: 2px; background: var(--bar-bg); overflow: hidden; }
+.cal-bar-fill { height: 100%; border-radius: 2px; }
 
 /* ── DETAIL PANEL ── */
 .detail-outer {
   background: var(--white); border: 1px solid var(--border);
-  border-radius: 14px; padding: 15px; margin-bottom: 16px;
+  border-radius: 13px; padding: 14px; margin-bottom: 14px;
 }
 .detail-head {
   display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 13px; padding-bottom: 13px; border-bottom: 1px solid #f0ede8; gap: 8px;
+  margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0ede8; gap: 8px;
 }
-.dh-day { font-size: 17px; font-weight: 600; color: var(--text); }
-.dh-act { font-size: 12px; color: #888; margin-top: 2px; }
+.dh-day { font-size: 16px; font-weight: 600; color: var(--text); }
+.dh-act { font-size: 11px; color: #888; margin-top: 2px; }
 .dh-right { text-align: right; flex-shrink: 0; }
-.dh-kcal { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+.dh-kcal { font-size: 24px; font-weight: 600; color: var(--text); line-height: 1; }
 .dh-lbl { font-size: 10px; color: var(--faint); margin-top: 2px; }
 
-/* ── MEAL TILES — always 2 col (readable at 320px+) ── */
-.meal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 7px; }
-.meal-tile { background: var(--surface); border-radius: 10px; padding: 10px 11px; }
-.mt-lbl { font-size: 10px; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
-.mt-kcal { font-size: 14px; font-weight: 600; color: var(--text); }
-.mt-desc { font-size: 11px; color: #777; margin-top: 3px; line-height: 1.4; }
+.meal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+.meal-tile { background: var(--surface); border-radius: 9px; padding: 9px 10px; }
+.mt-lbl { font-size: 9.5px; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+.mt-kcal { font-size: 13px; font-weight: 600; color: var(--text); }
+.mt-desc { font-size: 10.5px; color: #777; margin-top: 2px; line-height: 1.4; }
 
-/* ── EXTRA TILES ── */
-.extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10px; }
-.extra-tile { border-radius: 10px; padding: 10px 11px; border: 1px solid transparent; }
+.extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 9px; }
+.extra-tile { border-radius: 9px; padding: 9px 10px; border: 1px solid transparent; }
 .extra-tile.training { background: #eaf5e1; border-color: #b2d98a; }
 .extra-tile.training .mt-lbl { color: #3b6d11; }
 .extra-tile.training .mt-kcal { color: #27500a; }
@@ -152,66 +191,92 @@ body {
 .extra-tile.none .mt-kcal { color: #999; }
 .extra-tile.none .mt-desc { color: #ccc; }
 
-/* ── SPLIT BAR ── */
-.bar-row { margin: 10px 0 8px; }
-.split-bar { height: 6px; border-radius: 3px; overflow: hidden; display: flex; margin-bottom: 6px; }
-.split-legend { display: flex; gap: 12px; flex-wrap: wrap; }
-.sl-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #888; }
-.sl-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.bar-row { margin: 8px 0 7px; }
+.split-bar { height: 5px; border-radius: 3px; overflow: hidden; display: flex; margin-bottom: 5px; }
+.split-legend { display: flex; gap: 10px; flex-wrap: wrap; }
+.sl-item { display: flex; align-items: center; gap: 3px; font-size: 10px; color: #888; }
+.sl-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
 
-/* ── PB FOOTNOTE ── */
 .pb-footnote {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 7px 10px; background: var(--surface); border-radius: 8px; margin-top: 4px;
+  padding: 6px 10px; background: var(--surface); border-radius: 7px; margin-top: 3px;
 }
-.pb-text { font-size: 11px; color: var(--faint); }
-.pb-amt { font-size: 11px; font-weight: 600; color: #777; }
+.pb-text { font-size: 10.5px; color: var(--faint); }
+.pb-amt { font-size: 10.5px; font-weight: 600; color: #777; }
 
-/* ── CHART ── */
-.chart-section {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 15px; margin-bottom: 16px;
+/* ── DIVIDER ── */
+.section-divider {
+  border: none; border-top: 1px solid var(--border2);
+  margin: 16px 0;
 }
-.chart-wrap { position: relative; height: 130px; margin-top: 6px; }
 
-/* ── PRINCIPLES — 1 col mobile, 2 col desktop ── */
-.principles-grid { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 16px; }
+/* ── PHASE BLOCK ── */
+.phase-block {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 14px 15px;
+  margin-bottom: 14px;
+}
+.phase-block-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 10px;
+}
+.phase-block-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.phase-block-sub { font-size: 11px; color: #888; margin-top: 2px; }
+.phase-block-avg { text-align: right; }
+.phase-block-avg-val { font-size: 22px; font-weight: 600; color: var(--text); line-height: 1; }
+.phase-block-avg-lbl { font-size: 10px; color: var(--faint); margin-top: 2px; }
+
+.phase-nums { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+.phase-num { background: var(--surface); border-radius: 8px; padding: 8px 10px; }
+.phase-num-lbl { font-size: 9.5px; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+.phase-num-val { font-size: 14px; font-weight: 600; color: var(--text); }
+.phase-num-sub { font-size: 9.5px; color: #bbb; margin-top: 1px; }
+
+.phase-desc { font-size: 11.5px; color: #666; line-height: 1.55; margin-bottom: 12px; }
+
+.phase-tabs { display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px; }
+.phase-tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; padding: 5px 12px; border: 1px solid #d0cec8;
+  border-radius: 7px; font-size: 11px; font-weight: 500; cursor: pointer;
+  background: var(--bg); color: var(--muted); transition: all 0.15s;
+  font-family: inherit; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+}
+.tab:hover { border-color: #999; color: #444; }
+.tab.active { background: var(--navy); color: #e6f1fb; border-color: var(--navy); }
+
+/* ── PRINCIPLES ── */
+.principles-grid { display: grid; grid-template-columns: 1fr; gap: 5px; margin-bottom: 16px; }
 .p-item {
-  font-size: 11px; color: #555; padding: 9px 11px;
-  background: var(--white); border-radius: 9px; line-height: 1.5;
+  font-size: 11px; color: #555; padding: 8px 11px;
+  background: var(--white); border-radius: 8px; line-height: 1.5;
   border-left: 3px solid var(--blue); border-top: 1px solid var(--border2);
   border-right: 1px solid var(--border2); border-bottom: 1px solid var(--border2);
 }
 
 /* ── FOOTER ── */
-.footer { text-align: center; font-size: 11px; color: #ccc; margin-top: 20px; }
+.footer { text-align: center; font-size: 10px; color: #ccc; margin-top: 16px; }
 
-/* ══════════════════════════════════════════════
-   DESKTOP — ≥ 600px
-══════════════════════════════════════════════ */
+/* ══ DESKTOP ≥ 600px ══ */
 @media (min-width: 600px) {
-  .header { padding: 28px 32px 24px; }
-  .header-title { font-size: 26px; }
+  .header { padding: 14px 24px 12px; }
+  .header-title { font-size: 20px; }
   .container { padding: 0 20px; }
 
-  /* 4-col meta */
-  .meta-row { grid-template-columns: repeat(4, 1fr); }
-
-  /* Day grid — back to 7-col */
-  .day-strip-wrap { overflow: visible; margin: 0 0 18px; padding: 0; }
+  .day-strip-wrap { overflow: visible; margin: 0 0 14px; padding: 4px 0 6px; }
   .day-strip { display: grid; grid-template-columns: repeat(7, 1fr); width: auto; }
   .day-card { width: auto; }
 
-  /* Principles 2-col */
+  .phase-nums { grid-template-columns: repeat(3, 1fr); }
   .principles-grid { grid-template-columns: 1fr 1fr; }
-
-  .detail-outer { padding: 20px; }
-  .chart-section { padding: 16px 20px; }
-  .chart-wrap { height: 150px; }
+  .detail-outer { padding: 18px; }
 }
 
-@media (min-width: 700px) {
-  .header-title { font-size: 28px; }
+@media (min-width: 720px) {
+  .header-title { font-size: 22px; }
+  .today-activity { font-size: 21px; }
 }
 </style>
 </head>
@@ -219,33 +284,37 @@ body {
 
 <div class="header">
   <div class="container">
-    <div class="header-title">FatBoy's Fuel Plan</div>
-    <div class="header-date" id="headerDate"></div>
-    <div class="header-phase-badge" id="headerPhaseBadge"></div>
+    <div class="header-row1">
+      <div class="header-title">FatBoy's Fuel Plan</div>
+      <div class="header-meta">
+        <span class="header-date" id="headerDate"></span>
+        <span class="header-sep">·</span>
+        <span class="header-phase-badge" id="headerPhaseBadge"></span>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="container">
-  <div class="sec-lbl">Phase</div>
-  <div class="phase-tabs" id="phaseTabs"></div>
 
-  <div class="sec-lbl">Overview</div>
-  <div class="meta-row" id="phaseMeta"></div>
+  <!-- TODAY HERO -->
+  <div class="today-hero" id="todayHero"></div>
 
-  <div class="sec-lbl">Day</div>
+  <!-- DAY STRIP -->
+  <div class="sec-lbl">This week</div>
   <div class="day-strip-wrap">
     <div class="day-strip" id="dayGrid"></div>
   </div>
 
+  <!-- DETAIL PANEL -->
   <div id="detailPanel"></div>
 
-  <div class="chart-section">
-    <div class="sec-lbl">Weekly distribution</div>
-    <div class="chart-wrap">
-      <canvas id="weekChart" role="img" aria-label="Bar chart of daily calorie targets across the week"></canvas>
-    </div>
-  </div>
+  <hr class="section-divider">
 
+  <!-- PHASE BLOCK -->
+  <div class="phase-block" id="phaseBlock"></div>
+
+  <!-- PRINCIPLES -->
   <div class="sec-lbl">Key principles</div>
   <div class="principles-grid" id="principles"></div>
 
@@ -253,13 +322,8 @@ body {
 </div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
+// ── DATA ─────────────────────────────────────────────────────────────────
 
-// Months 0-indexed. Phase dates:
-// Phase 1: 24 Mar – 3 May 2026
-// Phase 2: 4 May – 17 May 2026
-// Phase 3: 18 May – 31 May 2026
-// Phase 4: 1 Jun 2026+
 const PHASE_DATES = [
   { start: new Date(2026, 2, 24), end: new Date(2026, 4, 3)  },
   { start: new Date(2026, 4, 4),  end: new Date(2026, 4, 17) },
@@ -268,27 +332,31 @@ const PHASE_DATES = [
 ];
 
 const days = [
-  { name:'Mon', full:'Monday',    act1:'Rest + walk',  act2:'5–10 km',        type:'walk',    pb:15, alcSlot:false, training:null },
-  { name:'Tue', full:'Tuesday',   act1:'Midweek run',  act2:'10–12 km',       type:'run',     pb:20, alcSlot:false, training:{label:'Pre/mid-run',desc:'Small banana or 2 dates before; electrolytes during'} },
-  { name:'Wed', full:'Wednesday', act1:'Short hike',   act2:'or cross-train', type:'hike',    pb:25, alcSlot:false, training:{label:'Activity fuel',desc:'Light snack before: nuts or peanut butter toast'} },
-  { name:'Thu', full:'Thursday',  act1:'Midweek run',  act2:'10–12 km',       type:'run',     pb:20, alcSlot:false, training:{label:'Pre/mid-run',desc:'Small banana or 2 dates before; electrolytes during'} },
-  { name:'Fri', full:'Friday',    act1:'Cycling ~50k', act2:'~500m ascent',   type:'cycle',   pb:25, alcSlot:true,  alcNote:'1–2 drinks post-ride',        training:{label:'On-bike fuel',desc:'Banana + dates mid-ride; extra snack post-ride before dinner'} },
-  { name:'Sat', full:'Saturday',  act1:'Weekend hike', act2:'long ascent',    type:'hike',    pb:25, alcSlot:false, training:{label:'On-hike fuel',desc:'Trail: nuts, dates, banana. Night protected — no alcohol, big pre-load dinner'} },
-  { name:'Sun', full:'Sunday',    act1:'Sundayrunday', act2:'21–26 km',       type:'longrun', pb:30, alcSlot:true,  alcNote:'1–2 drinks, relaxed evening', training:{label:'Recovery (non-negotiable)',desc:'Within 30 min: chocolate milk or lassi + banana. Then full recovery meal.'} },
+  { name:'Mon', full:'Monday',    act1:'Rest + walk',   act2:'5–10 km',        type:'walk',    pb:15, alcSlot:false, training:null },
+  { name:'Tue', full:'Tuesday',   act1:'Midweek run',   act2:'10–12 km',       type:'run',     pb:20, alcSlot:false, training:{label:'Pre/mid-run',desc:'Small banana or 2 dates before; electrolytes during'} },
+  { name:'Wed', full:'Wednesday', act1:'Short hike',    act2:'or cross-train', type:'hike',    pb:25, alcSlot:false, training:{label:'Activity fuel',desc:'Light snack before: nuts or peanut butter toast'} },
+  { name:'Thu', full:'Thursday',  act1:'Midweek run',   act2:'10–12 km',       type:'run',     pb:20, alcSlot:false, training:{label:'Pre/mid-run',desc:'Small banana or 2 dates before; electrolytes during'} },
+  { name:'Fri', full:'Friday',    act1:'Cycling ~50k',  act2:'~500m ascent',   type:'cycle',   pb:25, alcSlot:true,  alcNote:'1–2 drinks post-ride',        training:{label:'On-bike fuel',desc:'Banana + dates mid-ride; extra snack post-ride before dinner'} },
+  { name:'Sat', full:'Saturday',  act1:'Weekend hike',  act2:'long ascent',    type:'hike',    pb:25, alcSlot:false, training:{label:'On-hike fuel',desc:'Trail: nuts, dates, banana. Night protected — no alcohol, big pre-load dinner'} },
+  { name:'Sun', full:'Sunday',    act1:'Sundayrunday',  act2:'21–26 km',       type:'longrun', pb:30, alcSlot:true,  alcNote:'1–2 drinks, relaxed evening', training:{label:'Recovery (non-negotiable)',desc:'Within 30 min: chocolate milk or lassi + banana. Then full recovery meal.'} },
 ];
 
 const phases = [
-  { label:'Phase 1: Detox',   sub:'Flat baseline', avg:1800,
+  { label:'Phase 1: Detox',   sub:'24 Mar – 3 May 2026', avg:1800,
     kcals:[1700,1850,1800,1850,1850,1900,1850],
+    desc:'Flat baseline across all days — no differentiation yet. This is about establishing clean eating habits after cutting alcohol, desserts and biscuits. Portions stay unchanged; the goal is consistency.',
     meals:[{b:350,l:550,s:350,d:500,r:0},{b:380,l:580,s:380,d:560,r:0},{b:370,l:560,s:370,d:500,r:0},{b:380,l:580,s:380,d:560,r:0},{b:370,l:560,s:380,d:540,r:0},{b:370,l:580,s:370,d:580,r:0},{b:400,l:560,s:380,d:560,r:150}]},
-  { label:'Phase 2: Step-up', sub:'Weeks 1–2',    avg:2100,
+  { label:'Phase 2: Step-up', sub:'4 May – 17 May 2026', avg:2100,
     kcals:[1800,2100,2000,2100,2200,2200,2300],
+    desc:'First real differentiation: rest days stay low, training days step up. Average lifts from 1,800 to 2,100 kcal. The body starts learning to expect more fuel on harder days.',
     meals:[{b:350,l:550,s:450,d:450,r:0},{b:400,l:650,s:450,d:600,r:0},{b:400,l:620,s:430,d:550,r:0},{b:400,l:650,s:450,d:600,r:0},{b:420,l:680,s:450,d:650,r:0},{b:420,l:680,s:450,d:650,r:0},{b:450,l:680,s:450,d:570,r:150}]},
-  { label:'Phase 3: Build',   sub:'Weeks 3–4',    avg:2400,
+  { label:'Phase 3: Build',   sub:'18 May – 31 May 2026', avg:2400,
     kcals:[2000,2400,2250,2400,2550,2550,2700],
+    desc:'Portion sizes are the primary lever now. Meals get meaningfully bigger, especially around long training days. Sunday hits 2,700 kcal — proper athlete fuelling begins.',
     meals:[{b:380,l:620,s:500,d:500,r:0},{b:450,l:750,s:550,d:650,r:0},{b:440,l:700,s:510,d:600,r:0},{b:450,l:750,s:550,d:650,r:0},{b:470,l:790,s:580,d:710,r:0},{b:470,l:800,s:560,d:720,r:0},{b:500,l:800,s:580,d:670,r:150}]},
-  { label:'Phase 4: Athlete', sub:'Weeks 5–6',    avg:2700,
+  { label:'Phase 4: Athlete', sub:'From 1 Jun 2026',     avg:2700,
     kcals:[2200,2700,2550,2700,2900,2900,3050],
+    desc:'Full maintenance eating for a training athlete. Sunday long-run day hits 3,050 kcal. Monday stays the deficit anchor at 2,200. This is the target state — fuel the work, protect the training.',
     meals:[{b:420,l:700,s:580,d:500,r:0},{b:500,l:860,s:640,d:700,r:0},{b:490,l:810,s:610,d:640,r:0},{b:500,l:860,s:640,d:700,r:0},{b:520,l:910,s:660,d:810,r:0},{b:520,l:920,s:640,d:820,r:0},{b:550,l:920,s:680,d:750,r:150}]},
 ];
 
@@ -299,11 +367,12 @@ const snackD  = ['Hummus, carrots, nuts, seeds','Peanut butter toast, curd, frui
 
 const pillClass = { walk:'pill-walk', run:'pill-run', hike:'pill-hike', cycle:'pill-cycle', longrun:'pill-longrun' };
 const pillLabel = { walk:'Walk', run:'Run', hike:'Hike', cycle:'Cycle', longrun:'Long run' };
+const actLabel  = { walk:'Rest + walk', run:'Midweek run', hike:'Hike', cycle:'Cycling', longrun:'Long run' };
 const barCol    = { walk:'#888780', run:'#185fa5', hike:'#ef9f27', cycle:'#3b6d11', longrun:'#7f77dd' };
 const barColors = ['#378add','#1d9e75','#ba7517','#534ab7'];
 const maxK = 3200;
 
-// ── DATE LOGIC ────────────────────────────────────────────────────────────
+// ── DATE HELPERS ─────────────────────────────────────────────────────────
 const today = new Date(); today.setHours(0,0,0,0);
 const DAY_NAMES   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -323,12 +392,12 @@ function getDefaultPhase() {
 
 function getDefaultDay() {
   const j = today.getDay(); // 0=Sun
-  return j === 0 ? 6 : j - 1; // Mon=0 … Sun=6
+  return j === 0 ? 6 : j - 1; // Mon=0…Sun=6
 }
 
+const todayDayIndex = getDefaultDay();
 let ap = getDefaultPhase();
-let ad = getDefaultDay();
-let chartInst = null;
+let ad = todayDayIndex;
 
 // ── RENDER ────────────────────────────────────────────────────────────────
 document.getElementById('headerDate').textContent = formatDate(today);
@@ -336,37 +405,46 @@ document.getElementById('headerDate').textContent = formatDate(today);
 function render() {
   const p = phases[ap];
 
-  document.getElementById('headerPhaseBadge').textContent = p.label + ' · ' + p.sub;
+  // Header badge
+  document.getElementById('headerPhaseBadge').textContent = p.label;
 
-  document.getElementById('phaseTabs').innerHTML = phases.map((x, i) =>
-    `<button class="tab ${i===ap?'active':''}" onclick="ap=${i};render()">${x.label}</button>`
-  ).join('');
+  // Today hero — always shows today's day, not the selected day
+  const td = days[todayDayIndex];
+  const tk = p.kcals[todayDayIndex];
+  document.getElementById('todayHero').innerHTML = `
+    <div class="today-left">
+      <div class="today-label">Today's session</div>
+      <div class="today-activity">${td.act1}</div>
+      <div class="today-sub">${td.act2}</div>
+      <span class="today-pill ${pillClass[td.type]}">${pillLabel[td.type]}</span>
+    </div>
+    <div class="today-right">
+      <div class="today-kcal">${tk.toLocaleString()}</div>
+      <div class="today-kcal-lbl">kcal today</div>
+    </div>`;
 
-  document.getElementById('phaseMeta').innerHTML = `
-    <div class="mc"><div class="mc-lbl">Avg daily</div><div class="mc-val">${p.avg.toLocaleString()}</div><div class="mc-sub">kcal</div></div>
-    <div class="mc"><div class="mc-lbl">Rest day</div><div class="mc-val">${p.kcals[0].toLocaleString()}</div><div class="mc-sub">deficit anchor</div></div>
-    <div class="mc"><div class="mc-lbl">Long run</div><div class="mc-val">${p.kcals[6].toLocaleString()}</div><div class="mc-sub">peak day</div></div>
-    <div class="mc"><div class="mc-lbl">Range</div><div class="mc-val">${Math.min(...p.kcals).toLocaleString()}–${Math.max(...p.kcals).toLocaleString()}</div><div class="mc-sub">kcal/day</div></div>`;
-
+  // Day strip
   document.getElementById('dayGrid').innerHTML = days.map((d, i) => {
     const k = p.kcals[i], pct = Math.round(k / maxK * 100);
     return `<div class="day-card ${i===ad?'sel':''}" onclick="ad=${i};render()">
       <div class="day-name">${d.name}</div>
-      <span class="day-pill ${pillClass[d.type]}">${pillLabel[d.type]}</span>
+      <span class="day-pill-sm ${pillClass[d.type]}">${pillLabel[d.type]}</span>
       <div class="day-act">${d.act1}<br>${d.act2}</div>
       <div class="day-kcal">${k.toLocaleString()}</div>
       <div class="cal-bar-wrap"><div class="cal-bar-bg"><div class="cal-bar-fill" style="width:${pct}%;background:${barCol[d.type]}"></div></div></div>
     </div>`;
   }).join('');
 
-  // Scroll selected card into view on mobile
+  // Auto-scroll selected into view
   setTimeout(() => {
     const sel = document.querySelector('.day-card.sel');
     if (sel) sel.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }, 60);
 
+  // Detail panel
   const d = days[ad], m = p.meals[ad], tot = m.b + m.l + m.s + m.d + m.r;
   const segs = [m.b, m.l, m.s, m.d + m.r];
+  const isToday = (ad === todayDayIndex);
 
   const alcHTML = d.alcSlot
     ? `<div class="extra-tile alcohol"><div class="mt-lbl">Zum Wohl</div><div class="mt-kcal">~200–300 kcal</div><div class="mt-desc">${d.alcNote}</div></div>`
@@ -379,7 +457,10 @@ function render() {
   document.getElementById('detailPanel').innerHTML = `
     <div class="detail-outer">
       <div class="detail-head">
-        <div><div class="dh-day">${d.full}</div><div class="dh-act">${d.act1} · ${d.act2}</div></div>
+        <div>
+          <div class="dh-day">${d.full}${isToday?' <span style="font-size:10px;font-weight:500;color:#888;margin-left:4px;">· today</span>':''}</div>
+          <div class="dh-act">${d.act1} · ${d.act2}</div>
+        </div>
         <div class="dh-right"><div class="dh-kcal">${tot.toLocaleString()}</div><div class="dh-lbl">kcal target</div></div>
       </div>
       <div class="meal-grid">
@@ -399,6 +480,28 @@ function render() {
       </div>
     </div>`;
 
+  // Phase block
+  document.getElementById('phaseBlock').innerHTML = `
+    <div class="phase-block-header">
+      <div>
+        <div class="phase-block-title">${p.label}</div>
+        <div class="phase-block-sub">${p.sub}</div>
+      </div>
+      <div class="phase-block-avg">
+        <div class="phase-block-avg-val">${p.avg.toLocaleString()}</div>
+        <div class="phase-block-avg-lbl">avg kcal/day</div>
+      </div>
+    </div>
+    <div class="phase-nums">
+      <div class="phase-num"><div class="phase-num-lbl">Mon rest</div><div class="phase-num-val">${p.kcals[0].toLocaleString()}</div><div class="phase-num-sub">deficit anchor</div></div>
+      <div class="phase-num"><div class="phase-num-lbl">Run days</div><div class="phase-num-val">${p.kcals[1].toLocaleString()}</div><div class="phase-num-sub">Tue & Thu</div></div>
+      <div class="phase-num"><div class="phase-num-lbl">Sun long run</div><div class="phase-num-val">${p.kcals[6].toLocaleString()}</div><div class="phase-num-sub">peak day</div></div>
+    </div>
+    <div class="phase-desc">${p.desc}</div>
+    <div class="sec-lbl" style="margin-bottom:6px">Switch phase</div>
+    <div class="phase-tabs">${phases.map((x,i)=>`<button class="tab ${i===ap?'active':''}" onclick="ap=${i};render()">${x.label}</button>`).join('')}</div>`;
+
+  // Principles
   document.getElementById('principles').innerHTML = [
     'Monday is the deficit anchor — lowest calories, always',
     'Belly fat = cortisol/under-fuelling. Fix: eat more on hard days, not less',
@@ -407,40 +510,9 @@ function render() {
     'Peanut butter scales: 15g rest → 20g run → 25g cycle/hike → 30g long run',
     'Zum Wohl slots: Friday eve + Sunday eve only. Saturday night fully protected'
   ].map(t => `<div class="p-item">${t}</div>`).join('');
-
-  renderChart(p);
 }
 
-function renderChart(p) {
-  const canvas = document.getElementById('weekChart');
-  if (!canvas || typeof Chart === 'undefined') return;
-  if (chartInst) { chartInst.destroy(); chartInst = null; }
-  chartInst = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: days.map(d => d.name),
-      datasets: [{ data: p.kcals, backgroundColor: days.map((_,i) => i===ad ? '#185fa5' : '#c8dff5'), borderRadius: 5, borderSkipped: false }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.raw.toLocaleString()} kcal` } } },
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 10, family: 'Inter, sans-serif' }, color: '#888' } },
-        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 10, family: 'Inter, sans-serif' }, color: '#888' }, min: 1400, max: maxK }
-      },
-      onClick: (_, els) => { if (els[0]) { ad = els[0].index; render(); } }
-    }
-  });
-}
-
-// Load Chart.js then kick off first render
-(function () {
-  const s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
-  s.onload = () => render();
-  s.onerror = () => { render(); const cs = document.querySelector('.chart-section'); if (cs) cs.style.display = 'none'; };
-  document.head.appendChild(s);
-})();
+render();
 </script>
 </body>
 </html>
