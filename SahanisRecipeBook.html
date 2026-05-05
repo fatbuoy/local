@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sahani's Recipe Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6f0;
+    --paper: #f2ebe0;
+    --ink: #1a1208;
+    --spice: #b8490a;
+    --turmeric: #e8a020;
+    --sage: #6b7c5c;
+    --cardamom: #8b6f47;
+    --border: #d4c4a8;
+    --shadow: rgba(26,18,8,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--spice);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--turmeric); font-style: italic; }
+
+  .recipe-count {
+    font-size: 0.78rem;
+    color: var(--border);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* FILTERS BAR */
+  .filters-bar {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.4;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 9px 12px 9px 36px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--spice); }
+
+  select {
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b6f47' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+  select:focus { border-color: var(--spice); }
+
+  .filter-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cardamom);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .clear-btn {
+    padding: 9px 16px;
+    border: 1.5px solid var(--spice);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--spice);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .clear-btn:hover { background: var(--spice); color: white; }
+
+  /* MAIN GRID */
+  .main {
+    padding: 32px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .results-info {
+    font-size: 0.8rem;
+    color: var(--cardamom);
+    margin-bottom: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  /* RECIPE CARD */
+  .recipe-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.35s ease both;
+  }
+  .recipe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px var(--shadow);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+    background: var(--paper);
+  }
+  .card-img-placeholder {
+    width: 100%;
+    height: 160px;
+    background: linear-gradient(135deg, var(--paper) 0%, var(--border) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+
+  .card-body {
+    padding: 14px 16px 16px;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .tag-cuisine { background: var(--spice); color: white; }
+  .tag-sub { background: var(--paper); color: var(--cardamom); border: 1px solid var(--border); }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.02rem;
+    line-height: 1.35;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  .card-macros {
+    display: flex;
+    gap: 10px;
+    font-size: 0.73rem;
+    color: var(--cardamom);
+  }
+  .macro-item { display: flex; flex-direction: column; align-items: center; }
+  .macro-val { font-weight: 600; color: var(--spice); font-size: 0.88rem; }
+  .macro-lbl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1px; }
+
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--cardamom);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,8,0.6);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--cream);
+    border-radius: 14px;
+    max-width: 760px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.25s;
+    position: relative;
+  }
+  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 34px;
+    height: 34px;
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--spice); }
+
+  .modal-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+    border-radius: 14px 14px 0 0;
+  }
+  .modal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.4s;
+  }
+  .modal-img:hover { transform: scale(1.04); }
+
+  .modal-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--paper) 0%, var(--border) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+  }
+
+  .img-link-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(26,18,8,0.75);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .modal-img-wrap:hover .img-link-hint { opacity: 1; }
+
+  .modal-body {
+    padding: 24px 30px 32px;
+  }
+
+  .modal-header-tags { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .modal-meta {
+    font-size: 0.8rem;
+    color: var(--cardamom);
+    margin-bottom: 20px;
+  }
+
+  /* Nutrition panel */
+  .nutrition-panel {
+    background: var(--ink);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+    color: var(--cream);
+  }
+
+  .nutrition-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--border);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .nutrition-main {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 14px;
+  }
+
+  .cal-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    color: var(--turmeric);
+    line-height: 1;
+  }
+  .cal-label { font-size: 0.72rem; color: var(--border); margin-top: 2px; }
+
+  .nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  .nut-item { text-align: center; }
+  .nut-val { font-size: 1.05rem; font-weight: 500; color: var(--cream); }
+  .nut-lbl { font-size: 0.65rem; color: var(--border); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+
+  /* Ingredients section */
+  .ing-section-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cardamom);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .ing-categories { display: flex; flex-direction: column; gap: 16px; }
+
+  .ing-category {
+    border-left: 3px solid var(--turmeric);
+    padding-left: 14px;
+  }
+
+  .ing-cat-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--spice);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .ing-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+
+  .ing-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 0.88rem;
+    padding: 3px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .ing-row:last-child { border-bottom: none; }
+
+  .ing-qty {
+    min-width: 60px;
+    font-weight: 600;
+    color: var(--spice);
+    font-size: 0.82rem;
+  }
+  .ing-name { color: var(--ink); flex: 1; }
+
+  .no-ings {
+    font-style: italic;
+    color: var(--cardamom);
+    font-size: 0.88rem;
+  }
+
+  /* Category color accents */
+  .ing-category:nth-child(2) { border-color: var(--sage); }
+  .ing-category:nth-child(2) .ing-cat-name { color: var(--sage); }
+  .ing-category:nth-child(3) { border-color: var(--cardamom); }
+  .ing-category:nth-child(3) .ing-cat-name { color: var(--cardamom); }
+  .ing-category:nth-child(4) { border-color: #c04a8a; }
+  .ing-category:nth-child(4) .ing-cat-name { color: #c04a8a; }
+  .ing-category:nth-child(5) { border-color: #3a7abf; }
+  .ing-category:nth-child(5) .ing-cat-name { color: #3a7abf; }
+  .ing-category:nth-child(6) { border-color: #5a9e57; }
+  .ing-category:nth-child(6) .ing-cat-name { color: #5a9e57; }
+
+  @media (max-width: 768px) {
+    header, .filters-bar, .main { padding-left: 20px; padding-right: 20px; }
+    .nutrition-grid { grid-template-columns: repeat(2, 1fr); }
+    .modal-title { font-size: 1.4rem; }
+    .cal-big { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Sahani's <span>Recipe Book</span></div>
+  <div class="recipe-count" id="headerCount"></div>
+</header>
+
+<div class="filters-bar">
+  <span class="filter-label">Filter</span>
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="5" stroke="#1a1208" stroke-width="1.5"/><line x1="10" y1="10" x2="13" y2="13" stroke="#1a1208" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input type="text" id="searchInput" placeholder="Search dishes or ingredients…">
+  </div>
+  <select id="cuisineFilter">
+    <option value="">All Cuisines</option>
+  </select>
+  <select id="subCatFilter">
+    <option value="">All Categories</option>
+  </select>
+  <button class="clear-btn" id="clearBtn">Clear</button>
+</div>
+
+<div class="main">
+  <div class="results-info" id="resultsInfo"></div>
+  <div class="grid" id="recipeGrid"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-img-wrap" id="modalImgWrap"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const PLACEHOLDER = 'https://www.myfitnesspal.com/images/recipe_image_placeholder.png';
+
+const recipes = [
+  {id:1,cuisine:"Indian",sub:"Sabzi",name:"Tindora/Kovakkai Fry",servings:4,cal:91,fat:4,satFat:0,chol:0,sodium:440,potassium:21,carb:3,fiber:5,sugar:0,protein:6,img:"https://www.vegrecipesofindia.com/wp-content/uploads/2017/07/tendli-fry-recipe-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/160011078512173"},
+  {id:2,cuisine:"Indian",sub:"Curry",name:"Aaloo Mattar",servings:4,cal:144,fat:2,satFat:0,chol:0,sodium:444,potassium:752,carb:18,fiber:7,sugar:5,protein:7,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/168508394499693"},
+  {id:3,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Negroni Sbagliato",servings:1,cal:174,fat:0,satFat:0,chol:0,sodium:7,potassium:0,carb:12,fiber:0,sugar:10,protein:0,img:"http://www.campari.com/sites/default/files/2020-02/SBAGLIATO.jpg",link:"https://www.myfitnesspal.com/recipe/view/234227965529645"},
+  {id:4,cuisine:"Indian",sub:"Sabzi",name:"Sabzi - Karela",servings:4,cal:92,fat:4,satFat:0,chol:0,sodium:589,potassium:27,carb:4,fiber:5,sugar:2,protein:2,img:"https://www.vegrecipesofindia.com/wp-content/uploads/2010/08/karela-sabji-recipe-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/269670157159549"},
+  {id:5,cuisine:"Indian",sub:"Sabzi",name:"Arbi Sabzi",servings:6,cal:213,fat:3,satFat:0,chol:0,sodium:523,potassium:1019,carb:37,fiber:7,sugar:2,protein:3,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/230493646499629"},
+  {id:6,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Spritz Al Bitter (Spritz Veneziano)",servings:1,cal:133,fat:0,satFat:0,chol:0,sodium:8,potassium:0,carb:11,fiber:0,sugar:0,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3140967a12.jpg",link:"https://www.myfitnesspal.com/recipe/view/269824764661677"},
+  {id:7,cuisine:"Indian",sub:"Curry",name:"Ottolenghi Stuffed Aubergines in Curry & Coconut Dal",servings:6,cal:287,fat:13,satFat:4,chol:0,sodium:790,potassium:838,carb:19,fiber:8,sugar:8,protein:16,img:"https://thehappyfoodie.co.uk/wp-content/uploads/2021/08/ottolenghi-flavour-stuffed-curried-aubergines-8874e277-d6d7-4308-91e1-551e8e814779_s900x0_c2737x1598_l0x1528.jpg",link:"https://www.myfitnesspal.com/recipe/view/164821261528301"},
+  {id:8,cuisine:"Indian",sub:"Dal",name:"Brinjal Sambar",servings:8,cal:138,fat:2,satFat:0,chol:0,sodium:329,potassium:49,carb:14,fiber:7,sugar:3,protein:8,img:"https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2013/08/brinjal-sambar-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/279018132729645"},
+  {id:9,cuisine:"Indian",sub:"Dal",name:"Dal - Chana",servings:3,cal:173,fat:4,satFat:0,chol:0,sodium:386,potassium:53,carb:21,fiber:5,sugar:1,protein:9,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/278322105732349"},
+  {id:10,cuisine:"Indian",sub:"Sabzi",name:"Aloo Gajar",servings:5,cal:83,fat:2,satFat:0,chol:0,sodium:112,potassium:349,carb:10,fiber:5,sugar:3,protein:2,img:"https://aplateofhappiness.files.wordpress.com/2018/01/img_5679.jpg?w=1200",link:"https://www.myfitnesspal.com/recipe/view/265555449605293"},
+  {id:11,cuisine:"Indian",sub:"Curry",name:"South Indian Mushroom Peas Curry",servings:6,cal:127,fat:7,satFat:0,chol:0,sodium:408,potassium:454,carb:7,fiber:4,sugar:5,protein:6,img:"https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2012/12/south-indian-mushroom-peas-curry-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/273932803329085"},
+  {id:12,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Jaeger Old Fashioned",servings:1,cal:144,fat:0,satFat:0,chol:0,sodium:1,potassium:2,carb:8,fiber:0,sugar:7,protein:0,img:"https://www.liquor.com/thmb/LRkzlqIRhJNO1pFBZHnbwEF22pM=/1200x628/filters:fill(auto,1)/jagermeister-old-fashioned-1200x628-email-153e672e61c0430d998497685ecccdce.jpg",link:"https://www.myfitnesspal.com/recipe/view/172769265257901"},
+  {id:13,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Hunter's Verdict",servings:1,cal:177,fat:0,satFat:0,chol:0,sodium:13,potassium:0,carb:16,fiber:0,sugar:4,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2020/07/5f17f9f4abfbd.jpg",link:"https://www.myfitnesspal.com/recipe/view/278474866486509"},
+  {id:14,cuisine:"Indian",sub:"Dal",name:"Dal - Maash Chole",servings:2,cal:165,fat:5,satFat:2,chol:10,sodium:633,potassium:247,carb:19,fiber:3,sugar:2,protein:8,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/172930314964013"},
+  {id:15,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: The Right Hand",servings:1,cal:180,fat:0,satFat:0,chol:0,sodium:12,potassium:0,carb:6,fiber:0,sugar:6,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af31667b43b8.jpg",link:"https://www.myfitnesspal.com/recipe/view/208666439372461"},
+  {id:16,cuisine:"Indian",sub:"Sabzi",name:"Sarson ka Saag",servings:4,cal:127,fat:4,satFat:0,chol:0,sodium:654,potassium:841,carb:14,fiber:6,sugar:5,protein:5,img:"https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2018/12/sarson-ka-saag-1b.jpg",link:"https://www.myfitnesspal.com/recipe/view/159712430444221"},
+  {id:17,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Cynar Rum Negroni",servings:1,cal:129,fat:0,satFat:0,chol:0,sodium:8,potassium:0,carb:4,fiber:0,sugar:3,protein:0,img:"https://www.cheersmrforbes.com/wp-content/uploads/2020/07/cynar-rum-negroni.jpg",link:"https://www.myfitnesspal.com/recipe/view/173608949206189"},
+  {id:18,cuisine:"Indian",sub:"Sabzi",name:"Shlalgam Bharta",servings:8,cal:87,fat:2,satFat:0,chol:0,sodium:686,potassium:424,carb:10,fiber:5,sugar:9,protein:3,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/204122409938285"},
+  {id:19,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Rum-Pyaari",servings:2,cal:159,fat:0,satFat:7,chol:0,sodium:19,potassium:0,carb:9,fiber:0,sugar:9,protein:0,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/234356827180845"},
+  {id:20,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Bitter Jean",servings:1,cal:203,fat:0,satFat:0,chol:0,sodium:0,potassium:0,carb:13,fiber:0,sugar:11,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af2fd33ba771.jpg",link:"https://www.myfitnesspal.com/recipe/view/238765565857213"},
+  {id:21,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Fogerty",servings:1,cal:171,fat:0,satFat:0,chol:0,sodium:0,potassium:0,carb:6,fiber:0,sugar:6,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3040550669.jpg",link:"https://www.myfitnesspal.com/recipe/view/168944455159613"},
+  {id:22,cuisine:"Sri Lankan",sub:"Curry",name:"Kolamba's Polos (Young Jackfruit Curry)",servings:4,cal:228,fat:10,satFat:4,chol:0,sodium:762,potassium:635,carb:24,fiber:7,sugar:6,protein:4,img:"https://images.immediate.co.uk/production/volatile/sites/2/2020/01/Sri-Lankan-Jackfruit-Curry-Recipe-57324e7-scaled.jpg",link:"https://www.myfitnesspal.com/recipe/view/270374519229949"},
+  {id:23,cuisine:"Indian",sub:"Side",name:"Onion Pakora",servings:8,cal:76,fat:4,satFat:0,chol:0,sodium:166,potassium:0,carb:5,fiber:1,sugar:0,protein:2,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/203441619930989"},
+  {id:24,cuisine:"Indian",sub:"Side",name:"Potato Masala (for Dosa)",servings:8,cal:60,fat:1,satFat:0,chol:0,sodium:297,potassium:246,carb:8,fiber:2,sugar:1,protein:2,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/243831504047405"},
+  {id:25,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: The Dirty Martini",servings:1,cal:162,fat:1,satFat:0,chol:0,sodium:614,potassium:14,carb:35,fiber:0,sugar:1,protein:0,img:"https://www.liquor.com/thmb/YKhHonymFvZ5embNJkKh0nf7qoM=/720x720/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__liquor__2011__04__15150034__dirty-martini-720x720-recipe-7127449167d548c981c6103fd60f49b0.jpg",link:"https://www.myfitnesspal.com/recipe/view/265952896708141"},
+  {id:26,cuisine:"Indian",sub:"Sabzi",name:"Bombay Pav Bhaji",servings:4,cal:174,fat:7,satFat:2,chol:8,sodium:770,potassium:738,carb:17,fiber:7,sugar:8,protein:7,img:"https://lh4.googleusercontent.com/proxy/rGSZ3AmNjYIaKb_LYNbvBH27yYYESJhBo4pgfxF-vD6w40n-NWcmAQ6AmRoU0b3vKDnGm5WYRGqmi_KgR_w6HozURWMF-zyYDaii9-QC8OPgF4w=w1200-h630-p-k-no-nu",link:"https://www.myfitnesspal.com/recipe/view/230519240199725"},
+  {id:27,cuisine:"Mexican",sub:"",name:"Corn Tacos",servings:4,cal:129,fat:5,satFat:1,chol:0,sodium:73,potassium:0,carb:22,fiber:0,sugar:0,protein:2,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/203845355252973"},
+  {id:28,cuisine:"Indian",sub:"Rice",name:"Vangi Bath",servings:4,cal:342,fat:8,satFat:1,chol:0,sodium:589,potassium:59,carb:51,fiber:5,sugar:3,protein:9,img:"https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2018/12/vangi-bhath-recipe-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/207813912489005"},
+  {id:29,cuisine:"Western",sub:"Side",name:"Chipppppies",servings:2,cal:168,fat:3,satFat:0,chol:0,sodium:607,potassium:1033,carb:25,fiber:6,sugar:0,protein:7,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/238602507186157"},
+  {id:30,cuisine:"Indian",sub:"Sabzi",name:"Bhindi",servings:4,cal:114,fat:5,satFat:1,chol:0,sodium:444,potassium:162,carb:2,fiber:9,sugar:8,protein:6,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/163996815462013"},
+  {id:31,cuisine:"Indian",sub:"Rice",name:"Kathal Biryani",servings:4,cal:370,fat:13,satFat:2,chol:0,sodium:869,potassium:717,carb:43,fiber:8,sugar:5,protein:9,img:"https://rakskitchen.net/wp-content/uploads/2016/12/unripe-jackfruit-biryani.jpg",link:"https://www.myfitnesspal.com/recipe/view/173336050912317"},
+  {id:32,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Pimms & Ginger",servings:6,cal:74,fat:0,satFat:0,chol:0,sodium:1,potassium:0,carb:4,fiber:1,sugar:1,protein:0,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/278474824453437"},
+  {id:33,cuisine:"Indian",sub:"Sabzi",name:"Lauki Chana Dal",servings:4,cal:136,fat:3,satFat:1,chol:0,sodium:736,potassium:179,carb:7,fiber:9,sugar:3,protein:6,img:"https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2019/03/lauki-chana-dal-recipe-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/278468418776109"},
+  {id:34,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Cucumber Martini",servings:1,cal:180,fat:0,satFat:0,chol:0,sodium:1,potassium:38,carb:9,fiber:0,sugar:8,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af300f047d95.jpg",link:"https://www.myfitnesspal.com/recipe/view/207839683276605"},
+  {id:35,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Daiquiri No.1 Natural",servings:1,cal:177,fat:0,satFat:0,chol:0,sodium:0,potassium:0,carb:9,fiber:0,sugar:0,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3010f8bb4c.jpg",link:"https://www.myfitnesspal.com/recipe/view/278476875467885"},
+  {id:36,cuisine:"Asian",sub:"Curry",name:"Tempeh Green Beans Curry",servings:6,cal:248,fat:17,satFat:12,chol:0,sodium:486,potassium:278,carb:7,fiber:6,sugar:7,protein:10,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/199861776272573"},
+  {id:37,cuisine:"Indian",sub:"Side",name:"Boondi Raita",servings:2,cal:150,fat:8,satFat:2,chol:0,sodium:117,potassium:9,carb:12,fiber:0,sugar:5,protein:6,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/159600741363261"},
+  {id:38,cuisine:"Indian",sub:"Sabzi",name:"Cabbage Upkari",servings:6,cal:129,fat:4,satFat:0,chol:0,sodium:726,potassium:212,carb:8,fiber:7,sugar:7,protein:7,img:"https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2011/09/cabbage-chana-dal-recipe-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/238885870193773"},
+  {id:39,cuisine:"Indian",sub:"Rice",name:"Khichadi - Moong Chilka",servings:4,cal:364,fat:3,satFat:0,chol:0,sodium:570,potassium:77,carb:66,fiber:4,sugar:3,protein:14,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/243275172450285"},
+  {id:42,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: London Calling",servings:1,cal:166,fat:0,satFat:0,chol:0,sodium:1,potassium:24,carb:9,fiber:0,sugar:5,protein:0,img:"http://kuletos.com.au/cocktails/images/cocktails/cocktails-saucer-pink.png",link:"https://www.myfitnesspal.com/recipe/view/199569735331133"},
+  {id:43,cuisine:"Western",sub:"Dessert",name:"Lotus Custard Crumb",servings:1,cal:135,fat:8,satFat:5,chol:0,sodium:28,potassium:0,carb:13,fiber:0,sugar:9,protein:2,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/159446268243453"},
+  {id:44,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Prohibition",servings:1,cal:230,fat:0,satFat:0,chol:0,sodium:2,potassium:36,carb:10,fiber:0,sugar:9,protein:0,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/159985139805309"},
+  {id:45,cuisine:"Indian",sub:"Sabzi",name:"Kadai Paneer (Restaurant Style)",servings:4,cal:176,fat:8,satFat:3,chol:1,sodium:615,potassium:402,carb:11,fiber:3,sugar:7,protein:15,img:"https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2018/12/kadai-paneer-recipe-1.jpg",link:"https://www.myfitnesspal.com/recipe/view/199035125116733"},
+  {id:46,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Bourbon Old Fashioned",servings:1,cal:142,fat:0,satFat:0,chol:0,sodium:0,potassium:0,carb:4,fiber:0,sugar:4,protein:0,img:"https://www.liquor.com/thmb/lavmUGaMMriZPSxfHsPnyK15bSY=/720x720/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__liquor__2018__05__08113350__bourbon-old-fashioned-720x720-recipe-ade6f7780c304999be3577e565c9bcdd.jpg",link:"https://www.myfitnesspal.com/recipe/view/199312129551533"},
+  {id:48,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: Moscow Mule",servings:1,cal:182,fat:0,satFat:0,chol:0,sodium:16,potassium:0,carb:16,fiber:0,sugar:16,protein:0,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/164531484315197"},
+  {id:49,cuisine:"Cocktails",sub:"Drinks",name:"Aperol Spritz",servings:1,cal:202,fat:0,satFat:0,chol:0,sodium:23,potassium:73,carb:5,fiber:0,sugar:5,protein:0,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/195609913929261"},
+  {id:51,cuisine:"Indian",sub:"Snacks",name:"Masala Papad",servings:1,cal:48,fat:0,satFat:0,chol:0,sodium:3,potassium:131,carb:8,fiber:1,sugar:2,protein:1,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/164383198834621"},
+  {id:52,cuisine:"Indian",sub:"Sabzi",name:"Karela Fry",servings:4,cal:145,fat:11,satFat:1,chol:0,sodium:1184,potassium:269,carb:8,fiber:2,sugar:2,protein:1,img:"https://www.vegrecipesofindia.com/wp-content/uploads/2013/06/karela-sabzi-recipe-1a.jpg",link:"https://www.myfitnesspal.com/recipe/view/164658198351037"},
+  {id:53,cuisine:"Cocktails",sub:"Drinks",name:"Cocktail: M and M",servings:1,cal:158,fat:0,satFat:0,chol:0,sodium:0,potassium:0,carb:22,fiber:0,sugar:0,protein:0,img:"https://cdn.diffords.com/contrib/stock-images/2020/08/5f2d18b47e65e.jpg",link:"https://www.myfitnesspal.com/recipe/view/169212886625709"},
+  {id:54,cuisine:"Indian",sub:"Rice",name:"Biryani",servings:6,cal:299,fat:6,satFat:2,chol:0,sodium:688,potassium:326,carb:43,fiber:7,sugar:8,protein:8,img:PLACEHOLDER,link:"https://www.myfitnesspal.com/recipe/view/278740747611325"},
+];
+
+const ingredients = {
+  1:[{cat:"Spices (Powder)",qty:"0.17 g",name:"Garam Masala Powder"},{cat:"Vegetables",qty:"630 g",name:"Ivy Gourd/Tindora/Tinda"},{cat:"Spices (Powder)",qty:"3 g",name:"Amchur Powder - Dry Mango Powder"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Turmeric Powder"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Fennel Seed"},{cat:"Spices (Powder)",qty:"0.06 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Fresh Aromatics",qty:"2 tbsp",name:"Cilantro"},{cat:"Oils/Fats",qty:"3 tsp",name:"Rapeseed Oil"},{cat:"Spices (Powder)",qty:"0.33 g",name:"Coriander Cumin Powder"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Cumin"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Organic Kashmiri Chilli Powder"},{cat:"Salt/Seasonings",qty:"0.75 tsp",name:"Salt"}],
+  2:[{cat:"Vegetables",qty:"200 g",name:"Garden Peas"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Garam Masala"},{cat:"Vegetables",qty:"0.2 kg",name:"Tomatoes"},{cat:"Vegetables",qty:"7.5 g",name:"Green Chillies"},{cat:"Vegetables",qty:"100 g",name:"Onion"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Ground Turmeric"},{cat:"Fresh Aromatics",qty:"15 g",name:"Fresh Ginger"},{cat:"Oils/Fats",qty:"1 tsp",name:"Rapeseed Oil"},{cat:"Vegetables",qty:"0.49 kg",name:"Potato"},{cat:"Fresh Aromatics",qty:"3 clove",name:"Garlic"},{cat:"Salt/Seasonings",qty:"0.75 tsp",name:"Salt"}],
+  3:[{cat:"Alcohol/Cocktail",qty:"25 ml",name:"Sweet Vermouth"},{cat:"Alcohol/Cocktail",qty:"100 ml",name:"Prosecco"},{cat:"Alcohol/Cocktail",qty:"25 ml",name:"Campari"}],
+  4:[{cat:"Vegetables",qty:"400 g",name:"Karela"},{cat:"Vegetables",qty:"200 g",name:"Large Onions"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Garam Masala Spice - Powder"},{cat:"Spices (Powder)",qty:"5 g",name:"Turmeric Powder"},{cat:"Spices (Powder)",qty:"2 g",name:"Kashmiri Chilly Powder"},{cat:"Oils/Fats",qty:"1 tbsp",name:"Oil, Mustard"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Amchur Powder - Dry Mango Powder"},{cat:"Fresh Aromatics",qty:"4 clove",name:"Garlic"}],
+  5:[{cat:"Salt/Seasonings",qty:"1.25 tsp",name:"Salt"},{cat:"Vegetables",qty:"220 g",name:"Onion"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Whole Cumin Seeds"},{cat:"Vegetables",qty:"900 g",name:"Arbi"},{cat:"Oils/Fats",qty:"3 tsp",name:"Oil, Mustard"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Chilli Powder"},{cat:"Spices (Powder)",qty:"5 g",name:"Coriander Cumin Powder"},{cat:"Vegetables",qty:"200 g",name:"Tomatoes"},{cat:"Vegetables",qty:"5 g",name:"Green Chillies"}],
+  6:[{cat:"Alcohol/Cocktail",qty:"60 ml",name:"Brut Cava"},{cat:"Liquids",qty:"35 ml",name:"Club Soda"},{cat:"Alcohol/Cocktail",qty:"40 ml",name:"Apéritif"}],
+  7:[{cat:"Fresh Aromatics",qty:"45 g",name:"Fresh Ginger"},{cat:"Fresh Aromatics",qty:"1 sprig",name:"Curry Leaves"},{cat:"Spices (Powder)",qty:"5 g",name:"Coriander"},{cat:"Oils/Fats",qty:"1.5 tbsp",name:"Olive Oil"},{cat:"Citrus/Acid",qty:"2 lime yields",name:"Lime Juice"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Ground Coriander"},{cat:"Salt/Seasonings",qty:"2 tsp",name:"Tomato Paste"},{cat:"Legumes/Dals",qty:"100 g",name:"Red Lentils"},{cat:"Salt/Seasonings",qty:"45 g",name:"Hot Mango Pickle"},{cat:"Nuts/Coconut",qty:"400 ml",name:"Unsweetened Coconut Milk"},{cat:"Fresh Aromatics",qty:"7.5 tbsp chopped",name:"Shallots"},{cat:"Spices (Powder)",qty:"2 tsp",name:"Curry Powder"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Black Mustard Seeds"},{cat:"Vegetables",qty:"100 g",name:"Baby Spinach"},{cat:"Dairy",qty:"225 g",name:"Paneer"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Ground Turmeric"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Ground Cumin"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Vegetables",qty:"750 g",name:"Aubergine"},{cat:"Vegetables",qty:"5 g",name:"Red Chillies"}],
+  8:[{cat:"Fresh Aromatics",qty:"1 sprig",name:"Curry Leaves"},{cat:"Spices (Powder)",qty:"5 g",name:"Madras Sambar Powder"},{cat:"Liquids",qty:"2.5 cup",name:"Water"},{cat:"Oils/Fats",qty:"1 tbsp",name:"Rapeseed Oil"},{cat:"Spices (Whole/Seeds)",qty:"1 g",name:"Whole Dried Chilies"},{cat:"Legumes/Dals",qty:"222 g",name:"Toor Dal"},{cat:"Vegetables",qty:"350 g",name:"Baby Aubergines"},{cat:"Spices (Whole/Seeds)",qty:"2 tsp",name:"Wet Seedless Tamarind"},{cat:"Spices (Powder)",qty:"0.06 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Vegetables",qty:"100 g",name:"Onion"},{cat:"Spices (Whole/Seeds)",qty:"0.75 tsp",name:"Black Mustard Seeds"},{cat:"Legumes/Dals",qty:"5 g",name:"Bengal Gram (Dal)"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Turmeric Powder"},{cat:"Vegetables",qty:"90 g",name:"Tomatoes"}],
+  9:[{cat:"Spices (Powder)",qty:"1 tsp",name:"Coriander, Ground"},{cat:"Fresh Aromatics",qty:"3 clove",name:"Garlic"},{cat:"Spices (Powder)",qty:"2 g",name:"Hing"},{cat:"Legumes/Dals",qty:"130 g",name:"Chana Dal"},{cat:"Vegetables",qty:"2 g",name:"Medium Green Chillies"},{cat:"Oils/Fats",qty:"1 tsp",name:"Oil, Mustard"},{cat:"Spices (Whole/Seeds)",qty:"0.5 tsp",name:"Cumin Seed"},{cat:"Vegetables",qty:"70 g",name:"Red Onions"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Ground Turmeric"},{cat:"Salt/Seasonings",qty:"0.5 tsp",name:"Salt"}],
+  10:[{cat:"Oils/Fats",qty:"1.5 tsp",name:"Rapeseed Oil"},{cat:"Spices (Powder)",qty:"0.25 tsp",name:"Red Chilli Powder"},{cat:"Vegetables",qty:"1 medium",name:"Potato"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Turmeric Powder"},{cat:"Vegetables",qty:"500 g",name:"Carrot"},{cat:"Vegetables",qty:"5 g",name:"Fresh Green Chilli"},{cat:"Spices (Powder)",qty:"0.33 g",name:"Coriander Cumin Powder"},{cat:"Vegetables",qty:"42 g",name:"White Onion"},{cat:"Salt/Seasonings",qty:"1 g",name:"Salt"}],
+  11:[{cat:"Vegetables",qty:"100 g",name:"Onion"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Turmeric Powder"},{cat:"Legumes/Dals",qty:"5 g",name:"Urad Dal"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Garam Masala Powder"},{cat:"Oils/Fats",qty:"3 tsp",name:"Rapeseed Oil"},{cat:"Vegetables",qty:"600 g",name:"Closed Cup Mushrooms"},{cat:"Nuts/Coconut",qty:"50 g",name:"Shredded Coconut"},{cat:"Spices (Powder)",qty:"2 g",name:"Red Chilli Powder"},{cat:"Nuts/Coconut",qty:"8 pieces",name:"Cashews"},{cat:"Spices (Whole/Seeds)",qty:"2.5 g",name:"Indian Mustard Seeds"},{cat:"Vegetables",qty:"143 g",name:"Garden Peas"},{cat:"Fresh Aromatics",qty:"0.5 inch",name:"Fresh Ginger"},{cat:"Spices (Whole/Seeds)",qty:"0.25 tsp",name:"Fenugreek Seeds"},{cat:"Spices (Powder)",qty:"5 g",name:"Coriander Powder"},{cat:"Fresh Aromatics",qty:"1 sprig",name:"Curry Leaves"},{cat:"Vegetables",qty:"160 g",name:"Tomatoes"},{cat:"Fresh Aromatics",qty:"3 clove",name:"Garlic"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Cumin Seeds"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"}],
+  12:[{cat:"Alcohol/Cocktail",qty:"25 ml",name:"Jägermeister"},{cat:"Alcohol/Cocktail",qty:"25 ml",name:"Kentucky Straight Rye Whiskey"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Maple Syrup"},{cat:"Citrus/Acid",qty:"0.5 tsp",name:"Orange Peel"},{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Orange Bitters"}],
+  13:[{cat:"Alcohol/Cocktail",qty:"50 ml",name:"Dark Rum"},{cat:"Alcohol/Cocktail",qty:"20 ml",name:"Montenegro"},{cat:"Fresh Aromatics",qty:"5 ml",name:"Gingerbread Syrup"},{cat:"Alcohol/Cocktail",qty:"0.12 tsp",name:"Aromatic Bitters"}],
+  14:[{cat:"Legumes/Dals",qty:"30 g",name:"Urad Dal Chilka"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Garam Masala"},{cat:"Fresh Aromatics",qty:"3 clove",name:"Garlic"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Coriander Powder"},{cat:"Fresh Aromatics",qty:"15 g",name:"Fresh Ginger"},{cat:"Vegetables",qty:"0.14 kg",name:"Tomatoes"},{cat:"Legumes/Dals",qty:"30 g",name:"Chana Dal"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Turmeric Powder"},{cat:"Oils/Fats",qty:"2 tsp",name:"Butter"},{cat:"Salt/Seasonings",qty:"0.5 tsp",name:"Salt"},{cat:"Vegetables",qty:"5 g",name:"Green Chillies"}],
+  15:[{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Aromatic Bitters"},{cat:"Alcohol/Cocktail",qty:"19.8 ml",name:"Sweet Vermouth"},{cat:"Alcohol/Cocktail",qty:"40 ml",name:"Dark Rum"},{cat:"Alcohol/Cocktail",qty:"19.8 ml",name:"Campari"}],
+  16:[{cat:"Fresh Aromatics",qty:"7 clove",name:"Garlic"},{cat:"Vegetables",qty:"50 g",name:"Daikon Root"},{cat:"Fresh Aromatics",qty:"4 tsp",name:"Fresh Ginger"},{cat:"Oils/Fats",qty:"3 tsp",name:"Rapeseed Oil"},{cat:"Liquids",qty:"2.5 cup",name:"Water"},{cat:"Vegetables",qty:"0.3 kg",name:"Tomatoes"},{cat:"Spices (Powder)",qty:"0.12 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Vegetables",qty:"15 g",name:"Green Chillies"},{cat:"Vegetables",qty:"0.22 kg",name:"Spinach Leaves"},{cat:"Vegetables",qty:"200 g",name:"Onion"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Vegetables",qty:"240 g",name:"Mustard Leaves"},{cat:"Grains/Flour",qty:"20 g",name:"Corn Flour"}],
+  17:[{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Aromatic Bitters"},{cat:"Alcohol/Cocktail",qty:"25 ml",name:"Sweet Vermouth"},{cat:"Alcohol/Cocktail",qty:"25 ml",name:"Cynar"},{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Orange Bitters"},{cat:"Alcohol/Cocktail",qty:"25 ml",name:"Dark Rum"}],
+  18:[{cat:"Oils/Fats",qty:"3 tsp",name:"Rapeseed Oil"},{cat:"Citrus/Acid",qty:"0.5 tsp",name:"Lime Juice"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Red Chilli Powder"},{cat:"Vegetables",qty:"0.3 kg",name:"Tomatoes"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Whole Cumin Seeds"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Garam Masala"},{cat:"Fresh Aromatics",qty:"15 g",name:"Fresh Ginger"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Coriander Powder"},{cat:"Vegetables",qty:"96 g",name:"Garden Peas"},{cat:"Spices (Powder)",qty:"0.06 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Vegetables",qty:"1200 g",name:"Turnips"},{cat:"Salt/Seasonings",qty:"2 tsp",name:"Salt"},{cat:"Vegetables",qty:"200 g",name:"Red Onions"}],
+  19:[{cat:"Salt/Seasonings",qty:"10 ml",name:"Pure Sugar Cane Syrup"},{cat:"Liquids",qty:"100 ml",name:"Espresso"},{cat:"Citrus/Acid",qty:"29.6 ml",name:"Lime Juice"},{cat:"Alcohol/Cocktail",qty:"0.12 tsp",name:"Aromatic Bitters"},{cat:"Fresh Aromatics",qty:"93.75 ml",name:"Ginger Beer"},{cat:"Alcohol/Cocktail",qty:"99 ml",name:"Dark Rum"}],
+  20:[{cat:"Alcohol/Cocktail",qty:"45 ml",name:"Irish Whiskey"},{cat:"Alcohol/Cocktail",qty:"7.5 ml",name:"Whisky"},{cat:"Fruits",qty:"2 fruit",name:"Maraschino Cherries"},{cat:"Alcohol/Cocktail",qty:"12.5 ml",name:"Creme De Cassis"},{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Aromatic Bitters"},{cat:"Alcohol/Cocktail",qty:"17.7 ml",name:"Sweet Vermouth"}],
+  21:[{cat:"Alcohol/Cocktail",qty:"50 ml",name:"Kentucky Straight Rye Whiskey"},{cat:"Alcohol/Cocktail",qty:"7.5 ml",name:"Creme De Cassis"},{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Orange Bitters"},{cat:"Alcohol/Cocktail",qty:"11.8 ml",name:"Campari"}],
+  22:[{cat:"Citrus/Acid",qty:"1 lime",name:"Lime Juice"},{cat:"Spices (Powder)",qty:"0.5 tbsp",name:"Mild Curry Powder"},{cat:"Fresh Aromatics",qty:"4 clove",name:"Garlic"},{cat:"Spices (Whole/Seeds)",qty:"8 cm",name:"Cinnamon Stick"},{cat:"Fresh Aromatics",qty:"5 g",name:"Curry Leaves Green"},{cat:"Spices (Whole/Seeds)",qty:"0.5 tsp",name:"Fenugreek Seeds"},{cat:"Vegetables",qty:"200 g",name:"Potato"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Ground Cumin"},{cat:"Spices (Powder)",qty:"3 g",name:"Chilli Powder - Hot"},{cat:"Vegetables",qty:"2 cup",name:"Green Jackfruit"},{cat:"Vegetables",qty:"5 g",name:"Finger Chillies"},{cat:"Oils/Fats",qty:"3 tsp",name:"Rapeseed Oil"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Sugar"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Coriander, Ground"},{cat:"Vegetables",qty:"200 g",name:"Onion"},{cat:"Vegetables",qty:"200 g",name:"Tomatoes"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Ground Turmeric"},{cat:"Spices (Whole/Seeds)",qty:"0.5 tsp",name:"Black Mustard Seeds"},{cat:"Nuts/Coconut",qty:"165 g",name:"Coconut Milk"}],
+  23:[{cat:"Legumes/Dals",qty:"80 g",name:"Chickpea Flour"},{cat:"Spices (Whole/Seeds)",qty:"0.4 tsp",name:"Ajwain (Carom) Seeds"},{cat:"Oils/Fats",qty:"2 tbsp",name:"Rapeseed Oil"},{cat:"Spices (Powder)",qty:"1.25 g",name:"Garam Masala Powder"},{cat:"Vegetables",qty:"125 g",name:"Large Onions"},{cat:"Spices (Powder)",qty:"0.4 tsp",name:"Red Chilli Powder"},{cat:"Liquids",qty:"0.25 cup",name:"Water"},{cat:"Salt/Seasonings",qty:"0.56 tsp",name:"Salt"}],
+  24:[{cat:"Spices (Powder)",qty:"0.12 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Legumes/Dals",qty:"10 g",name:"Chana Dal Dry"},{cat:"Fresh Aromatics",qty:"1 g",name:"Curry Leaves Green"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Mustard Seeds"},{cat:"Fresh Aromatics",qty:"3 tsp",name:"Fresh Ginger"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Turmeric Powder"},{cat:"Oils/Fats",qty:"2 tsp",name:"Rapeseed Oil"},{cat:"Vegetables",qty:"200 g",name:"Red Onion"},{cat:"Vegetables",qty:"0.4 kg",name:"Potato"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"}],
+  25:[{cat:"Alcohol/Cocktail",qty:"15 ml",name:"Dry Vermouth"},{cat:"Alcohol/Cocktail",qty:"59 ml",name:"London Dry Gin"},{cat:"Vegetables",qty:"2 olives",name:"Queen Olives (Green)"},{cat:"Vegetables",qty:"14.8 ml",name:"Olive Brine"}],
+  26:[{cat:"Vegetables",qty:"50 g",name:"Garden Peas"},{cat:"Spices (Powder)",qty:"15 g",name:"Pav Bhaji Masala"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Oils/Fats",qty:"2 tsp",name:"Rapeseed Oil"},{cat:"Vegetables",qty:"400 g",name:"Tinned Chopped Tomatoes"},{cat:"Fresh Aromatics",qty:"2 tsp",name:"Fresh Ginger"},{cat:"Oils/Fats",qty:"10 g",name:"Butter"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Ground Turmeric"},{cat:"Vegetables",qty:"0.48 kg",name:"Cauliflower"},{cat:"Fresh Aromatics",qty:"4 clove",name:"Garlic"},{cat:"Vegetables",qty:"0.25 kg",name:"Potato"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Chili Powder"}],
+  27:[{cat:"Grains/Flour",qty:"133 g",name:"Fine Corn Meal"},{cat:"Salt/Seasonings",qty:"0.12 tsp",name:"Salt"},{cat:"Oils/Fats",qty:"1 tsp",name:"Rapeseed Oil"}],
+  28:[{cat:"Spices (Powder)",qty:"2 g",name:"Turmeric Powder"},{cat:"Spices (Whole/Seeds)",qty:"0.5 tsp",name:"Mustard Seeds"},{cat:"Vegetables",qty:"250 g",name:"Baby Aubergines"},{cat:"Fresh Aromatics",qty:"1 sprig",name:"Curry Leaves"},{cat:"Nuts/Coconut",qty:"29 g",name:"Shredded Coconut"},{cat:"Salt/Seasonings",qty:"0.5 tsp",name:"Brown Sugar"},{cat:"Legumes/Dals",qty:"1 tsp",name:"Urad Dal Black Split"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Oils/Fats",qty:"2 tsp",name:"Rapeseed Oil"},{cat:"Spices (Whole/Seeds)",qty:"3 tsp",name:"Wet Seedless Tamarind"},{cat:"Vegetables",qty:"5 g",name:"Dried Red Chilli"},{cat:"Spices (Powder)",qty:"15 g",name:"Vangi Bhath Powder"},{cat:"Grains/Flour",qty:"260 g",name:"Basmati Rice Uncooked"},{cat:"Spices (Powder)",qty:"0.12 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Nuts/Coconut",qty:"20 g",name:"Red Skin Peanuts"}],
+  29:[{cat:"Salt/Seasonings",qty:"0.5 tsp",name:"Salt"},{cat:"Vegetables",qty:"0.5 kg",name:"Potato"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Schwartz Cajun Seasoning"},{cat:"Oils/Fats",qty:"1 tsp",name:"Rapeseed Oil"}],
+  30:[{cat:"Spices (Powder)",qty:"1.5 tsp",name:"Coriander, Ground"},{cat:"Spices (Powder)",qty:"0.3 tsp",name:"Ground Turmeric"},{cat:"Spices (Powder)",qty:"0.25 tsp",name:"Chili Powder"},{cat:"Vegetables",qty:"790 g",name:"Okra"},{cat:"Salt/Seasonings",qty:"0.75 tsp",name:"Salt"},{cat:"Oils/Fats",qty:"2.5 tsp",name:"Oil, Mustard"},{cat:"Vegetables",qty:"240 g",name:"White Onion"}],
+  31:[{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Caraway Seeds"},{cat:"Spices (Powder)",qty:"5 g",name:"Turmeric Powder"},{cat:"Grains/Flour",qty:"200 g",name:"Basmati Rice Uncooked"},{cat:"Vegetables",qty:"100 g",name:"Tomatoes"},{cat:"Fresh Aromatics",qty:"1 tbsp",name:"Fresh Ginger"},{cat:"Fresh Aromatics",qty:"8 clove",name:"Garlic"},{cat:"Vegetables",qty:"200 g",name:"Onion"},{cat:"Liquids",qty:"420 g",name:"Jackfruit In Water"},{cat:"Spices (Whole/Seeds)",qty:"2 ml",name:"Whole Cloves"},{cat:"Fresh Aromatics",qty:"3 tbsp",name:"Coriander Leaves"},{cat:"Spices (Whole/Seeds)",qty:"1 leaf",name:"Bay Leaf"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Spices (Powder)",qty:"5 g",name:"Red Chilli Powder"},{cat:"Fresh Aromatics",qty:"15 leaves",name:"Mint Leaves"},{cat:"Nuts/Coconut",qty:"12 g",name:"Cashew Nuts"},{cat:"Spices (Whole/Seeds)",qty:"4 g",name:"Cardamom"},{cat:"Vegetables",qty:"1 g",name:"Medium Green Chillies"},{cat:"Oils/Fats",qty:"1 tbsp",name:"Rapeseed Oil"},{cat:"Dairy",qty:"150 g",name:"Natural Set Yogurt"},{cat:"Spices (Whole/Seeds)",qty:"8 cm",name:"Cinnamon Stick"}],
+  32:[{cat:"Liquids",qty:"59 ml",name:"Diet Tonic"},{cat:"Fresh Aromatics",qty:"281 ml",name:"Ginger Beer UK"},{cat:"Fresh Aromatics",qty:"10 leaves",name:"Mint Leaves"}],
+  33:[{cat:"Legumes/Dals",qty:"65 g",name:"Chana Dal Dry"},{cat:"Vegetables",qty:"200 g",name:"Tomatoes"},{cat:"Spices (Whole/Seeds)",qty:"2.5 g",name:"Cumin Seeds"},{cat:"Vegetables",qty:"120 g",name:"Onion"},{cat:"Spices (Powder)",qty:"0.12 tsp",name:"Asafoetida"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Turmeric Powder"},{cat:"Spices (Powder)",qty:"1 pinch",name:"Red Chili Powder"},{cat:"Liquids",qty:"1 cup",name:"Water"},{cat:"Fresh Aromatics",qty:"0.25 cup",name:"Coriander Leaves"},{cat:"Fresh Aromatics",qty:"1 inch",name:"Fresh Ginger"},{cat:"Spices (Powder)",qty:"2 g",name:"Garam Masala"},{cat:"Vegetables",qty:"650 g",name:"Calabash/Bottle Gourd/Lauki"},{cat:"Salt/Seasonings",qty:"1.25 tsp",name:"Salt"},{cat:"Oils/Fats",qty:"2 tsp",name:"Rapeseed Oil"},{cat:"Vegetables",qty:"5 g",name:"Finger Chillies"}],
+  34:[{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Orange Bitters"},{cat:"Salt/Seasonings",qty:"10.4 ml",name:"Pure Sugar Cane Syrup"},{cat:"Alcohol/Cocktail",qty:"59 ml",name:"Vodka"}],
+  35:[{cat:"Alcohol/Cocktail",qty:"60 ml",name:"White Rum"},{cat:"Citrus/Acid",qty:"15 ml",name:"Lime Juice"},{cat:"Alcohol/Cocktail",qty:"0.25 tsp",name:"Aromatic Bitters"},{cat:"Salt/Seasonings",qty:"10 ml",name:"Sugar Syrup"}],
+  36:[{cat:"Vegetables",qty:"75 g",name:"Garden Peas"},{cat:"Other",qty:"200 g",name:"Original Tempeh"},{cat:"Salt/Seasonings",qty:"10 ml",name:"Soy Sauce"},{cat:"Oils/Fats",qty:"2 tsp",name:"Coconut Oil"},{cat:"Fresh Aromatics",qty:"1 tsp",name:"Fresh Ginger"},{cat:"Fresh Aromatics",qty:"2 tbsp",name:"Cilantro"},{cat:"Spices (Powder)",qty:"1 tsp",name:"Ground Turmeric"},{cat:"Spices (Powder)",qty:"2.5 g",name:"Coriander Powder"},{cat:"Vegetables",qty:"200 g",name:"Fine Beans"},{cat:"Vegetables",qty:"5 g",name:"Finger Chillies"},{cat:"Vegetables",qty:"150 g",name:"Red Bell Pepper"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Vegetables",qty:"238 g",name:"Tomatoes"},{cat:"Vegetables",qty:"147 g",name:"Onion"},{cat:"Fresh Aromatics",qty:"4 clove",name:"Garlic"},{cat:"Vegetables",qty:"119 g",name:"Carrots"},{cat:"Dairy",qty:"400 ml",name:"Coconut Milk"}],
+  37:[{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Cumin"},{cat:"Dairy",qty:"200 g",name:"Set Yoghurt"},{cat:"Salt/Seasonings",qty:"0.1 tsp",name:"Salt"},{cat:"Other",qty:"30 g",name:"Raita Boondi"}],
+  38:[{cat:"Fresh Aromatics",qty:"5 g",name:"Curry Leaves Green"},{cat:"Spices (Powder)",qty:"0.06 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Black Mustard Seeds"},{cat:"Fresh Aromatics",qty:"3 clove",name:"Garlic"},{cat:"Spices (Powder)",qty:"2 pinch",name:"Red Chili Powder"},{cat:"Spices (Whole/Seeds)",qty:"3 g",name:"Cumin Seeds"},{cat:"Legumes/Dals",qty:"67 g",name:"Chana Dal"},{cat:"Oils/Fats",qty:"1.5 tsp",name:"Oil, Mustard"},{cat:"Spices (Powder)",qty:"1.25 g",name:"Turmeric Powder"},{cat:"Vegetables",qty:"800 g",name:"British White Cabbage"},{cat:"Nuts/Coconut",qty:"30 g",name:"Shredded Coconut"},{cat:"Fresh Aromatics",qty:"2 tbsp",name:"Coriander Leaves"},{cat:"Salt/Seasonings",qty:"1.5 tsp",name:"Salt"},{cat:"Vegetables",qty:"5 g",name:"Green Chillies"}],
+  39:[{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Ground Turmeric"},{cat:"Fresh Aromatics",qty:"10 g",name:"Fresh Ginger"},{cat:"Oils/Fats",qty:"1 tsp",name:"Rapeseed Oil"},{cat:"Vegetables",qty:"80 g",name:"Tomatoes"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Vegetables",qty:"100 g",name:"Onion"},{cat:"Vegetables",qty:"300 g",name:"Potato"},{cat:"Vegetables",qty:"100 g",name:"Frozen Broad Beans"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Red Chilli Powder"},{cat:"Grains/Flour",qty:"200 g",name:"Basmati Rice Uncooked"},{cat:"Legumes/Dals",qty:"100 g",name:"Moong Dal Chilka"}],
+  42:[{cat:"Alcohol/Cocktail",qty:"50 ml",name:"Gin"},{cat:"Citrus/Acid",qty:"0.5 lemon",name:"Lemon Juice"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Sugar"},{cat:"Alcohol/Cocktail",qty:"0.5 tsp",name:"Aromatic Bitters"},{cat:"Dairy",qty:"10 ml",name:"Bristol Cream Sherry"}],
+  43:[{cat:"Other",qty:"50 g",name:"Vanilla Custard"},{cat:"Other",qty:"7.8 g",name:"Biscoff Caramelised Biscuit"}],
+  44:[{cat:"Alcohol/Cocktail",qty:"0.5 tsp",name:"Aromatic Bitters"},{cat:"Salt/Seasonings",qty:"14.8 ml",name:"Maple Syrup"},{cat:"Alcohol/Cocktail",qty:"73.9 ml",name:"Kentucky Straight Rye Whiskey"}],
+  45:[{cat:"Vegetables",qty:"7 g",name:"Finger Chillies"},{cat:"Vegetables",qty:"156 g",name:"Onion"},{cat:"Fresh Aromatics",qty:"1 tbsp",name:"Coriander Leaves"},{cat:"Spices (Powder)",qty:"0.08 g",name:"Garam Masala Powder"},{cat:"Liquids",qty:"0.5 cup",name:"Water"},{cat:"Vegetables",qty:"0.46 kg",name:"Tomatoes"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Oils/Fats",qty:"2 tsp",name:"Rapeseed Oil"},{cat:"Fresh Aromatics",qty:"1 tsp",name:"Fresh Ginger"},{cat:"Vegetables",qty:"1.1 g",name:"Red Chillies Dried"},{cat:"Fresh Aromatics",qty:"2 tsp",name:"Ginger & Garlic Paste"},{cat:"Vegetables",qty:"160 g",name:"Green Bell Pepper"},{cat:"Dairy",qty:"225 g",name:"Paneer"},{cat:"Spices (Whole/Seeds)",qty:"1.5 tbsp",name:"Coriander Seeds"}],
+  46:[{cat:"Alcohol/Cocktail",qty:"50 ml",name:"Bourbon"},{cat:"Fresh Aromatics",qty:"4.5 ml",name:"Gingerbread Syrup"},{cat:"Alcohol/Cocktail",qty:"0.5 tsp",name:"Aromatic Bitters"}],
+  48:[{cat:"Citrus/Acid",qty:"1 tsp",name:"Lime Juice"},{cat:"Alcohol/Cocktail",qty:"0.5 tsp",name:"Orange Bitters"},{cat:"Fresh Aromatics",qty:"150 ml",name:"Ginger Beer"},{cat:"Alcohol/Cocktail",qty:"50 ml",name:"Vodka"}],
+  49:[{cat:"Alcohol/Cocktail",qty:"150 ml",name:"Prosecco"},{cat:"Alcohol/Cocktail",qty:"0.5 tsp",name:"Orange Bitters"},{cat:"Citrus/Acid",qty:"0.15 medium",name:"Orange"},{cat:"Alcohol/Cocktail",qty:"50 ml",name:"Apéritif"},{cat:"Liquids",qty:"177.5 ml",name:"Soda Water"}],
+  51:[{cat:"Vegetables",qty:"40 g",name:"Tomatoes"},{cat:"Legumes/Dals",qty:"1 papad",name:"Udad Dal Papad"},{cat:"Vegetables",qty:"25 g",name:"Red Onion"}],
+  52:[{cat:"Vegetables",qty:"250 g",name:"Karela"},{cat:"Spices (Powder)",qty:"0.33 g",name:"Coriander Cumin Powder"},{cat:"Spices (Powder)",qty:"0.25 tsp",name:"Turmeric Powder"},{cat:"Spices (Powder)",qty:"0.06 tsp",name:"Asafoetida Powder (Hing)"},{cat:"Oils/Fats",qty:"3 tsp",name:"Rapeseed Oil"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Cumin"},{cat:"Spices (Powder)",qty:"0.75 tsp",name:"Amchur Powder - Dry Mango Powder"},{cat:"Spices (Powder)",qty:"0.25 tsp",name:"Garam Masala Spice - Powder"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Legumes/Dals",qty:"1 tbsp",name:"Chickpea Flour (Besan)"}],
+  53:[{cat:"Other",qty:"40 ml",name:"Mezcal"},{cat:"Alcohol/Cocktail",qty:"40 ml",name:"Montenegro"}],
+  54:[{cat:"Grains/Flour",qty:"256 g",name:"Basmati Rice Uncooked"},{cat:"Spices (Whole/Seeds)",qty:"1 tsp",name:"Ground Cloves"},{cat:"Dairy",qty:"250 g",name:"Natural Set Yogurt"},{cat:"Vegetables",qty:"300 g",name:"Onions"},{cat:"Vegetables",qty:"0.24 kg",name:"Broccoli"},{cat:"Vegetables",qty:"80 g",name:"Carrots"},{cat:"Spices (Powder)",qty:"0.25 tsp",name:"Red Chilli Powder"},{cat:"Fresh Aromatics",qty:"4 clove",name:"Garlic"},{cat:"Salt/Seasonings",qty:"1 tsp",name:"Salt"},{cat:"Vegetables",qty:"400 g",name:"Tomatoes"},{cat:"Vegetables",qty:"200 g",name:"White Baby Button Mushrooms"},{cat:"Oils/Fats",qty:"3 tsp",name:"Rapeseed Oil"},{cat:"Spices (Powder)",qty:"0.5 tsp",name:"Turmeric Powder"},{cat:"Fresh Aromatics",qty:"20 g",name:"Fresh Ginger"},{cat:"Vegetables",qty:"2 cup",name:"Green Jackfruit"}],
+};
+
+// ─── BUILD UI ────────────────────────────────────────────────────────────────
+const cuisineFilter = document.getElementById('cuisineFilter');
+const subCatFilter = document.getElementById('subCatFilter');
+const searchInput = document.getElementById('searchInput');
+const recipeGrid = document.getElementById('recipeGrid');
+const resultsInfo = document.getElementById('resultsInfo');
+const headerCount = document.getElementById('headerCount');
+
+const cuisines = [...new Set(recipes.map(r => r.cuisine))].sort();
+const subCats = [...new Set(recipes.map(r => r.sub).filter(Boolean))].sort();
+
+cuisines.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; cuisineFilter.appendChild(o); });
+subCats.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; subCatFilter.appendChild(o); });
+
+headerCount.textContent = `${recipes.length} Recipes`;
+
+function isPlaceholder(url) {
+  return !url || url.includes('recipe_image_placeholder');
+}
+
+const cuisineEmojis = {
+  'Indian': '🍛', 'Cocktails': '🍹', 'Mexican': '🌮', 'Sri Lankan': '🥥', 
+  'Asian': '🥢', 'Western': '🍽️'
+};
+
+function renderCards(filtered) {
+  recipeGrid.innerHTML = '';
+  resultsInfo.textContent = `${filtered.length} recipe${filtered.length !== 1 ? 's' : ''} found`;
+
+  if (filtered.length === 0) {
+    recipeGrid.innerHTML = '<div class="no-results">No recipes found — try different filters</div>';
+    return;
+  }
+
+  filtered.forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.style.animationDelay = `${Math.min(i * 0.03, 0.4)}s`;
+
+    const hasImg = !isPlaceholder(r.img);
+    const imgHTML = hasImg
+      ? `<img class="card-img" src="${r.img}" alt="${r.name}" onerror="this.parentNode.innerHTML='<div class=card-img-placeholder>${cuisineEmojis[r.cuisine]||'🍴'}</div>'">`
+      : `<div class="card-img-placeholder">${cuisineEmojis[r.cuisine]||'🍴'}</div>`;
+
+    card.innerHTML = `
+      ${imgHTML}
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag tag-cuisine">${r.cuisine}</span>
+          ${r.sub ? `<span class="tag tag-sub">${r.sub}</span>` : ''}
+        </div>
+        <div class="card-name">${r.name}</div>
+        <div class="card-macros">
+          <div class="macro-item"><div class="macro-val">${r.cal}</div><div class="macro-lbl">Cal</div></div>
+          <div class="macro-item"><div class="macro-val">${r.protein}g</div><div class="macro-lbl">Protein</div></div>
+          <div class="macro-item"><div class="macro-val">${r.carb}g</div><div class="macro-lbl">Carbs</div></div>
+          <div class="macro-item"><div class="macro-val">${r.fat}g</div><div class="macro-lbl">Fat</div></div>
+        </div>
+      </div>`;
+
+    card.addEventListener('click', () => openModal(r));
+    recipeGrid.appendChild(card);
+  });
+}
+
+function filterRecipes() {
+  const query = searchInput.value.toLowerCase().trim();
+  const cuisine = cuisineFilter.value;
+  const sub = subCatFilter.value;
+
+  return recipes.filter(r => {
+    if (cuisine && r.cuisine !== cuisine) return false;
+    if (sub && r.sub !== sub) return false;
+    if (query) {
+      const nameMatch = r.name.toLowerCase().includes(query);
+      const ings = (ingredients[r.id] || []).map(i => i.name.toLowerCase()).join(' ');
+      const ingMatch = ings.includes(query);
+      const cuisineMatch = r.cuisine.toLowerCase().includes(query);
+      const subMatch = r.sub.toLowerCase().includes(query);
+      if (!nameMatch && !ingMatch && !cuisineMatch && !subMatch) return false;
+    }
+    return true;
+  });
+}
+
+function applyFilters() { renderCards(filterRecipes()); }
+
+searchInput.addEventListener('input', applyFilters);
+cuisineFilter.addEventListener('change', applyFilters);
+subCatFilter.addEventListener('change', applyFilters);
+document.getElementById('clearBtn').addEventListener('click', () => {
+  searchInput.value = '';
+  cuisineFilter.value = '';
+  subCatFilter.value = '';
+  applyFilters();
+});
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+const modalOverlay = document.getElementById('modalOverlay');
+const modalImgWrap = document.getElementById('modalImgWrap');
+const modalBody = document.getElementById('modalBody');
+
+function openModal(r) {
+  const hasImg = !isPlaceholder(r.img);
+  const hasLink = !!r.link;
+
+  if (hasImg) {
+    modalImgWrap.innerHTML = `
+      <img class="modal-img" src="${r.img}" alt="${r.name}" 
+        ${hasLink ? `onclick="window.open('${r.link}','_blank')" title="Click to open recipe page"` : ''}
+        onerror="this.parentNode.innerHTML='<div class=modal-img-placeholder>${cuisineEmojis[r.cuisine]||'🍴'}</div>'">
+      ${hasLink ? `<div class="img-link-hint">↗ Open recipe page</div>` : ''}`;
+  } else {
+    modalImgWrap.innerHTML = `<div class="modal-img-placeholder" ${hasLink ? `onclick="window.open('${r.link}','_blank')" style="cursor:pointer"` : ''}>${cuisineEmojis[r.cuisine]||'🍴'}</div>`;
+  }
+
+  // Group ingredients by category
+  const ings = ingredients[r.id] || [];
+  const byCategory = {};
+  ings.forEach(ing => {
+    if (!byCategory[ing.cat]) byCategory[ing.cat] = [];
+    byCategory[ing.cat].push(ing);
+  });
+
+  const catOrder = ['Vegetables', 'Legumes/Dals', 'Grains/Flour', 'Spices (Powder)', 'Spices (Whole/Seeds)', 
+    'Fresh Aromatics', 'Oils/Fats', 'Dairy', 'Nuts/Coconut', 'Alcohol/Cocktail', 'Citrus/Acid', 
+    'Liquids', 'Fruits', 'Salt/Seasonings', 'Other'];
+  const sortedCats = Object.keys(byCategory).sort((a, b) => {
+    const ia = catOrder.indexOf(a), ib = catOrder.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
+
+  const ingHTML = sortedCats.length > 0 ? sortedCats.map(cat => `
+    <div class="ing-category">
+      <div class="ing-cat-name">${cat}</div>
+      <ul class="ing-list">
+        ${byCategory[cat].map(i => `
+          <li class="ing-row">
+            <span class="ing-qty">${i.qty}</span>
+            <span class="ing-name">${i.name}</span>
+          </li>`).join('')}
+      </ul>
+    </div>`).join('') : '<p class="no-ings">No ingredient details available</p>';
+
+  modalBody.innerHTML = `
+    <div class="modal-header-tags">
+      <span class="tag tag-cuisine">${r.cuisine}</span>
+      ${r.sub ? `<span class="tag tag-sub">${r.sub}</span>` : ''}
+    </div>
+    <h2 class="modal-title">${r.name}</h2>
+    <div class="modal-meta">Serves ${r.servings} &nbsp;·&nbsp; per serving</div>
+
+    <div class="nutrition-panel">
+      <div class="nutrition-title">Nutrition per serving</div>
+      <div class="nutrition-main">
+        <div>
+          <div class="cal-big">${r.cal}</div>
+          <div class="cal-label">calories</div>
+        </div>
+      </div>
+      <div class="nutrition-grid">
+        <div class="nut-item"><div class="nut-val">${r.protein}g</div><div class="nut-lbl">Protein</div></div>
+        <div class="nut-item"><div class="nut-val">${r.carb}g</div><div class="nut-lbl">Carbs</div></div>
+        <div class="nut-item"><div class="nut-val">${r.fat}g</div><div class="nut-lbl">Fat</div></div>
+        <div class="nut-item"><div class="nut-val">${r.fiber}g</div><div class="nut-lbl">Fiber</div></div>
+        <div class="nut-item"><div class="nut-val">${r.satFat}g</div><div class="nut-lbl">Sat Fat</div></div>
+        <div class="nut-item"><div class="nut-val">${r.sugar}g</div><div class="nut-lbl">Sugar</div></div>
+        <div class="nut-item"><div class="nut-val">${r.sodium}mg</div><div class="nut-lbl">Sodium</div></div>
+        <div class="nut-item"><div class="nut-val">${r.potassium}mg</div><div class="nut-lbl">Potassium</div></div>
+      </div>
+    </div>
+
+    <div class="ing-section-title">Ingredients by Category</div>
+    <div class="ing-categories">${ingHTML}</div>
+  `;
+
+  modalOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modalOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderCards(recipes);
+</script>
+</body>
+</html>
