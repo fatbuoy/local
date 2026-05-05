@@ -1,52 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Download Recipe Images</title>
+  <title>Recipe Image Downloader</title>
 </head>
-<body>
-  <h2>Download All Recipe Images</h2>
-  <button onclick="downloadAll()">Download ZIP</button>
+<body style="font-family: Arial; padding: 20px;">
+  <h2>Download All Recipe Images (ZIP)</h2>
+  <button onclick="downloadAll()" style="padding:10px 20px;font-size:16px;">
+    Download ZIP
+  </button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
   <script>
-    const images = [
-      { name: "tindora-fry.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2017/07/tendli-fry-recipe-1a.jpg" },
-      { name: "aloo-matar.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/04/aloo-matar-1.jpg" },
-      { name: "negroni-sbagliato.jpg", url: "https://www.campari.com/sites/default/files/2020-02/SBAGLIATO.jpg" },
-      { name: "karela-sabzi.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2010/08/karela-sabji-recipe-1a.jpg" },
-      { name: "arbi-sabzi.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2015/10/arbi-sabzi-recipe-1.jpg" },
-      { name: "spritz-bitter.jpg", url: "https://cdn.diffords.com/contrib/stock-images/2018/05/5af3140967a12.jpg" },
-      { name: "brinjal-sambar.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2013/08/brinjal-sambar-1a.jpg" },
-      { name: "chana-dal.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/06/chana-dal-recipe-1.jpg" },
-      { name: "onion-pakora.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2016/07/onion-pakoda-recipe-1.jpg" },
-      { name: "pav-bhaji.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2014/07/pav-bhaji-recipe-1.jpg" },
-      { name: "vangi-bath.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2018/12/vangi-bhath-recipe-1a.jpg" },
-      { name: "sarson-saag.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2018/12/sarson-ka-saag-1b.jpg" },
-      { name: "boondi-raita.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2012/05/boondi-raita-recipe-1.jpg" },
-      { name: "masala-papad.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2014/11/masala-papad-recipe-1.jpg" },
-      { name: "veg-biryani.jpg", url: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/12/veg-biryani-1.jpg" },
-      { name: "chips.jpg", url: "https://www.bbcgoodfood.com/sites/default/files/recipe/recipe-image/2016/08/chunky-chips.jpg" }
-    ];
+const images = [
+  {name:"tindora-fry.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2017/07/tendli-fry-recipe-1a.jpg"},
+  {name:"aloo-matar.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2021/04/aloo-matar-1.jpg"},
+  {name:"negroni-sbagliato.jpg",url:"https://www.campari.com/sites/default/files/2020-02/SBAGLIATO.jpg"},
+  {name:"karela-sabzi.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2010/08/karela-sabji-recipe-1a.jpg"},
+  {name:"arbi-sabzi.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2015/10/arbi-sabzi-recipe-1.jpg"},
+  {name:"spritz-bitter.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3140967a12.jpg"},
+  {name:"ottolenghi-aubergines.jpg",url:"https://thehappyfoodie.co.uk/wp-content/uploads/2021/08/ottolenghi-flavour-stuffed-curried-aubergines.jpg"},
+  {name:"brinjal-sambar.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2013/08/brinjal-sambar-1a.jpg"},
+  {name:"chana-dal.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2021/06/chana-dal-recipe-1.jpg"},
+  {name:"aloo-gajar.jpg",url:"https://aplateofhappiness.files.wordpress.com/2018/01/img_5679.jpg"},
+  {name:"mushroom-peas.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2012/12/south-indian-mushroom-peas-curry-1a.jpg"},
+  {name:"jaeger-old-fashioned.jpg",url:"https://www.liquor.com/thmb/LRkzlqIRhJNO1pFBZHnbwEF22pM=/1200x628/filters:fill(auto,1)/jagermeister-old-fashioned.jpg"},
+  {name:"hunters-verdict.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2020/07/5f17f9f4abfbd.jpg"},
+  {name:"maash-chole.jpg",url:"https://www.archanaskitchen.com/images/archanaskitchen/kali_dal.jpg"},
+  {name:"right-hand.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af31667b43b8.jpg"},
+  {name:"sarson-saag.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2018/12/sarson-ka-saag-1b.jpg"},
+  {name:"cynar-negroni.jpg",url:"https://www.cheersmrforbes.com/wp-content/uploads/2020/07/cynar-rum-negroni.jpg"},
+  {name:"turnip-bharta.jpg",url:"https://www.archanaskitchen.com/images/archanaskitchen/turnip_bharta.jpg"},
+  {name:"rum-pyaari.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3162c8c5a3.jpg"},
+  {name:"bitter-jean.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af2fd33ba771.jpg"},
+  {name:"fogerty.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3040550669.jpg"},
+  {name:"jackfruit-curry.jpg",url:"https://images.immediate.co.uk/production/volatile/sites/2/2020/01/Sri-Lankan-Jackfruit-Curry.jpg"},
+  {name:"onion-pakora.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2016/07/onion-pakoda-recipe-1.jpg"},
+  {name:"potato-masala.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2021/05/potato-masala-1.jpg"},
+  {name:"dirty-martini.jpg",url:"https://www.liquor.com/thmb/YKhHonymFvZ5embNJkKh0nf7qoM=/720x720/dirty-martini.jpg"},
+  {name:"pav-bhaji.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2014/07/pav-bhaji-recipe-1.jpg"},
+  {name:"corn-tacos.jpg",url:"https://www.simplyrecipes.com/thmb/corn-tacos.jpg"},
+  {name:"vangi-bath.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2018/12/vangi-bhath-recipe-1a.jpg"},
+  {name:"chips.jpg",url:"https://www.bbcgoodfood.com/sites/default/files/recipe/recipe-image/2016/08/chunky-chips.jpg"},
+  {name:"boondi-raita.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2012/05/boondi-raita-recipe-1.jpg"},
+  {name:"masala-papad.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2014/11/masala-papad-recipe-1.jpg"},
+  {name:"veg-biryani.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2021/12/veg-biryani-1.jpg"},
+  {name:"kadai-paneer.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2018/12/kadai-paneer-recipe-1.jpg"},
+  {name:"bhindi.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2014/07/bhindi-masala-recipe-1.jpg"},
+  {name:"sarson-saag2.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2018/12/sarson-ka-saag-1b.jpg"},
+  {name:"lauki-chana-dal.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2019/03/lauki-chana-dal-recipe-1a.jpg"},
+  {name:"cabbage-upkari.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2011/09/cabbage-chana-dal-recipe-1a.jpg"},
+  {name:"khichdi.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2021/07/moong-dal-khichdi-1.jpg"},
+  {name:"lotus-dessert.jpg",url:"https://www.bbcgoodfood.com/sites/default/files/recipe/recipe-image/2019/10/lotus-biscoff-dessert.jpg"},
+  {name:"prohibition.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af316c1c5f2f.jpg"},
+  {name:"moscow-mule.jpg",url:"https://www.liquor.com/thmb/moscow-mule.jpg"},
+  {name:"aperol-spritz.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3149a1a7f5.jpg"},
+  {name:"margarita.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af30c9a1.jpg"},
+  {name:"gin-tonic.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af30d1a2.jpg"},
+  {name:"old-fashioned.jpg",url:"https://www.liquor.com/thmb/old-fashioned.jpg"},
+  {name:"rum-cocktail.jpg",url:"https://cdn.diffords.com/contrib/stock-images/2018/05/5af3162c8c5a3.jpg"},
+  {name:"papdi-chaat.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2014/10/papdi-chaat-recipe-1.jpg"},
+  {name:"vada-pav.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2015/04/vada-pav-recipe-1.jpg"},
+  {name:"idli.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2018/04/idli-recipe-1.jpg"},
+  {name:"dosa.jpg",url:"https://www.vegrecipesofindia.com/wp-content/uploads/2018/06/dosa-recipe-1.jpg"}
+];
 
-    async function downloadAll() {
-      const zip = new JSZip();
-      const folder = zip.folder("recipes");
+async function downloadAll(){
+  const zip = new JSZip();
+  const folder = zip.folder("recipes");
 
-      for (const img of images) {
-        try {
-          const response = await fetch(img.url);
-          const blob = await response.blob();
-          folder.file(img.name, blob);
-        } catch (e) {
-          console.log("Failed:", img.name);
-        }
-      }
-
-      const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, "recipe-images.zip");
+  for(const img of images){
+    try{
+      const res = await fetch(img.url);
+      const blob = await res.blob();
+      folder.file(img.name, blob);
+    } catch(e){
+      console.log("Failed:", img.name);
     }
+  }
+
+  const content = await zip.generateAsync({type:"blob"});
+  saveAs(content,"recipes-images.zip");
+}
   </script>
 </body>
 </html>
