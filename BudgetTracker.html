@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ⓈⒶⒽⒶⓃⒾ Pocket Change</title>
+<title>Sahani's Pocket Change</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -5755,6 +5755,7 @@ function togglePrivacy() {
 // ─── TOOLTIP ──────────────────────────────────────────────────────────────────
 const TT = document.getElementById('chartTooltip');
 function showTT(e, title, rows) {
+  if (privacyOn) return;
   TT.innerHTML = `<div class="tt-title">${title}</div>` +
     rows.map(r=>`<div class="tt-row">
       ${r.color?`<div class="tt-dot" style="background:${r.color}"></div>`:''}
