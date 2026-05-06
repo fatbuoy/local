@@ -143,11 +143,27 @@ canvas{display:block;width:100% !important}
 /* Section separator */
 .section-sep{height:1px;background:var(--border);margin:8px 0 16px}
  
-/* Privacy mode */
+
+/* Password modal */
+.pw-overlay{position:fixed;inset:0;background:rgba(12,35,64,.55);backdrop-filter:blur(3px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px}
+.pw-modal{background:var(--white);border-radius:var(--r-lg);padding:24px 20px;width:100%;max-width:320px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.pw-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.pw-sub{font-size:11px;color:var(--muted);margin-bottom:16px}
+.pw-input{width:100%;border:1.5px solid var(--border);border-radius:var(--r-md);padding:9px 12px;font-size:14px;font-family:inherit;color:var(--text);outline:none;transition:border-color .15s;letter-spacing:.1em}
+.pw-input:focus{border-color:var(--blue)}
+.pw-input.shake{animation:shake .3s}
+.pw-error{font-size:11px;color:#c0392b;margin-top:6px;min-height:16px}
+.pw-actions{display:flex;gap:8px;margin-top:16px}
+.pw-btn{flex:1;padding:8px;border-radius:var(--r-md);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s}
+.pw-btn-cancel{background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+.pw-btn-cancel:hover{border-color:#bbb;color:var(--text)}
+.pw-btn-confirm{background:var(--navy);border:1px solid var(--navy2);color:var(--on-navy)}
+.pw-btn-confirm:hover{background:var(--navy2)}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .privacy-btn{background:none;border:none;cursor:pointer;padding:2px 4px;color:var(--on-navy3);font-size:16px;line-height:1;transition:color .15s;-webkit-tap-highlight-color:transparent}
 .privacy-btn:hover{color:var(--on-navy)}
 body.privacy .num-private{filter:blur(5px);user-select:none;pointer-events:none;transition:filter .2s}
- 
+
 /* Tooltip */
 #chartTooltip{position:fixed;pointer-events:none;background:var(--navy);color:var(--on-navy);border:1px solid var(--navy3);border-radius:var(--r-md);padding:7px 10px;font-size:11px;font-family:'Inter',sans-serif;z-index:9999;opacity:0;transition:opacity .1s;white-space:nowrap;line-height:1.6;box-shadow:0 4px 16px rgba(0,0,0,.25)}
 #chartTooltip.visible{opacity:1}
@@ -5743,13 +5759,71 @@ const CSV = `Years (Book Date),Months (Book Date),Source,Category,Sub-Category,T
 
 // ─── PRIVACY MODE ─────────────────────────────────────────────────────────────
 let privacyOn = false;
+const PRIVACY_PASSWORD = 'SundayRunday';
+ 
 function togglePrivacy() {
-  privacyOn = !privacyOn;
-  document.body.classList.toggle('privacy', privacyOn);
-  document.getElementById('privacyBtn').textContent = privacyOn ? '🙈' : '👁';
-  // Re-render sec1 & sec2 to swap num-private onto new nodes (they rebuild innerHTML)
-  renderSection1(selectedYear);
-  renderSection2(selectedYear);
+  if (!privacyOn) {
+    // Turning ON — no password needed
+    privacyOn = true;
+    document.body.classList.add('privacy');
+    document.getElementById('privacyBtn').textContent = '🙈';
+    renderSection1(selectedYear);
+    renderSection2(selectedYear);
+  } else {
+    // Turning OFF — require password
+    showPasswordModal();
+  }
+}
+ 
+function showPasswordModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'pw-overlay';
+  overlay.id = 'pwOverlay';
+  overlay.innerHTML = `
+    <div class="pw-modal">
+      <div class="pw-title">🔒 Privacy lock</div>
+      <div class="pw-sub">Enter the password to reveal your data</div>
+      <input class="pw-input" id="pwInput" type="password" placeholder="Password" autocomplete="off">
+      <div class="pw-error" id="pwError"></div>
+      <div class="pw-actions">
+        <button class="pw-btn pw-btn-cancel" onclick="closePasswordModal()">Cancel</button>
+        <button class="pw-btn pw-btn-confirm" onclick="submitPassword()">Unlock</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  // Focus input after paint
+  requestAnimationFrame(() => document.getElementById('pwInput').focus());
+  // Allow Enter key
+  overlay.querySelector('#pwInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitPassword();
+    if (e.key === 'Escape') closePasswordModal();
+  });
+}
+ 
+function closePasswordModal() {
+  const el = document.getElementById('pwOverlay');
+  if (el) el.remove();
+}
+ 
+function submitPassword() {
+  const input = document.getElementById('pwInput');
+  if (!input) return;
+  if (input.value === PRIVACY_PASSWORD) {
+    closePasswordModal();
+    privacyOn = false;
+    document.body.classList.remove('privacy');
+    document.getElementById('privacyBtn').textContent = '👁';
+    renderSection1(selectedYear);
+    renderSection2(selectedYear);
+  } else {
+    const errEl = document.getElementById('pwError');
+    errEl.textContent = 'Incorrect password — try again';
+    input.value = '';
+    input.classList.remove('shake');
+    void input.offsetWidth; // reflow to restart animation
+    input.classList.add('shake');
+    input.focus();
+  }
 }
  
 // ─── TOOLTIP ──────────────────────────────────────────────────────────────────
