@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Suite — Build Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --eat: #C8553D;
+    --run: #3D7A8A;
+    --live: #6B8F5E;
+    --bg: #F5F0E8;
+    --ink: #1A1A18;
+    --mid: #6B6860;
+    --line: #D8D2C4;
+    --paper: #FDFAF4;
+    --accent: #E8B84B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 3rem 4rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.02);
+  }
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  .eat-run-live {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .pill-eat { background: var(--eat); color: white; }
+  .pill-run { background: var(--run); color: white; }
+  .pill-live { background: var(--live); color: white; }
+  .header-sub {
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.6);
+    margin-top: 1.5rem;
+    max-width: 580px;
+    font-weight: 300;
+  }
+
+  /* ── NAV TABS ── */
+  nav {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding: 0 4rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  nav button {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    color: var(--mid);
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  nav button:hover { color: var(--ink); }
+  nav button.active { color: var(--ink); border-bottom-color: var(--accent); font-weight: 500; }
+
+  /* ── MAIN ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+
+  section { display: none; }
+  section.active { display: block; }
+
+  /* ── SECTION TITLE ── */
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .section-header p {
+    color: var(--mid);
+    font-size: 0.9rem;
+    max-width: 600px;
+  }
+
+  /* ── PHASE BLOCK ── */
+  .phase {
+    margin-bottom: 3rem;
+  }
+  .phase-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .phase-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── TASK CARDS GRID ── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.25rem 1.4rem;
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+    gap: 0.5rem;
+  }
+  .card h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-eat { background: #f9ebe8; color: var(--eat); }
+  .badge-run { background: #e8f2f5; color: var(--run); }
+  .badge-live { background: #edf2ea; color: var(--live); }
+  .badge-core { background: #f5f0e0; color: #8a7a3a; }
+  .badge-home { background: #ece8f5; color: #5a4a8a; }
+
+  .card p {
+    font-size: 0.8rem;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+  .card .effort {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .effort-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--mid);
+    letter-spacing: 0.05em;
+  }
+  .dots {
+    display: flex;
+    gap: 3px;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .dot.filled { background: var(--accent); }
+  .priority-flag {
+    position: absolute;
+    top: 0; right: 1rem;
+    font-size: 0.55rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    color: var(--eat);
+    text-transform: uppercase;
+    padding: 0.2rem 0.4rem;
+    background: #f9ebe8;
+    border-radius: 0 0 4px 4px;
+  }
+
+  /* ── ROADMAP TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.45rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: var(--line);
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.55rem;
+    top: 0.4rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--line);
+  }
+  .tl-item.done::before { background: var(--live); border-color: var(--live); }
+  .tl-item.now::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(232,184,75,0.2); }
+  .tl-item.soon::before { background: var(--run); border-color: var(--run); }
+
+  .tl-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .tl-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .tl-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--mid);
+    letter-spacing: 0.1em;
+  }
+  .tl-body {
+    font-size: 0.83rem;
+    color: var(--mid);
+    line-height: 1.6;
+  }
+  .tl-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+  .tl-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--mid);
+  }
+
+  /* ── APP OVERVIEW CARDS ── */
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .app-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .app-card-top {
+    padding: 1.25rem 1.4rem 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .app-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--mid);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+  }
+  .app-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .app-card .app-desc {
+    font-size: 0.78rem;
+    color: var(--mid);
+  }
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.4rem;
+  }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.built { background: var(--live); }
+  .status-dot.planned { background: var(--line); }
+  .status-dot.inprogress { background: var(--accent); }
+  .status-text { font-size: 0.72rem; font-family: 'DM Mono', monospace; color: var(--mid); }
+
+  /* ── DATA WORKFLOW ── */
+  .workflow-step {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding: 1.25rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    align-items: flex-start;
+  }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--line);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 2.5rem;
+    text-align: center;
+  }
+  .step-content h4 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .step-content p {
+    font-size: 0.8rem;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+  .step-content ul {
+    margin-top: 0.4rem;
+    padding-left: 1rem;
+    font-size: 0.78rem;
+    color: var(--mid);
+  }
+  .step-content li { margin-bottom: 0.2rem; }
+
+  /* ── HOMEPAGE SECTION ── */
+  .homepage-concept {
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .homepage-concept::before {
+    content: 'EAT · RUN · LIVE';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+    white-space: nowrap;
+  }
+  .homepage-concept h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+  .homepage-concept p {
+    font-size: 0.85rem;
+    color: rgba(245,240,232,0.7);
+    max-width: 540px;
+    line-height: 1.6;
+  }
+  .erl-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .erl-col { padding: 1rem; border-radius: 8px; }
+  .erl-col.eat { background: rgba(200,85,61,0.15); }
+  .erl-col.run { background: rgba(61,122,138,0.15); }
+  .erl-col.live { background: rgba(107,143,94,0.15); }
+  .erl-col h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.6rem;
+  }
+  .erl-col.eat h4 { color: #e07a68; }
+  .erl-col.run h4 { color: #6aaabb; }
+  .erl-col.live h4 { color: #90b882; }
+  .erl-col ul {
+    list-style: none;
+    font-size: 0.75rem;
+    color: rgba(245,240,232,0.6);
+  }
+  .erl-col li { margin-bottom: 0.25rem; padding-left: 0.75rem; position: relative; }
+  .erl-col li::before { content: '—'; position: absolute; left: 0; opacity: 0.5; }
+
+  /* ── PRINCIPLES ── */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .principle {
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .principle .icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.6rem;
+  }
+  .principle h4 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .principle p {
+    font-size: 0.75rem;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 700px) {
+    header { padding: 2rem 1.5rem; }
+    nav { padding: 0 1rem; }
+    main { padding: 2rem 1rem 4rem; }
+    .erl-grid { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Personal Life Suite · Build Plan 2025–2026</div>
+  <h1>The Master Plan</h1>
+  <div class="eat-run-live">
+    <span class="pill pill-eat">EAT</span>
+    <span class="pill pill-run">RUN</span>
+    <span class="pill pill-live">LIVE</span>
+  </div>
+  <p class="header-sub">A structured roadmap for building, enhancing and connecting a suite of personal HTML apps — from nutrition to marathons, budgets to travel.</p>
+</header>
+
+<nav>
+  <button class="active" onclick="show('overview')">Overview</button>
+  <button onclick="show('enhance')">Enhance Existing</button>
+  <button onclick="show('build')">Build New</button>
+  <button onclick="show('homepage')">Homepage</button>
+  <button onclick="show('data')">Data Workflows</button>
+  <button onclick="show('roadmap')">Roadmap</button>
+  <button onclick="show('principles')">Principles</button>
+</nav>
+
+<main>
+
+<!-- ══ OVERVIEW ══ -->
+<section id="overview" class="active">
+  <div class="section-header">
+    <h2>Suite Overview</h2>
+    <p>Five apps across three life pillars, unified by a shared style guide and a homepage hub.</p>
+  </div>
+
+  <div class="app-grid">
+    <div class="app-card">
+      <div class="app-card-top">
+        <div class="app-number">APP 01 · EAT</div>
+        <h3>Daily Calorie Planner</h3>
+        <p class="app-desc">Diet + training schedule + weight loss goals. Daily macro targets and intake logging.</p>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot built"></div>
+        <span class="status-text">BUILT — Enhance in Phase 2</span>
+      </div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-top">
+        <div class="app-number">APP 02 · EAT</div>
+        <h3>Recipe Book</h3>
+        <p class="app-desc">Personal recipes with full nutritional breakdown, searchable and filterable.</p>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot built"></div>
+        <span class="status-text">BUILT — Enhance in Phase 2</span>
+      </div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-top">
+        <div class="app-number">APP 03 · LIVE</div>
+        <h3>Expense & Budget Tracker</h3>
+        <p class="app-desc">7–8 years of monthly data by category. Updated monthly. Trend analysis.</p>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot built"></div>
+        <span class="status-text">BUILT — Enhance in Phase 2</span>
+      </div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-top">
+        <div class="app-number">APP 04 · LIVE</div>
+        <h3>Travel Planner</h3>
+        <p class="app-desc">Short + long trips, visitor management, itinerary tracking, packing and prep.</p>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot planned"></div>
+        <span class="status-text">PLANNED — Build in Phase 3</span>
+      </div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-top">
+        <div class="app-number">APP 05 · RUN</div>
+        <h3>Training Planner</h3>
+        <p class="app-desc">Marathon plans, daily run logging, historical volume, race times and PB tracking.</p>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot planned"></div>
+        <span class="status-text">PLANNED — Build in Phase 3</span>
+      </div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-top">
+        <div class="app-number">HUB · ALL</div>
+        <h3>EAT · RUN · LIVE Homepage</h3>
+        <p class="app-desc">Unified dashboard linking all apps. Daily snapshot view. Navigation hub.</p>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot planned"></div>
+        <span class="status-text">PLANNED — Build in Phase 4</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-label">Shared Foundation</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-top">
+        <h4>CSS Style Guide</h4>
+        <span class="badge badge-core">CORE</span>
+      </div>
+      <p>Already created. Governs typography, colour, spacing and component patterns across all apps. Will need minor extensions as new apps introduce new UI patterns.</p>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <h4>Shared Data Schema</h4>
+        <span class="badge badge-core">CORE</span>
+      </div>
+      <p>A consistent JSON structure across apps enables the homepage to pull live summaries from each. Defining this early saves rework later.</p>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <h4>Cross-App Navigation Pattern</h4>
+        <span class="badge badge-core">CORE</span>
+      </div>
+      <p>A shared nav bar or back-to-home link embedded in each app so the suite feels seamlessly connected.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ENHANCE ══ -->
+<section id="enhance">
+  <div class="section-header">
+    <h2>Enhance Existing Apps</h2>
+    <p>Targeted improvements to the three built apps before moving to new builds. Focus on data depth, usability and homepage integration readiness.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">App 01 · Daily Calorie Planner</div>
+    <div class="cards">
+      <div class="card">
+        <div class="priority-flag">Priority</div>
+        <div class="card-top">
+          <h4>Recipe Book Integration</h4>
+          <span class="badge badge-eat">EAT</span>
+        </div>
+        <p>Pull recipes directly into the daily planner so adding a meal auto-fills calories and macros. Avoids double-entry and keeps nutrition data consistent.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Training Day Adjustment Logic</h4>
+          <span class="badge badge-eat">EAT</span>
+        </div>
+        <p>Automatically adjust calorie and macro targets based on whether today is a rest day, easy run or long run. Link to the Training Planner once built.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Weekly & Monthly Summary View</h4>
+          <span class="badge badge-eat">EAT</span>
+        </div>
+        <p>Calorie and macro averages over 7 and 30 days. Compliance rate (days hitting target). Weight trend overlay. Makes the homepage summary card easy to populate.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Weight Log & Goal Tracker</h4>
+          <span class="badge badge-eat">EAT</span>
+        </div>
+        <p>Daily weight entry with trend line. Projected date to reach goal based on current trajectory. Simple but motivating when combined with calorie data.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">App 02 · Recipe Book</div>
+    <div class="cards">
+      <div class="card">
+        <div class="priority-flag">Priority</div>
+        <div class="card-top">
+          <h4>Macro-Friendly Filter & Tags</h4>
+          <span class="badge badge-eat">EAT</span>
+        </div>
+        <p>Filter by high-protein, low-carb, race-week, quick-prep. Tag recipes for their role in the diet (pre-run, recovery, bulk cook). Essential for Calorie Planner integration.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Serving Size Scaler</h4>
+          <span class="badge badge-eat">EAT</span>
+        </div>
+        <p>Adjust any recipe from 1 to N servings and have all ingredient quantities and nutritional values scale automatically. Useful for bulk cooking days.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Meal Plan Generator</h4>
+          <span class="badge badge-eat">EAT</span>
+        </div>
+        <p>Given a daily calorie target and macro split, suggest a day's meals from your recipe book. The bridge between recipe library and daily planner.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Data Prep: Recipe JSON Standard</h4>
+          <span class="badge badge-core">DATA</span>
+        </div>
+        <p>Formalise the recipe data schema (name, category, ingredients with weights and macros, method, tags, image path). This unlocks the integration with the Calorie Planner and homepage.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">App 03 · Expense & Budget Tracker</div>
+    <div class="cards">
+      <div class="card">
+        <div class="priority-flag">Priority</div>
+        <div class="card-top">
+          <h4>Monthly Update Workflow</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>A clean, fast-input form for entering the current month's actuals by category. Should take under 3 minutes. Auto-generate the new month's row and flag any category that is over budget.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Year-on-Year Comparison Charts</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>With 7–8 years of data, overlay current year vs prior years by category. Highlights spending drift and seasonal patterns. Makes the historical data genuinely useful.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Travel Budget Integration</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>Link travel expenditure in the budget tracker to individual trips in the Travel Planner. Gives a true cost-per-trip view and feeds into annual travel budget planning.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Annual Budget Setting Tool</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>Each January, review last year's actuals and set next year's budget by category. Pre-fill from prior year with an easy adjustment interface. Saves the budget to JSON.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BUILD NEW ══ -->
+<section id="build">
+  <div class="section-header">
+    <h2>Build New Apps</h2>
+    <p>Detailed feature plans for the two new apps. Each is broken into a core MVP, then enhancement layers.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">App 04 · Travel Planner — MVP Core</div>
+    <div class="cards">
+      <div class="card">
+        <div class="priority-flag">Start here</div>
+        <div class="card-top">
+          <h4>Trip List & Calendar View</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>All upcoming trips listed with dates, destination, trip type (short break / long haul / visitors). A year-at-a-glance calendar shows trips and visitors visually.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Trip Detail Page</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>Per-trip: destination, dates, accommodation, daily itinerary, budget estimate, key bookings (flights, hotels) with confirmation numbers. Notes field for ideas and must-sees.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Visitor Management</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>Track incoming visitors with arrival/departure dates, who's coming, where they're sleeping, planned activities and any costs. Keeps hosting organised alongside your own travel.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Packing List Templates</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>Reusable packing lists by trip type (city break, hiking, beach, marathon travel). Customise per trip. Check off as you pack. Huge time saver for frequent travellers.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">App 04 · Travel Planner — Enhancements</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top">
+          <h4>Race Travel Mode</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>For marathon-destination trips, link to the Training Planner race entry. Add race logistics (expo, packet pickup, start wave, finish area meeting point). Carb-load meal planner using Recipe Book.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Trip Cost Tracker</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>Log spending during a trip by category (food, transport, activities, accommodation). Auto-compare to pre-trip budget. Feed final total back to the Budget Tracker app.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Historical Trip Archive</h4>
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <p>Archive past trips with photos, ratings and notes. See a world map of places visited. Useful for planning — "we loved that coastal town, what did we do there?"</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">App 05 · Training Planner — MVP Core</div>
+    <div class="cards">
+      <div class="card">
+        <div class="priority-flag">Start here</div>
+        <div class="card-top">
+          <h4>Race Calendar & Goals</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>List upcoming races with date, location, distance, target time and current PB. The anchor of the app. Everything else hangs off the race calendar.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Training Plan Builder</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>For each race, build a week-by-week plan counting back from race day. Define sessions by type (easy, tempo, long run, intervals, rest). Set target distances or times per session.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Daily Run Logger</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>Quick-entry form: date, distance, time, type, notes, perceived effort. Shows today's planned session alongside the entry form. The most-used view in the app.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Planned vs Actual View</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>Week-by-week comparison of planned km/miles vs actual. Colour-coded compliance. Shows at a glance if you're under-training and how much runway is left to the race.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">App 05 · Training Planner — Enhancements</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top">
+          <h4>Historical Race Archive & PB Tracker</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>All past races with finish times, splits, weather, course notes. Charts PB progression over time by distance. Motivating and useful for pacing strategy.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Annual Volume Dashboard</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>Monthly km totals for all years on record. Year-on-year comparison. Injury flags (weeks with zero runs). Helps identify the training load that produces best race results.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Calorie Burn ↔ Calorie Planner Link</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>Push today's estimated calorie burn from a logged run into the Calorie Planner. Adjust daily targets automatically on hard training days. The core EAT–RUN feedback loop.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Race-Week Nutrition Plan</h4>
+          <span class="badge badge-run">RUN</span>
+        </div>
+        <p>In the 7 days before a marathon, suggest a daily meal plan from the Recipe Book optimised for carb-loading. Uses your nutrition targets and personal recipes.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOMEPAGE ══ -->
+<section id="homepage">
+  <div class="section-header">
+    <h2>EAT · RUN · LIVE Homepage</h2>
+    <p>A unified hub that presents a live daily snapshot from all apps. Built last, when all apps have stable data schemas.</p>
+  </div>
+
+  <div class="homepage-concept">
+    <h3>The Concept</h3>
+    <p>The homepage isn't just a link menu — it's a genuine daily dashboard. Open it each morning and see: today's calorie target, today's run plan, upcoming travel and a budget snapshot. Everything you need to start the day, connected.</p>
+    <div class="erl-grid">
+      <div class="erl-col eat">
+        <h4>EAT</h4>
+        <ul>
+          <li>Today's calorie target vs yesterday's actual</li>
+          <li>Weight trend (last 7 days)</li>
+          <li>Suggested recipe for today</li>
+        </ul>
+      </div>
+      <div class="erl-col run">
+        <h4>RUN</h4>
+        <ul>
+          <li>Today's session (planned)</li>
+          <li>Weeks to next race</li>
+          <li>This week: planned vs actual km</li>
+        </ul>
+      </div>
+      <div class="erl-col live">
+        <h4>LIVE</h4>
+        <ul>
+          <li>Days to next trip</li>
+          <li>Month-to-date spend vs budget</li>
+          <li>Upcoming visitor stays</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">Homepage Build Tasks</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top">
+          <h4>App Summary JSON Contract</h4>
+          <span class="badge badge-home">HUB</span>
+        </div>
+        <p>Each app exposes a small summary JSON object (or localStorage key) that the homepage reads. Define this contract before building — it drives homepage design and each app's data structure.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Daily Snapshot Dashboard</h4>
+          <span class="badge badge-home">HUB</span>
+        </div>
+        <p>Three-panel layout (EAT / RUN / LIVE) with live data cards pulled from each app summary. Today's date, weather optionally. The home screen you'll open every morning.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>App Navigation Hub</h4>
+          <span class="badge badge-home">HUB</span>
+        </div>
+        <p>Clear visual links to all five apps. Consistent back-to-home button in every app. Keyboard shortcuts for power navigation. Should feel like one product, not five separate files.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Alerts & Nudges System</h4>
+          <span class="badge badge-home">HUB</span>
+        </div>
+        <p>Surface smart prompts: "Race in 3 weeks — are you on track?", "Over budget in travel this month", "No run logged in 3 days". Driven by thresholds you define, not complex logic.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Weekly Review Mode</h4>
+          <span class="badge badge-home">HUB</span>
+        </div>
+        <p>A Sunday summary view: training week vs plan, avg calories hit, spend vs budget, recap of the week's runs. Makes the weekly review ritual fast and meaningful.</p>
+        <div class="effort"><span class="effort-label">Effort</span><div class="dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DATA WORKFLOWS ══ -->
+<section id="data">
+  <div class="section-header">
+    <h2>Data Workflows</h2>
+    <p>The hidden foundation. Good data habits make the apps genuinely useful and sustainable over years.</p>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">Recurring Workflows</div>
+
+    <div class="workflow-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Monthly Budget Update (App 03)</h4>
+        <p>First weekend of each month. Takes ~5 minutes once the data entry form is built. Process:</p>
+        <ul>
+          <li>Open the monthly update form in the Budget Tracker</li>
+          <li>Enter actuals by category from bank/card statements</li>
+          <li>Review any over-budget categories — add a note if it was exceptional</li>
+          <li>Save to the JSON dataset. Charts auto-update.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Daily Run Log (App 05)</h4>
+        <p>Every run, within a few hours. Should take under 60 seconds. Process:</p>
+        <ul>
+          <li>Open Training Planner → Daily Log</li>
+          <li>Today's plan is pre-shown — click to confirm or edit</li>
+          <li>Add: actual distance, time, notes, RPE (1–10)</li>
+          <li>Calorie burn auto-pushes to Calorie Planner</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Daily Calorie Log (App 01)</h4>
+        <p>Each evening or after each meal. The most frequent workflow — needs to be frictionless. Process:</p>
+        <ul>
+          <li>Select meals from Recipe Book or add custom items</li>
+          <li>Running total vs target visible at all times</li>
+          <li>End-of-day: log weight if measuring</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Trip Planning Setup (App 04)</h4>
+        <p>As soon as a trip is confirmed — typically months ahead. Process:</p>
+        <ul>
+          <li>Create trip entry with dates and destination</li>
+          <li>Add confirmed bookings with confirmation numbers</li>
+          <li>Clone relevant packing list template</li>
+          <li>Set budget estimate → links to Budget Tracker travel category</li>
+          <li>If marathon trip: link to race in Training Planner</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Race Setup (App 05)</h4>
+        <p>When you register for a marathon. Process:</p>
+        <ul>
+          <li>Add race to calendar: date, location, distance, goal time</li>
+          <li>Build or load a training plan (12–20 weeks out)</li>
+          <li>Plan auto-populates week-by-week sessions counting back from race day</li>
+          <li>Create linked trip in Travel Planner if travelling for the race</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h4>Annual Review & Reset (All Apps)</h4>
+        <p>Each January. Takes 1–2 hours but sets up the year well. Process:</p>
+        <ul>
+          <li><strong>Budget:</strong> Review prior year actuals, set this year's budget by category</li>
+          <li><strong>Training:</strong> Review annual volume, enter target races for the year</li>
+          <li><strong>Nutrition:</strong> Update calorie/macro targets if goals have changed</li>
+          <li><strong>Travel:</strong> Enter all known trips; estimate costs; set travel budget</li>
+          <li><strong>Recipes:</strong> Archive any recipes not used, add new ones</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label">Data Architecture Decisions</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-top">
+          <h4>Storage: localStorage vs JSON Files</h4>
+          <span class="badge badge-core">ARCH</span>
+        </div>
+        <p>localStorage is quick to implement but browser-locked. JSON files saved to disk are portable and version-controllable with Git. Recommendation: JSON files with a simple save/load UI. This future-proofs the data.</p>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Git for Version Control</h4>
+          <span class="badge badge-core">ARCH</span>
+        </div>
+        <p>Store all app HTML files and JSON data in a single Git repo. Free backup, full history, easy to restore. A simple private GitHub repo is sufficient. Commit after each monthly update.</p>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Single Source of Truth per Dataset</h4>
+          <span class="badge badge-core">ARCH</span>
+        </div>
+        <p>Each app owns one JSON file as its source of truth. The homepage reads from each. No duplication. When a recipe changes in recipes.json, it's immediately reflected in the Calorie Planner.</p>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <h4>Export / Backup Buttons</h4>
+          <span class="badge badge-core">ARCH</span>
+        </div>
+        <p>Every app should have a Download JSON button that lets you save the current dataset. Build this from the start — one-click backup is better than hoping the browser hasn't cleared localStorage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ROADMAP ══ -->
+<section id="roadmap">
+  <div class="section-header">
+    <h2>Phased Roadmap</h2>
+    <p>A logical sequence that builds on what you have, adds value at each phase, and avoids rework.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item done">
+      <div class="tl-header">
+        <span class="tl-title">Phase 0 — Foundation</span>
+        <span class="tl-period">COMPLETE</span>
+      </div>
+      <div class="tl-body">CSS style guide created. Three apps built: Calorie Planner, Recipe Book, Budget Tracker. Core infrastructure exists.</div>
+      <div class="tl-tags">
+        <span class="tl-tag">Style Guide ✓</span>
+        <span class="tl-tag">App 01 ✓</span>
+        <span class="tl-tag">App 02 ✓</span>
+        <span class="tl-tag">App 03 ✓</span>
+      </div>
+    </div>
+
+    <div class="tl-item now">
+      <div class="tl-header">
+        <span class="tl-title">Phase 1 — Data Architecture</span>
+        <span class="tl-period">DO FIRST · 1–2 WEEKS</span>
+      </div>
+      <div class="tl-body">Before adding features, lock in your data schema and storage approach. Define the summary JSON contract for the homepage. Migrate existing apps to consistent JSON files if needed. Add export/backup buttons to all three apps. Set up a Git repo.</div>
+      <div class="tl-tags">
+        <span class="tl-tag">JSON schemas</span>
+        <span class="tl-tag">Git repo</span>
+        <span class="tl-tag">Export buttons</span>
+        <span class="tl-tag">Homepage contract</span>
+      </div>
+    </div>
+
+    <div class="tl-item soon">
+      <div class="tl-header">
+        <span class="tl-title">Phase 2 — Enhance Existing Apps</span>
+        <span class="tl-period">4–6 WEEKS</span>
+      </div>
+      <div class="tl-body">Systematically improve App 01, 02 and 03. Priority order: Recipe ↔ Calorie integration first (highest daily value), then Budget monthly update workflow, then charts and analysis features. One app at a time to keep focus.</div>
+      <div class="tl-tags">
+        <span class="tl-tag">Recipe integration</span>
+        <span class="tl-tag">Budget workflow</span>
+        <span class="tl-tag">Weight log</span>
+        <span class="tl-tag">YoY charts</span>
+        <span class="tl-tag">Macro filters</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-header">
+        <span class="tl-title">Phase 3A — Training Planner</span>
+        <span class="tl-period">4–5 WEEKS</span>
+      </div>
+      <div class="tl-body">Build App 05 first among the two new apps, because it has strong links to the Calorie Planner (calorie burn) and creates the most daily usage habit. MVP: race calendar, plan builder, daily log, planned vs actual. Then add historical archive and volume dashboard.</div>
+      <div class="tl-tags">
+        <span class="tl-tag">Race calendar</span>
+        <span class="tl-tag">Plan builder</span>
+        <span class="tl-tag">Daily log</span>
+        <span class="tl-tag">Volume history</span>
+        <span class="tl-tag">Calorie link</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-header">
+        <span class="tl-title">Phase 3B — Travel Planner</span>
+        <span class="tl-period">3–4 WEEKS</span>
+      </div>
+      <div class="tl-body">Build App 04. MVP: trip list, trip detail pages, visitor management and packing lists. Enhancement: cost tracker linked to Budget Tracker, race travel mode linked to Training Planner. Historical archive as a later addition.</div>
+      <div class="tl-tags">
+        <span class="tl-tag">Trip list</span>
+        <span class="tl-tag">Trip detail</span>
+        <span class="tl-tag">Visitors</span>
+        <span class="tl-tag">Packing lists</span>
+        <span class="tl-tag">Cost tracker</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-header">
+        <span class="tl-title">Phase 4 — Homepage Hub</span>
+        <span class="tl-period">2–3 WEEKS</span>
+      </div>
+      <div class="tl-body">Build the EAT · RUN · LIVE homepage once all apps have stable data. Daily snapshot dashboard, alerts and nudges, weekly review mode. Add cross-app back-to-home navigation to every app.</div>
+      <div class="tl-tags">
+        <span class="tl-tag">Daily snapshot</span>
+        <span class="tl-tag">Alerts</span>
+        <span class="tl-tag">Weekly review</span>
+        <span class="tl-tag">Nav integration</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-header">
+        <span class="tl-title">Phase 5 — Cross-App Intelligence</span>
+        <span class="tl-period">ONGOING</span>
+      </div>
+      <div class="tl-body">The interesting phase. Race-week nutrition plans drawn from Recipe Book. Training load adjusting calorie targets automatically. Trip costs flowing into Budget Tracker. Marathon travel linked across Training and Travel planners. Build these bridges one at a time as the data quality matures.</div>
+      <div class="tl-tags">
+        <span class="tl-tag">Race nutrition plans</span>
+        <span class="tl-tag">Auto calorie adjust</span>
+        <span class="tl-tag">Trip cost sync</span>
+        <span class="tl-tag">Annual review mode</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRINCIPLES ══ -->
+<section id="principles">
+  <div class="section-header">
+    <h2>Guiding Principles</h2>
+    <p>Rules of thumb to keep the suite coherent and sustainable as it grows over years.</p>
+  </div>
+
+  <div class="principles">
+    <div class="principle">
+      <div class="icon">🎯</div>
+      <h4>Daily Usefulness First</h4>
+      <p>Prioritise features you'll use every day (log a run, log food) over impressive but rare ones. Daily habits make an app indispensable.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">⚡</div>
+      <h4>Minimum Clicks to Log</h4>
+      <p>Any data entry workflow should take under 60 seconds. If logging a run is slow or fiddly, you'll stop doing it. Design for speed.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">📦</div>
+      <h4>Data Portability Always</h4>
+      <p>Every app exports its own data. You own your data. Never build yourself into a corner where years of runs or finances are locked in a single file with no backup.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">🔗</div>
+      <h4>Link, Don't Duplicate</h4>
+      <p>A recipe lives in recipes.json once. The Calorie Planner reads it. The Meal Generator reads it. Change it in one place. Never copy data between apps manually.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">🧱</div>
+      <h4>MVP Before Enhancement</h4>
+      <p>Build the simplest useful version of each app before adding features. A simple app that gets used beats a feature-rich one that's too complex to maintain.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">🎨</div>
+      <h4>One Style Guide to Rule Them</h4>
+      <p>Add new UI patterns to the style guide as they appear. Never style an element ad-hoc in a single app. Consistency is what makes the suite feel like a product.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">📅</div>
+      <h4>Commit to a Maintenance Rhythm</h4>
+      <p>Monthly budget update, weekly run log, annual review. Build the workflows around these rhythms so updating the apps feels like the right cadence, not a chore.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">🌱</div>
+      <h4>Build for Decades</h4>
+      <p>Plain HTML, CSS and JSON will work in any browser in 20 years. Don't add dependencies you don't need. The budget data from 2025 should be just as accessible in 2045.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
