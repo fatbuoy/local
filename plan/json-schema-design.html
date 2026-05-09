@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Schema Design — Life Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F4F1EB; --paper:#FDFBF7; --ink:#1C1C1A; --mid:#7A7670;
+  --dim:#B0ACA5; --border:#E2DDD5; --border2:#CEC9C0;
+  --kitchen:#B85C38; --pocket:#2E6B8A; --fuel:#5A7A3A;
+  --travel:#7A5EA8; --training:#C07030;
+  --code-bg:#1A1C22; --code-ink:#B8C4D8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;}
+
+header{background:var(--ink);color:var(--bg);padding:3.5rem 5rem 3rem;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:#5A5E6A;margin-bottom:1rem;}
+header h1{font-family:'Instrument Serif',serif;font-size:clamp(2rem,5vw,3rem);font-weight:400;line-height:1.15;margin-bottom:1rem;}
+header h1 em{font-style:italic;color:#7A8090;}
+.header-note{font-size:0.82rem;color:#6A7080;max-width:560px;line-height:1.65;}
+
+nav{background:var(--paper);border-bottom:1px solid var(--border);display:flex;padding:0 5rem;position:sticky;top:0;z-index:100;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+nav button{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;padding:0.95rem 1rem;cursor:pointer;color:var(--mid);white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:0.45rem;}
+nav button:hover{color:var(--ink);}
+nav button.active{color:var(--ink);border-bottom-color:var(--ink);}
+.ndot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+main{max-width:1060px;margin:0 auto;padding:3rem 2rem 7rem;}
+section{display:none;}
+section.active{display:block;}
+
+.sh{display:flex;align-items:flex-start;gap:1.25rem;margin-bottom:2.25rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border);}
+.app-pill{flex-shrink:0;padding:0.4rem 0.8rem;border-radius:5px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:white;margin-top:0.35rem;font-weight:500;}
+.sh h2{font-family:'Instrument Serif',serif;font-size:1.8rem;font-weight:400;line-height:1.2;margin-bottom:0.3rem;}
+.sh h2 em{font-style:italic;}
+.sh p{font-size:0.82rem;color:var(--mid);max-width:560px;line-height:1.65;}
+
+.note{background:var(--paper);border:1px solid var(--border);border-left:3px solid var(--border2);border-radius:0 6px 6px 0;padding:0.9rem 1.15rem;margin-bottom:1rem;font-size:0.8rem;line-height:1.65;color:var(--mid);}
+.note strong{color:var(--ink);font-weight:600;}
+.note.dec{border-left-color:var(--ink);background:#F8F6F0;}
+.note.obs{border-left-color:var(--dim);}
+.note.warn{border-left-color:var(--training);}
+.note.link{border-left-color:var(--fuel);}
+.note-label{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);margin-bottom:0.25rem;}
+
+.sg{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin:2rem 0 0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+
+.cb{background:var(--code-bg);border-radius:8px;overflow:hidden;margin-bottom:1.5rem;}
+.cb-head{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 1rem;border-bottom:1px solid #22262E;background:#13151C;}
+.cb-name{font-family:'DM Mono',monospace;font-size:0.63rem;color:#4A5470;}
+.cb-right{display:flex;align-items:center;gap:0.75rem;}
+.cb-lang{font-family:'DM Mono',monospace;font-size:0.56rem;color:#323850;text-transform:uppercase;letter-spacing:0.1em;}
+.cpb{font-family:'DM Mono',monospace;font-size:0.56rem;background:none;border:1px solid #2A3050;border-radius:3px;color:#4A5470;padding:0.17rem 0.42rem;cursor:pointer;transition:all 0.15s;}
+.cpb:hover{color:var(--code-ink);border-color:#4A5880;}
+.cpb.ok{color:#7DB87A;border-color:#7DB87A;}
+pre{padding:1.25rem;font-family:'DM Mono',monospace;font-size:0.72rem;line-height:1.8;color:var(--code-ink);overflow-x:auto;}
+.k{color:#C792EA;} .s{color:#C3E88D;} .n{color:#F78C6C;}
+.p{color:#89DDFF;} .c{color:#37475E;font-style:italic;} .b{color:#FFCB6B;}
+
+.ft{width:100%;border-collapse:collapse;font-size:0.76rem;margin-bottom:1.5rem;}
+.ft th{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);text-align:left;padding:0.55rem 0.8rem;border-bottom:1px solid var(--border2);background:var(--paper);}
+.ft td{padding:0.6rem 0.8rem;border-bottom:1px solid var(--border);vertical-align:top;}
+.ft tr:last-child td{border-bottom:none;}
+.ft code{font-family:'DM Mono',monospace;font-size:0.68rem;background:var(--border);padding:0.08rem 0.32rem;border-radius:3px;}
+.ft .src{font-size:0.7rem;color:var(--dim);}
+.ft .td-type{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--mid);}
+.ft .td-note{font-size:0.72rem;color:var(--mid);line-height:1.5;}
+.new-field{background:#F0F8F0;}
+
+.ct{width:100%;border-collapse:collapse;font-size:0.76rem;margin-bottom:1.5rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ct th{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.12em;text-transform:uppercase;background:var(--paper);padding:0.6rem 0.9rem;border-bottom:1px solid var(--border2);text-align:left;color:var(--mid);}
+.ct td{padding:0.65rem 0.9rem;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5;}
+.ct tr:last-child td{border-bottom:none;}
+.ct code{font-family:'DM Mono',monospace;font-size:0.68rem;background:var(--border);padding:0.08rem 0.32rem;border-radius:3px;}
+.pill-sm{display:inline-block;padding:0.1rem 0.45rem;border-radius:3px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;font-weight:500;color:white;vertical-align:middle;}
+
+.file-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.7rem;margin-bottom:1.75rem;}
+.fc{background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:0.85rem 1rem;}
+.fc-name{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--ink);margin-bottom:0.2rem;}
+.fc p{font-size:0.72rem;color:var(--mid);line-height:1.5;}
+.fc-src{font-size:0.65rem;font-family:'DM Mono',monospace;color:var(--dim);margin-top:0.4rem;}
+
+@media(max-width:680px){header{padding:2rem 1.25rem;}nav{padding:0 0.75rem;}main{padding:2rem 1rem 5rem;}.sh{flex-direction:column;gap:0.6rem;}}
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+  color: inherit;
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow"><a class="header-home" href="life-suite-plan.html" title="Hub">Life Suite</a> · Phase 1 · Schema Design · Mapped from your actual CSV files</div>
+  <h1>Seven files,<br><em>one shared language</em></h1>
+  <p class="header-note">JSON schemas designed from your actual CSV structures. Every field traced to its source column. Design decisions explained where the CSV needed restructuring for integration and extensibility.</p>
+</header>
+
+<nav>
+  <button class="active" onclick="show('principles',this)">Principles</button>
+  <button onclick="show('kitchen',this)"><span class="ndot" style="background:var(--kitchen)"></span>Kitchen</button>
+  <button onclick="show('pocket',this)"><span class="ndot" style="background:var(--pocket)"></span>Pocket Change</button>
+  <button onclick="show('fuel',this)"><span class="ndot" style="background:var(--fuel)"></span>Fuel Plan</button>
+  <button onclick="show('travel',this)"><span class="ndot" style="background:var(--travel)"></span>Travel</button>
+  <button onclick="show('training',this)"><span class="ndot" style="background:var(--training)"></span>Training</button>
+  <button onclick="show('links',this)">↔ Cross-App</button>
+</nav>
+
+<main>
+
+<!-- PRINCIPLES -->
+<section id="principles" class="active">
+  <div class="sh">
+    <div>
+      <h2>Global <em>design rules</em></h2>
+      <p>Six rules applied to every JSON file. They make the apps naturally interoperable without rework later.</p>
+    </div>
+  </div>
+
+  <div class="note dec"><div class="note-label">Rule 1 — IDs</div><strong>Every entity gets a stable, readable ID.</strong> Recipes: <code>rcp_001</code>. Ingredients: <code>ing_042</code>. Trips: <code>trp_2025_amsterdam</code>. Race events: <code>evt_paris_marathon_2026</code>. Never bare integers — they survive copy/paste between files and mean something when read cold. Your CSV uses bare integers for Recipe_ID; pad to <code>rcp_001</code> format during conversion.</div>
+
+  <div class="note dec"><div class="note-label">Rule 2 — Dates are always ISO 8601</div><strong>Full date: <code>"2025-05-09"</code> &nbsp;·&nbsp; Year-month: <code>"2025-05"</code>.</strong> Never <code>"Jan"</code>, <code>"May 2025"</code>, or <code>"09/05/25"</code>. Your calorie schedule CSV already uses ISO dates — good. Your budget CSV uses separate Year / abbreviated Month columns — merge to <code>"2017-01"</code> during conversion.</div>
+
+  <div class="note dec"><div class="note-label">Rule 3 — Numbers are numbers</div><strong>Calories, grams, costs are always numeric, never strings.</strong> <code>520</code> not <code>"520"</code>. Missing/unknown = <code>null</code>. Crucially: <code>0</code> is a real value (your recipes have real zero Trans Fat, Cholesterol etc.) — never replace a zero with null.</div>
+
+  <div class="note dec"><div class="note-label">Rule 4 — Every file has a meta block</div><strong>The homepage reads only <code>meta</code></strong> — a small pre-computed summary at the top of each file. It never scans the full dataset. Meta is updated whenever data changes and holds pre-calculated values: today's kcal target, current month variance, days to next trip.</div>
+
+  <div class="note dec"><div class="note-label">Rule 5 — Cross-references use IDs, not copies</div>A fuel schedule day references a recipe as <code>"recipeId": "rcp_012"</code>. A trip references a race as <code>"eventId": "evt_paris_marathon_2026"</code>. One source of truth, referenced everywhere. Changing a recipe name in recipes.json propagates everywhere automatically.</div>
+
+  <div class="note dec"><div class="note-label">Rule 6 — Tags are the integration glue</div><strong>Tags are lowercase-hyphenated string arrays.</strong> The same tag <code>"paris-2026"</code> on a trip, a budget month, and a training event is what lets the homepage connect them into a single view. Establish your tag vocabulary early and use it consistently.</div>
+
+  <div class="sg">All 7 JSON files</div>
+  <div class="file-row">
+    <div class="fc"><div class="fc-name">🧄 ingredients.json</div><p>Master ingredient library. Shared across all recipes.</p><div class="fc-src">NEW — from Standardised Ingredient column</div></div>
+    <div class="fc"><div class="fc-name">🍳 recipes.json</div><p>Recipe headers, nutrition, ingredient refs.</p><div class="fc-src">FROM recipes-source + ingredients CSVs</div></div>
+    <div class="fc"><div class="fc-name">💰 budget.json</div><p>All monthly actuals + budgets by category/sub.</p><div class="fc-src">FROM budget-source CSV</div></div>
+    <div class="fc"><div class="fc-name">⚡ phases.json</div><p>Calorie phases — targets by day type and mode.</p><div class="fc-src">FROM calorie-phases CSV</div></div>
+    <div class="fc"><div class="fc-name">📅 schedule.json</div><p>Day-by-day fuel plan + food log.</p><div class="fc-src">FROM calorie-schedule CSV</div></div>
+    <div class="fc"><div class="fc-name">✈️ travel.json</div><p>Trips, visitors, packing lists.</p><div class="fc-src">NEW — no CSV source yet</div></div>
+    <div class="fc"><div class="fc-name">🏃 training.json</div><p>Races, training plans, run log.</p><div class="fc-src">NEW — no CSV source yet</div></div>
+  </div>
+</section>
+
+
+<!-- KITCHEN -->
+<section id="kitchen">
+  <div class="sh">
+    <div class="app-pill" style="background:var(--kitchen)">Kitchen</div>
+    <div>
+      <h2>The <em>Kitchen</em></h2>
+      <p>Two CSV files become three JSON files: a master ingredient library, then recipes that reference it. The ingredient library is the key design decision — it eliminates duplication and powers future features like shopping lists and "which recipes use X?"</p>
+    </div>
+  </div>
+
+  <div class="note obs"><div class="note-label">Observed from CSV — recipes-source</div><strong>20 columns:</strong> Recipe_ID (int), Source, Cuisine, Sub-Category, Dish Name, Servings, then 13 nutrition columns (kcal, full fat breakdown: total/sat/mono/poly/trans, cholesterol, sodium, potassium, carbs, fibre, sugars, protein), plus Image URL and Item Page Link. Nutrition is comprehensive — all values preserved.</div>
+
+  <div class="note obs"><div class="note-label">Observed from CSV — recipes-ingredients-source</div><strong>8 columns:</strong> Recipe_ID (int), Dish Name (redundant — already in recipes), Original Ingredient (messy free text like "0.17 g, Garam Masala Powder"), Category (clean: "Spices (Powder)", "Vegetables", "Oils/Fats" etc.), Quantity (numeric), Unit Original (inconsistent: gm/tsp(s)/tbsp), Standardised Ingredient (clean name), Unit Standardised (cleaner but still some variants). The Standardised Ingredient column is your ingredient library already — it just needs extracting.</div>
+
+  <div class="note warn"><div class="note-label">Conversion decisions</div>
+    <strong>1.</strong> Recipe_ID integer → <code>"rcp_001"</code> zero-padded string.<br>
+    <strong>2.</strong> Extract all unique Standardised Ingredient values → <code>ingredients.json</code> with IDs <code>"ing_001"</code> etc.<br>
+    <strong>3.</strong> Dish Name in ingredients CSV is redundant — drop it.<br>
+    <strong>4.</strong> Original Ingredient column is noise — use Standardised Ingredient only.<br>
+    <strong>5.</strong> Unit normalisation: <code>gm</code>→<code>g</code>, <code>tsp(s)</code>→<code>tsp</code>, <code>tbsp(s)</code>→<code>tbsp</code>.<br>
+    <strong>6.</strong> Sub-Category in recipes is a cuisine sub-type ("Sabzi"), not a meal slot. Add a separate <code>mealCategory</code> column to your CSV (breakfast/lunch/dinner/snack) before converting.
+  </div>
+
+  <div class="sg">File 1 of 2 — ingredients.json</div>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-name">data/kitchen/ingredients.json</span><div class="cb-right"><span class="cb-lang">JSON</span><button class="cpb" onclick="cp(this)">Copy</button></div></div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>:      <span class="s">"2025-05-09"</span>,
+    <span class="p">"totalIngredients"</span>: <span class="n">87</span>          <span class="c">// count of unique standardised ingredients</span>
+  },
+
+  <span class="p">"ingredients"</span>: [
+    {
+      <span class="p">"id"</span>:          <span class="s">"ing_001"</span>,          <span class="c">// NEW — stable ID, referenced by recipes</span>
+      <span class="p">"name"</span>:        <span class="s">"Garam Masala Powder"</span>, <span class="c">// FROM Standardised Ingredient</span>
+      <span class="p">"category"</span>:    <span class="s">"spices-powder"</span>,    <span class="c">// FROM Category — slugified</span>
+                                          <span class="c">// raw categories: "Spices (Powder)" → "spices-powder"</span>
+                                          <span class="c">//   "Spices (Whole/Seeds)" → "spices-whole"</span>
+                                          <span class="c">//   "Fresh Aromatics" → "fresh-aromatics"</span>
+                                          <span class="c">//   "Vegetables" → "vegetables"</span>
+                                          <span class="c">//   "Oils/Fats" → "oils-fats"</span>
+                                          <span class="c">//   "Salt/Seasonings" → "salt-seasonings"</span>
+
+      <span class="c">// Nutrition per 100g — null until you add it.
+      // Optional now; enables ingredient-level macro lookup later.</span>
+      <span class="p">"per100g"</span>: {
+        <span class="p">"kcal"</span>:     <span class="k">null</span>,
+        <span class="p">"proteinG"</span>: <span class="k">null</span>,
+        <span class="p">"carbsG"</span>:   <span class="k">null</span>,
+        <span class="p">"fatG"</span>:     <span class="k">null</span>
+      },
+
+      <span class="p">"commonUnits"</span>: [<span class="s">"g"</span>, <span class="s">"tsp"</span>]      <span class="c">// NEW — units seen across your recipes for this ingredient</span>
+    },
+    {
+      <span class="p">"id"</span>:          <span class="s">"ing_002"</span>,
+      <span class="p">"name"</span>:        <span class="s">"Ivy Gourd/Tindora"</span>,  <span class="c">// standardised name</span>
+      <span class="p">"category"</span>:    <span class="s">"vegetables"</span>,
+      <span class="p">"per100g"</span>:     { <span class="p">"kcal"</span>: <span class="k">null</span>, <span class="p">"proteinG"</span>: <span class="k">null</span>, <span class="p">"carbsG"</span>: <span class="k">null</span>, <span class="p">"fatG"</span>: <span class="k">null</span> },
+      <span class="p">"commonUnits"</span>: [<span class="s">"g"</span>]
+    }
+    <span class="c">// ... one object per unique standardised ingredient across all recipes</span>
+  ]
+}</pre>
+  </div>
+
+  <div class="sg">File 2 of 2 — recipes.json</div>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-name">data/kitchen/recipes.json</span><div class="cb-right"><span class="cb-lang">JSON</span><button class="cpb" onclick="cp(this)">Copy</button></div></div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>:    <span class="s">"2025-05-09"</span>,
+    <span class="p">"totalRecipes"</span>:   <span class="n">47</span>,
+    <span class="p">"cuisines"</span>:       [<span class="s">"Indian"</span>, <span class="s">"Italian"</span>, <span class="s">"Mexican"</span>],  <span class="c">// pre-computed for filter UI</span>
+    <span class="p">"mealCategories"</span>: [<span class="s">"breakfast"</span>, <span class="s">"lunch"</span>, <span class="s">"dinner"</span>, <span class="s">"snack"</span>]
+  },
+
+  <span class="p">"recipes"</span>: [
+    {
+      <span class="c">// ── Identity ────────────────────────────────────────────</span>
+      <span class="p">"id"</span>:          <span class="s">"rcp_001"</span>,               <span class="c">// FROM Recipe_ID (1 → "rcp_001")</span>
+      <span class="p">"name"</span>:        <span class="s">"Tindora/Kovakkai Fry"</span>,  <span class="c">// FROM Dish Name</span>
+      <span class="p">"source"</span>:      <span class="s">"Rishi"</span>,                 <span class="c">// FROM Source</span>
+      <span class="p">"externalUrl"</span>: <span class="s">"https://www.myfitnesspal.com/recipe/..."</span>, <span class="c">// FROM Item Page Link</span>
+      <span class="p">"imagePath"</span>:   <span class="s">"/images/recipes/tindora-fry.jpg"</span>,       <span class="c">// FROM Image URL</span>
+
+      <span class="c">// ── Classification ──────────────────────────────────────</span>
+      <span class="p">"cuisine"</span>:      <span class="s">"Indian"</span>,               <span class="c">// FROM Cuisine</span>
+      <span class="p">"cuisineSub"</span>:   <span class="s">"Sabzi"</span>,                <span class="c">// FROM Sub-Category (cuisine sub-type)</span>
+      <span class="p">"mealCategory"</span>: <span class="s">"dinner"</span>,               <span class="c">// NEW — add column to CSV before converting</span>
+      <span class="p">"tags"</span>: [<span class="s">"vegetarian"</span>, <span class="s">"high-fibre"</span>, <span class="s">"race-week"</span>], <span class="c">// NEW — add manually</span>
+
+      <span class="c">// ── Yield ───────────────────────────────────────────────</span>
+      <span class="p">"servings"</span>: <span class="n">4</span>,                          <span class="c">// FROM Servings</span>
+
+      <span class="c">// ── Nutrition per serving ───────────────────────────────
+      // All 13 nutrition columns preserved. Fat breakdown grouped
+      // into a sub-object — cleaner to read and extend.</span>
+      <span class="p">"perServing"</span>: {
+        <span class="p">"kcal"</span>:         <span class="n">91</span>,                  <span class="c">// FROM Calories per Serving</span>
+        <span class="p">"proteinG"</span>:     <span class="n">6</span>,                   <span class="c">// FROM Protein (g)</span>
+        <span class="p">"carbsG"</span>:       <span class="n">3</span>,                   <span class="c">// FROM Total Carbohydrate (g)</span>
+        <span class="p">"fibreG"</span>:       <span class="n">5</span>,                   <span class="c">// FROM Dietary Fiber (g)</span>
+        <span class="p">"sugarsG"</span>:      <span class="n">0</span>,                   <span class="c">// FROM Sugars (g) — 0 is real, not null</span>
+        <span class="p">"sodiumMg"</span>:     <span class="n">440</span>,                 <span class="c">// FROM Sodium (mg)</span>
+        <span class="p">"potassiumMg"</span>:  <span class="n">21</span>,                  <span class="c">// FROM Potassium (mg)</span>
+        <span class="p">"cholesterolMg"</span>: <span class="n">0</span>,                 <span class="c">// FROM Cholesterol (mg)</span>
+        <span class="p">"fat"</span>: {
+          <span class="p">"totalG"</span>:     <span class="n">4</span>,                   <span class="c">// FROM Total Fat (g)</span>
+          <span class="p">"saturatedG"</span>: <span class="n">0</span>,                   <span class="c">// FROM Saturated Fat (g)</span>
+          <span class="p">"monounsatG"</span>: <span class="n">2</span>,                   <span class="c">// FROM Monounsaturated Fat (g)</span>
+          <span class="p">"polyunsatG"</span>: <span class="n">1</span>,                   <span class="c">// FROM Polyunsaturated Fat (g)</span>
+          <span class="p">"transG"</span>:     <span class="n">0</span>                    <span class="c">// FROM Trans Fat (g)</span>
+        }
+      },
+
+      <span class="c">// ── Ingredients — reference the master library ──────────</span>
+      <span class="p">"ingredients"</span>: [
+        {
+          <span class="p">"ingredientId"</span>: <span class="s">"ing_001"</span>,         <span class="c">// ref → ingredients.json</span>
+          <span class="p">"quantity"</span>:     <span class="n">0.17</span>,             <span class="c">// FROM Quantity</span>
+          <span class="p">"unit"</span>:         <span class="s">"g"</span>               <span class="c">// FROM Unit (Standardised) — normalised</span>
+        },
+        {
+          <span class="p">"ingredientId"</span>: <span class="s">"ing_002"</span>,
+          <span class="p">"quantity"</span>:     <span class="n">630</span>,
+          <span class="p">"unit"</span>:         <span class="s">"g"</span>
+        }
+        <span class="c">// ... all 12 ingredients for rcp_001</span>
+      ],
+
+      <span class="c">// ── Optional rich fields — null until added manually ────</span>
+      <span class="p">"prepMins"</span>: <span class="k">null</span>,
+      <span class="p">"cookMins"</span>: <span class="k">null</span>,
+      <span class="p">"method"</span>:   <span class="k">null</span>,
+      <span class="p">"notes"</span>:    <span class="k">null</span>
+    }
+  ]
+}</pre>
+  </div>
+
+  <table class="ft">
+    <thead><tr><th>JSON field</th><th>Type</th><th>CSV source</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td class="td-type">string</td><td class="src">Recipe_ID</td><td class="td-note">Integer → <code>"rcp_001"</code> zero-padded</td></tr>
+      <tr><td><code>name</code></td><td class="td-type">string</td><td class="src">Dish Name</td><td class="td-note">Direct</td></tr>
+      <tr><td><code>cuisine / cuisineSub</code></td><td class="td-type">string</td><td class="src">Cuisine / Sub-Category</td><td class="td-note">Direct. Sub-Category is cuisine type, not meal slot.</td></tr>
+      <tr class="new-field"><td><code>mealCategory</code></td><td class="td-type">string</td><td class="src">NEW — add to CSV</td><td class="td-note">breakfast / lunch / dinner / snack. Add column, fill before converting.</td></tr>
+      <tr class="new-field"><td><code>tags</code></td><td class="td-type">string[]</td><td class="src">NEW — manual</td><td class="td-note">e.g. <code>["race-week","high-protein","vegetarian"]</code></td></tr>
+      <tr><td><code>perServing.kcal</code></td><td class="td-type">number</td><td class="src">Calories per Serving</td><td class="td-note">Renamed to kcal for consistency with Fuel Plan</td></tr>
+      <tr><td><code>perServing.fat{}</code></td><td class="td-type">object</td><td class="src">5 fat columns</td><td class="td-note">Grouped into sub-object. All values preserved.</td></tr>
+      <tr><td><code>ingredients[].ingredientId</code></td><td class="td-type">string</td><td class="src">Derived from Standardised Ingredient</td><td class="td-note">Looked up against ingredients.json during conversion</td></tr>
+      <tr><td><code>ingredients[].unit</code></td><td class="td-type">string</td><td class="src">Unit (Standardised)</td><td class="td-note">Normalise: gm→g, tsp(s)→tsp, tbsp(s)→tbsp</td></tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- POCKET CHANGE -->
+<section id="pocket">
+  <div class="sh">
+    <div class="app-pill" style="background:var(--pocket)">Pocket Change</div>
+    <div>
+      <h2><em>Pocket Change</em></h2>
+      <p>Your budget CSV is a long flat table: one row per year/month/source/category/subcategory. The JSON pivots this into a nested structure — categories defined once, months as objects with budget and actual side by side. Far easier to query and chart.</p>
+    </div>
+  </div>
+
+  <div class="note obs"><div class="note-label">Observed from CSV</div><strong>6 columns:</strong> Years (int), Months (abbreviated: "Jan"), Source (<code>Budget</code> or <code>Actual</code>), Category, Sub-Category, Total (decimal). Each calendar month has multiple rows — one Budget row and one Actual row per sub-category. With 8 years × 12 months × ~6 categories × ~2–3 subcategories × 2 (budget + actual) = roughly 3,000–7,000 rows total. The structure is correct, just long.</div>
+
+  <div class="note warn"><div class="note-label">Conversion decisions</div>
+    <strong>1.</strong> Merge Years + Months into ISO year-month: <code>"Jan"</code> + <code>2017</code> → <code>"2017-01"</code>.<br>
+    <strong>2.</strong> Pivot Source from a row value into two sibling keys per subcategory: <code>budget</code> and <code>actual</code>. This halves row count and makes variance trivial to calculate.<br>
+    <strong>3.</strong> Define categories and subcategories once in a master <code>categories</code> array — month spending references them by ID. Prevents typos drifting category names across 8 years.<br>
+    <strong>4.</strong> Add <code>tags</code> array on each month for trip linkage — populated manually when a month contains significant travel spend.
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-name">data/budget/budget.json</span><div class="cb-right"><span class="cb-lang">JSON</span><button class="cpb" onclick="cp(this)">Copy</button></div></div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>:         <span class="s">"2025-05-09"</span>,
+    <span class="p">"currency"</span>:            <span class="s">"CHF"</span>,
+    <span class="p">"oldestMonth"</span>:         <span class="s">"2017-01"</span>,
+    <span class="p">"latestMonth"</span>:         <span class="s">"2025-04"</span>,
+    <span class="p">"currentMonth"</span>:        <span class="s">"2025-05"</span>,
+    <span class="c">// Pre-computed for homepage — updated each monthly save</span>
+    <span class="p">"currentActualTotal"</span>:  <span class="n">3870</span>,
+    <span class="p">"currentBudgetTotal"</span>:  <span class="n">4200</span>,
+    <span class="p">"currentVariance"</span>:    <span class="n">-330</span>       <span class="c">// negative = under budget</span>
+  },
+
+  <span class="c">// ── Category master list ─────────────────────────────────────
+  // Defined ONCE. Months reference catId/subId.
+  // Populate by extracting unique Category + Sub-Category pairs from CSV.</span>
+  <span class="p">"categories"</span>: [
+    {
+      <span class="p">"id"</span>:     <span class="s">"groceries"</span>,
+      <span class="p">"label"</span>:  <span class="s">"Groceries"</span>,
+      <span class="p">"colour"</span>: <span class="s">"#5AAEC0"</span>,
+      <span class="p">"subs"</span>: [
+        { <span class="p">"id"</span>: <span class="s">"groceries-general"</span>, <span class="p">"label"</span>: <span class="s">"Groceries"</span> }
+      ]
+    },
+    {
+      <span class="p">"id"</span>:     <span class="s">"travel"</span>,
+      <span class="p">"label"</span>:  <span class="s">"Travel"</span>,
+      <span class="p">"colour"</span>: <span class="s">"#7A5EA8"</span>,
+      <span class="p">"subs"</span>: [
+        { <span class="p">"id"</span>: <span class="s">"travel-flights"</span>,       <span class="p">"label"</span>: <span class="s">"Flights"</span> },
+        { <span class="p">"id"</span>: <span class="s">"travel-accommodation"</span>, <span class="p">"label"</span>: <span class="s">"Accommodation"</span> },
+        { <span class="p">"id"</span>: <span class="s">"travel-other"</span>,        <span class="p">"label"</span>: <span class="s">"Other Travel"</span> }
+      ]
+    }
+    <span class="c">// ... extract all unique categories from your CSV</span>
+  ],
+
+  <span class="c">// ── Annual budget targets ────────────────────────────────────</span>
+  <span class="p">"annualBudgets"</span>: [
+    {
+      <span class="p">"year"</span>: <span class="n">2025</span>,
+      <span class="p">"totals"</span>: {
+        <span class="p">"groceries"</span>: <span class="n">3600</span>,
+        <span class="p">"travel"</span>:    <span class="n">8000</span>
+        <span class="c">// one key per category id</span>
+      }
+    }
+  ],
+
+  <span class="c">// ── Monthly records ──────────────────────────────────────────
+  // One object per month. Budget and actual are side by side
+  // within each sub-category — replaces the multi-row CSV structure.</span>
+  <span class="p">"months"</span>: [
+    {
+      <span class="p">"month"</span>:  <span class="s">"2017-01"</span>,              <span class="c">// FROM Years + Months ("Jan" 2017 → "2017-01")</span>
+      <span class="p">"tags"</span>:   [],                    <span class="c">// NEW — e.g. ["amsterdam-2025"] for trip linkage</span>
+      <span class="p">"notes"</span>:  <span class="k">null</span>,                  <span class="c">// NEW — free text for unusual months</span>
+
+      <span class="c">// Spending pivoted: Source column becomes budget/actual keys</span>
+      <span class="p">"spending"</span>: {
+        <span class="p">"groceries"</span>: {
+          <span class="p">"budget"</span>: <span class="n">300</span>,             <span class="c">// FROM rows where Source = "Budget", Category = "Groceries"</span>
+          <span class="p">"actual"</span>: <span class="n">248.82</span>,          <span class="c">// FROM rows where Source = "Actual", Category = "Groceries"</span>
+          <span class="p">"subs"</span>: {
+            <span class="p">"groceries-general"</span>: { <span class="p">"budget"</span>: <span class="n">300</span>, <span class="p">"actual"</span>: <span class="n">248.82</span> }
+          }
+        },
+        <span class="p">"travel"</span>: {
+          <span class="p">"budget"</span>: <span class="n">0</span>,
+          <span class="p">"actual"</span>: <span class="n">0</span>,
+          <span class="p">"subs"</span>: {
+            <span class="p">"travel-flights"</span>:       { <span class="p">"budget"</span>: <span class="n">0</span>, <span class="p">"actual"</span>: <span class="n">0</span> },
+            <span class="p">"travel-accommodation"</span>: { <span class="p">"budget"</span>: <span class="n">0</span>, <span class="p">"actual"</span>: <span class="n">0</span> },
+            <span class="p">"travel-other"</span>:         { <span class="p">"budget"</span>: <span class="n">0</span>, <span class="p">"actual"</span>: <span class="n">0</span> }
+          }
+        }
+      }
+    }
+  ]
+}</pre>
+  </div>
+</section>
+
+
+<!-- FUEL PLAN -->
+<section id="fuel">
+  <div class="sh">
+    <div class="app-pill" style="background:var(--fuel)">Fuel Plan</div>
+    <div>
+      <h2><em>Fuel Plan</em></h2>
+      <p>Two very well-structured CSV files become two JSON files that work as a system. Phases define the targets; schedule is the day-by-day plan that references a phase. Your CSVs needed minimal restructuring — mainly grouping and adding cross-app link fields.</p>
+    </div>
+  </div>
+
+  <div class="note obs"><div class="note-label">Observed — calorie-phases.csv</div><strong>9 columns:</strong> label, sub (human date range string), start_date (ISO — already correct), end_date (ISO), avg_kcal, rest_kcal, run_kcal, long_kcal, description. Very clean. Phase 5 uses <code>2099-12-31</code> as an open-ended sentinel — make this explicit with a flag. The <code>mode</code> concept (base/marathon-build/taper/race/recovery/holiday) is implied but not present — add it as a new field.</div>
+
+  <div class="note obs"><div class="note-label">Observed — calorie-schedule.csv</div><strong>17 columns:</strong> date (ISO), label ("Mon 13"), activity, detail, type (walk/run), kcal, pb_g, alc (boolean), tagline, b_kcal, l_kcal, s_kcal, d_kcal, r_kcal (meal breakdown), tr_label, tr_detail (pre-run nutrition), zw_note (Zwift — empty in sample). Richly structured. The meal breakdown columns (b/l/s/d/r_kcal) group neatly into a <code>mealTargets</code> sub-object. Missing: actual logged data fields — these need adding for the app to function as a food log.</div>
+
+  <div class="note warn"><div class="note-label">Conversion decisions</div>
+    <strong>1.</strong> Add <code>id</code> to each phase: <code>"phase_1"</code> through <code>"phase_5"</code>.<br>
+    <strong>2.</strong> Phase 5 <code>end_date: "2099-12-31"</code> → <code>endDate: null</code> + <code>openEnded: true</code>.<br>
+    <strong>3.</strong> Add <code>mode</code> field to each phase: <code>base</code> / <code>marathon-build</code> / <code>taper</code> / <code>race</code> / <code>recovery</code> / <code>holiday</code>. This drives "race mode" and "holiday mode" in the app later.<br>
+    <strong>4.</strong> Add <code>phaseId</code> to each schedule day — derived from which phase's date range contains that date.<br>
+    <strong>5.</strong> Group b/l/s/d/r_kcal columns → <code>mealTargets{breakfast, lunch, snack, dinner, race}</code>.<br>
+    <strong>6.</strong> Rename <code>pb_g</code> → <code>proteinBonusG</code>. Rename <code>kcal</code> → <code>targetKcal</code>.<br>
+    <strong>7.</strong> Add actual logging fields to each day: <code>actualKcal</code>, <code>actualWeight</code>, <code>loggedMeals[]</code> — all null until logged.
+  </div>
+
+  <div class="sg">File 1 of 2 — phases.json</div>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-name">data/fuel/phases.json</span><div class="cb-right"><span class="cb-lang">JSON</span><button class="cpb" onclick="cp(this)">Copy</button></div></div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>:    <span class="s">"2025-05-09"</span>,
+    <span class="p">"activePhaseId"</span>:  <span class="s">"phase_2"</span>,        <span class="c">// pre-computed: which phase contains today?</span>
+    <span class="p">"todayKcalTarget"</span>: <span class="n">2100</span>            <span class="c">// pre-computed for homepage card</span>
+  },
+
+  <span class="p">"phases"</span>: [
+    {
+      <span class="p">"id"</span>:          <span class="s">"phase_1"</span>,           <span class="c">// NEW — sequential ID</span>
+      <span class="p">"label"</span>:       <span class="s">"Phase 1: Detox"</span>,    <span class="c">// FROM label</span>
+      <span class="p">"startDate"</span>:   <span class="s">"2026-04-13"</span>,       <span class="c">// FROM start_date (already ISO)</span>
+      <span class="p">"endDate"</span>:     <span class="s">"2026-05-03"</span>,       <span class="c">// FROM end_date</span>
+      <span class="p">"openEnded"</span>:   <span class="k">false</span>,
+      <span class="p">"description"</span>: <span class="s">"Flat baseline — clean eating habits..."</span>, <span class="c">// FROM description</span>
+      <span class="p">"mode"</span>:        <span class="s">"base"</span>,             <span class="c">// NEW — base|marathon-build|taper|race|recovery|holiday</span>
+      <span class="p">"targets"</span>: {
+        <span class="p">"avgKcal"</span>:  <span class="n">1900</span>,               <span class="c">// FROM avg_kcal</span>
+        <span class="p">"restKcal"</span>: <span class="n">1750</span>,               <span class="c">// FROM rest_kcal</span>
+        <span class="p">"runKcal"</span>:  <span class="n">1950</span>,               <span class="c">// FROM run_kcal</span>
+        <span class="p">"longKcal"</span>: <span class="n">2300</span>                <span class="c">// FROM long_kcal</span>
+      }
+    },
+    {
+      <span class="p">"id"</span>: <span class="s">"phase_4"</span>, <span class="p">"label"</span>: <span class="s">"Phase 4: Taper + Race"</span>,
+      <span class="p">"startDate"</span>: <span class="s">"2026-06-08"</span>, <span class="p">"endDate"</span>: <span class="s">"2026-06-14"</span>, <span class="p">"openEnded"</span>: <span class="k">false</span>,
+      <span class="p">"description"</span>: <span class="s">"Volume drops, carb loading kicks in Wed-Sat..."</span>,
+      <span class="p">"mode"</span>: <span class="s">"race"</span>,                  <span class="c">// triggers race mode UI in the app</span>
+      <span class="p">"targets"</span>: { <span class="p">"avgKcal"</span>: <span class="n">2300</span>, <span class="p">"restKcal"</span>: <span class="n">1850</span>, <span class="p">"runKcal"</span>: <span class="n">2000</span>, <span class="p">"longKcal"</span>: <span class="n">3800</span> }
+    },
+    {
+      <span class="p">"id"</span>: <span class="s">"phase_5"</span>, <span class="p">"label"</span>: <span class="s">"Phase 5: Recovery"</span>,
+      <span class="p">"startDate"</span>: <span class="s">"2026-06-15"</span>,
+      <span class="p">"endDate"</span>: <span class="k">null</span>,                 <span class="c">// FROM "2099-12-31" sentinel → explicit null</span>
+      <span class="p">"openEnded"</span>: <span class="k">true</span>,
+      <span class="p">"description"</span>: <span class="s">"Post-marathon rebuild. Easy running..."</span>,
+      <span class="p">"mode"</span>: <span class="s">"recovery"</span>,
+      <span class="p">"targets"</span>: { <span class="p">"avgKcal"</span>: <span class="n">2000</span>, <span class="p">"restKcal"</span>: <span class="n">1800</span>, <span class="p">"runKcal"</span>: <span class="n">2050</span>, <span class="p">"longKcal"</span>: <span class="n">2100</span> }
+    }
+  ]
+}</pre>
+  </div>
+
+  <div class="sg">File 2 of 2 — schedule.json</div>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-name">data/fuel/schedule.json</span><div class="cb-right"><span class="cb-lang">JSON</span><button class="cpb" onclick="cp(this)">Copy</button></div></div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>:     <span class="s">"2025-05-09"</span>,
+    <span class="p">"todayKcalTarget"</span>:  <span class="n">2100</span>,           <span class="c">// pre-computed from today's day entry</span>
+    <span class="p">"todayKcalActual"</span>:  <span class="n">1840</span>,           <span class="c">// from today's loggedMeals (null if not yet logged)</span>
+    <span class="p">"weekKcalAvg"</span>:      <span class="n">2050</span>,           <span class="c">// rolling 7-day actual average</span>
+    <span class="p">"currentWeight"</span>:    <span class="n">78.4</span>           <span class="c">// most recent weight log entry</span>
+  },
+
+  <span class="p">"days"</span>: [
+    {
+      <span class="c">// ── Plan (from CSV) ──────────────────────────────────────</span>
+      <span class="p">"date"</span>:           <span class="s">"2026-04-13"</span>,    <span class="c">// FROM date (already ISO)</span>
+      <span class="p">"phaseId"</span>:        <span class="s">"phase_1"</span>,       <span class="c">// NEW — derived from phases date ranges</span>
+      <span class="p">"label"</span>:          <span class="s">"Mon 13"</span>,        <span class="c">// FROM label</span>
+      <span class="p">"activity"</span>:       <span class="s">"Rest + walk"</span>,   <span class="c">// FROM activity</span>
+      <span class="p">"detail"</span>:         <span class="s">"Easy 8k walk"</span>, <span class="c">// FROM detail</span>
+      <span class="p">"type"</span>:           <span class="s">"walk"</span>,          <span class="c">// FROM type — rest|walk|run|long|race|bike|cross</span>
+      <span class="p">"targetKcal"</span>:     <span class="n">1750</span>,           <span class="c">// FROM kcal (renamed)</span>
+      <span class="p">"proteinBonusG"</span>:  <span class="n">15</span>,             <span class="c">// FROM pb_g (renamed)</span>
+      <span class="p">"alcohol"</span>:        <span class="k">false</span>,          <span class="c">// FROM alc (already boolean)</span>
+      <span class="p">"tagline"</span>:        <span class="s">"Softest day of the week. Move gently, eat clean."</span>, <span class="c">// FROM tagline</span>
+
+      <span class="c">// Meal calorie targets — grouped from b/l/s/d/r_kcal columns</span>
+      <span class="p">"mealTargets"</span>: {
+        <span class="p">"breakfast"</span>: <span class="n">360</span>,              <span class="c">// FROM b_kcal</span>
+        <span class="p">"lunch"</span>:     <span class="n">560</span>,              <span class="c">// FROM l_kcal</span>
+        <span class="p">"snack"</span>:     <span class="n">360</span>,              <span class="c">// FROM s_kcal</span>
+        <span class="p">"dinner"</span>:    <span class="n">470</span>,              <span class="c">// FROM d_kcal</span>
+        <span class="p">"race"</span>:      <span class="n">0</span>                 <span class="c">// FROM r_kcal (non-zero on race day only)</span>
+      },
+
+      <span class="c">// Pre/during run nutrition guidance</span>
+      <span class="p">"runNutrition"</span>: {
+        <span class="p">"label"</span>:  <span class="k">null</span>,               <span class="c">// FROM tr_label — e.g. "Pre-run"</span>
+        <span class="p">"detail"</span>: <span class="k">null</span>                <span class="c">// FROM tr_detail — e.g. "Banana + 2 dates, electrolytes"</span>
+      },
+
+      <span class="c">// Cross-app: link to the training run for this day (Phase 3 onwards)</span>
+      <span class="p">"trainingRunId"</span>: <span class="k">null</span>,           <span class="c">// ref → training.json runs[].id</span>
+
+      <span class="c">// ── Actual data — null until logged ──────────────────────</span>
+      <span class="p">"actualKcal"</span>:   <span class="k">null</span>,            <span class="c">// NEW — total kcal logged for this day</span>
+      <span class="p">"actualWeight"</span>: <span class="k">null</span>,            <span class="c">// NEW — morning weigh-in in kg</span>
+      <span class="p">"loggedMeals"</span>: [                  <span class="c">// NEW — meals logged against this day</span>
+        <span class="c">// Recipe-based: pull nutrition from recipes.json</span>
+        { <span class="p">"recipeId"</span>: <span class="s">"rcp_012"</span>, <span class="p">"servings"</span>: <span class="n">1</span>, <span class="p">"meal"</span>: <span class="s">"lunch"</span> },
+        <span class="c">// Ad-hoc item: not in recipe book</span>
+        { <span class="p">"recipeId"</span>: <span class="k">null</span>, <span class="p">"name"</span>: <span class="s">"Coffee with milk"</span>, <span class="p">"kcal"</span>: <span class="n">45</span>, <span class="p">"meal"</span>: <span class="s">"breakfast"</span> }
+      ]
+    }
+  ]
+}</pre>
+  </div>
+</section>
+
+
+<!-- TRAVEL -->
+<section id="travel">
+  <div class="sh">
+    <div class="app-pill" style="background:var(--travel)">Travel</div>
+    <div>
+      <h2><em>Travel</em> Planner</h2>
+      <p>No CSV source — designed from scratch. The key integration hooks: <code>budgetTag</code> links to budget months, <code>eventId</code> links to a race, and <code>type</code> drives packing list template selection automatically.</p>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-name">data/travel/travel.json</span><div class="cb-right"><span class="cb-lang">JSON</span><button class="cpb" onclick="cp(this)">Copy</button></div></div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>:   <span class="s">"2025-05-09"</span>,
+    <span class="p">"nextTripId"</span>:    <span class="s">"trp_2025_amsterdam"</span>,
+    <span class="p">"nextTripDate"</span>:  <span class="s">"2025-06-10"</span>,
+    <span class="p">"nextTripLabel"</span>: <span class="s">"Amsterdam"</span>,
+    <span class="p">"daysToNextTrip"</span>: <span class="n">32</span>
+  },
+
+  <span class="p">"trips"</span>: [
+    {
+      <span class="p">"id"</span>:           <span class="s">"trp_2025_amsterdam"</span>,   <span class="c">// trp_{year}_{slug}</span>
+      <span class="p">"label"</span>:        <span class="s">"Amsterdam"</span>,
+      <span class="p">"destination"</span>:  <span class="s">"Amsterdam, Netherlands"</span>,
+      <span class="p">"startDate"</span>:    <span class="s">"2025-06-10"</span>,
+      <span class="p">"endDate"</span>:      <span class="s">"2025-06-15"</span>,
+      <span class="p">"nights"</span>:       <span class="n">5</span>,
+
+      <span class="c">// Type drives packing list template + UI mode</span>
+      <span class="p">"type"</span>: <span class="s">"leisure"</span>,                    <span class="c">// leisure|race|bikepacking|family|visitors</span>
+      <span class="p">"tags"</span>: [<span class="s">"amsterdam-2025"</span>],
+
+      <span class="c">// Budget linkage — tag must match tags[] in budget.json months</span>
+      <span class="p">"budgetTag"</span>:      <span class="s">"amsterdam-2025"</span>,
+      <span class="p">"budgetEstimate"</span>: <span class="n">1400</span>,
+      <span class="p">"budgetActual"</span>:   <span class="k">null</span>,              <span class="c">// filled after trip</span>
+
+      <span class="c">// Race linkage — only set for type: "race"</span>
+      <span class="p">"eventId"</span>: <span class="k">null</span>,                      <span class="c">// ref → training.json events[].id</span>
+
+      <span class="p">"accommodation"</span>: <span class="s">"Hotel V Nesplein"</span>,
+      <span class="p">"confirmations"</span>: [
+        { <span class="p">"type"</span>: <span class="s">"flight"</span>, <span class="p">"ref"</span>: <span class="s">"AB1234"</span>, <span class="p">"detail"</span>: <span class="s">"ZRH→AMS 07:30"</span> },
+        { <span class="p">"type"</span>: <span class="s">"hotel"</span>,  <span class="p">"ref"</span>: <span class="s">"HV-9921"</span>, <span class="p">"detail"</span>: <span class="s">"Check-in 15:00"</span> }
+      ],
+      <span class="p">"packingListId"</span>: <span class="s">"pack_city_break"</span>,   <span class="c">// ref → packingLists[] below</span>
+      <span class="p">"notes"</span>: <span class="k">null</span>,
+      <span class="p">"itinerary"</span>: [
+        { <span class="p">"date"</span>: <span class="s">"2025-06-10"</span>, <span class="p">"notes"</span>: <span class="s">"Arrive, canal walk, dinner at Rijks"</span> }
+      ]
+    }
+  ],
+
+  <span class="p">"visitors"</span>: [
+    {
+      <span class="p">"id"</span>:            <span class="s">"vis_2025_smith_jun"</span>,
+      <span class="p">"who"</span>:           <span class="s">"The Smiths"</span>,
+      <span class="p">"arrivalDate"</span>:   <span class="s">"2025-06-20"</span>,
+      <span class="p">"departureDate"</span>: <span class="s">"2025-06-25"</span>,
+      <span class="p">"sleeping"</span>:      <span class="s">"Guest room"</span>,
+      <span class="p">"activities"</span>:    [<span class="s">"Hiking"</span>, <span class="s">"Fondue dinner"</span>],
+      <span class="p">"notes"</span>:         <span class="k">null</span>
+    }
+  ],
+
+  <span class="p">"packingLists"</span>: [
+    {
+      <span class="p">"id"</span>:    <span class="s">"pack_city_break"</span>,
+      <span class="p">"label"</span>: <span class="s">"City Break"</span>,
+      <span class="p">"items"</span>: [
+        { <span class="p">"category"</span>: <span class="s">"Clothing"</span>, <span class="p">"item"</span>: <span class="s">"Jeans"</span>,     <span class="p">"qty"</span>: <span class="n">2</span> },
+        { <span class="p">"category"</span>: <span class="s">"Running"</span>,  <span class="p">"item"</span>: <span class="s">"Run shoes"</span>,  <span class="p">"qty"</span>: <span class="n">1</span> }
+      ]
+    },
+    { <span class="p">"id"</span>: <span class="s">"pack_race_trip"</span>,   <span class="p">"label"</span>: <span class="s">"Race Trip"</span>,   <span class="p">"items"</span>: [] },
+    { <span class="p">"id"</span>: <span class="s">"pack_bikepacking"</span>, <span class="p">"label"</span>: <span class="s">"Bikepacking"</span>, <span class="p">"items"</span>: [] },
+    { <span class="p">"id"</span>: <span class="s">"pack_family"</span>,      <span class="p">"label"</span>: <span class="s">"Family Trip"</span>, <span class="p">"items"</span>: [] }
+  ]
+}</pre>
+  </div>
+</section>
+
+
+<!-- TRAINING -->
+<section id="training">
+  <div class="sh">
+    <div class="app-pill" style="background:var(--training)">Training</div>
+    <div>
+      <h2><em>Training</em> Planner</h2>
+      <p>No CSV source — designed for your pattern: 3 marathons a year, each with a dedicated training block. Events anchor everything. Plans hang off events. Daily runs log against a plan day and push calorie burn to the Fuel Plan.</p>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-name">data/training/training.json</span><div class="cb-right"><span class="cb-lang">JSON</span><button class="cpb" onclick="cp(this)">Copy</button></div></div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>:       <span class="s">"2025-05-09"</span>,
+    <span class="p">"nextEventId"</span>:       <span class="s">"evt_paris_marathon_2026"</span>,
+    <span class="p">"nextEventDate"</span>:     <span class="s">"2026-06-14"</span>,
+    <span class="p">"nextEventLabel"</span>:    <span class="s">"Paris Marathon 2026"</span>,
+    <span class="p">"weeksToNextEvent"</span>:  <span class="n">5</span>,
+    <span class="p">"thisWeekPlannedKm"</span>: <span class="n">62</span>,
+    <span class="p">"thisWeekActualKm"</span>:  <span class="n">38</span>
+  },
+
+  <span class="c">// ── Race event calendar ──────────────────────────────────────
+  // All races past and future. The anchor for plans and training blocks.</span>
+  <span class="p">"events"</span>: [
+    {
+      <span class="p">"id"</span>:            <span class="s">"evt_paris_marathon_2026"</span>, <span class="c">// evt_{city}_{type}_{year}</span>
+      <span class="p">"label"</span>:         <span class="s">"Paris Marathon 2026"</span>,
+      <span class="p">"date"</span>:          <span class="s">"2026-06-14"</span>,
+      <span class="p">"location"</span>:      <span class="s">"Paris, France"</span>,
+      <span class="p">"distance"</span>:      <span class="s">"marathon"</span>,              <span class="c">// marathon|half|10k|ultra|other</span>
+      <span class="p">"distanceKm"</span>:    <span class="n">42.195</span>,
+      <span class="p">"goalTimeMin"</span>:   <span class="n">225</span>,                     <span class="c">// target finish in minutes</span>
+      <span class="p">"pbAtEntryMin"</span>:  <span class="n">238</span>,                     <span class="c">// your PB at time of registration</span>
+
+      <span class="c">// Filled in after the race</span>
+      <span class="p">"finishTimeMin"</span>: <span class="k">null</span>,
+      <span class="p">"newPb"</span>:         <span class="k">null</span>,                    <span class="c">// true if this race set a new PB</span>
+      <span class="p">"notes"</span>:         <span class="k">null</span>,
+      <span class="p">"conditions"</span>:    <span class="k">null</span>,                    <span class="c">// weather, course notes</span>
+
+      <span class="c">// Cross-app links</span>
+      <span class="p">"tripId"</span>:        <span class="s">"trp_2026_paris"</span>,        <span class="c">// ref → travel.json trips[].id</span>
+      <span class="p">"fuelPhaseId"</span>:   <span class="s">"phase_4"</span>,              <span class="c">// ref → fuel phases.json — which phase is race week</span>
+      <span class="p">"planId"</span>:        <span class="s">"plan_paris_2026"</span>        <span class="c">// ref → plans[] below</span>
+    }
+  ],
+
+  <span class="c">// ── Training plans ───────────────────────────────────────────
+  // One plan per race. Weeks count back from race date.
+  // Each week has daily session targets.</span>
+  <span class="p">"plans"</span>: [
+    {
+      <span class="p">"id"</span>:        <span class="s">"plan_paris_2026"</span>,
+      <span class="p">"eventId"</span>:   <span class="s">"evt_paris_marathon_2026"</span>,
+      <span class="p">"label"</span>:     <span class="s">"Paris 2026 — 16 Week Build"</span>,
+      <span class="p">"startDate"</span>: <span class="s">"2026-02-23"</span>,
+      <span class="p">"endDate"</span>:   <span class="s">"2026-06-14"</span>,
+      <span class="p">"weeks"</span>: [
+        {
+          <span class="p">"weekNumber"</span>: <span class="n">1</span>,
+          <span class="p">"startDate"</span>:  <span class="s">"2026-02-23"</span>,
+          <span class="p">"label"</span>:      <span class="s">"Base Week 1"</span>,
+          <span class="p">"targetKm"</span>:   <span class="n">45</span>,
+          <span class="p">"days"</span>: [
+            {
+              <span class="p">"date"</span>:           <span class="s">"2026-02-23"</span>,
+              <span class="p">"sessionType"</span>:    <span class="s">"easy"</span>,    <span class="c">// rest|easy|tempo|intervals|long|race|cross</span>
+              <span class="p">"targetKm"</span>:       <span class="n">10</span>,
+              <span class="p">"targetPaceMinKm"</span>: <span class="k">null</span>,      <span class="c">// null for easy/long — effort-based</span>
+              <span class="p">"notes"</span>:          <span class="s">"Easy recovery pace, flat route"</span>
+            },
+            { <span class="p">"date"</span>: <span class="s">"2026-02-24"</span>, <span class="p">"sessionType"</span>: <span class="s">"rest"</span>, <span class="p">"targetKm"</span>: <span class="n">0</span> }
+          ]
+        }
+      ]
+    }
+  ],
+
+  <span class="c">// ── Daily run log ────────────────────────────────────────────
+  // Every run ever. Permanent growing record.
+  // Has both planned (from plan) and actual (logged) data.</span>
+  <span class="p">"runs"</span>: [
+    {
+      <span class="p">"id"</span>:            <span class="s">"run_2026_04_14"</span>,   <span class="c">// run_{date}</span>
+      <span class="p">"date"</span>:          <span class="s">"2026-04-14"</span>,
+      <span class="p">"planId"</span>:        <span class="s">"plan_paris_2026"</span>,  <span class="c">// null if standalone (not part of a plan)</span>
+      <span class="p">"planWeek"</span>:      <span class="n">8</span>,
+      <span class="p">"sessionType"</span>:   <span class="s">"easy"</span>,
+      <span class="p">"distanceKm"</span>:    <span class="n">6.4</span>,
+      <span class="p">"durationMin"</span>:   <span class="n">38</span>,
+      <span class="p">"paceMinKm"</span>:     <span class="n">5.94</span>,
+      <span class="p">"elevationM"</span>:    <span class="n">42</span>,
+      <span class="p">"heartRateAvg"</span>:  <span class="n">138</span>,
+      <span class="p">"rpe"</span>:           <span class="n">4</span>,                 <span class="c">// perceived effort 1–10</span>
+      <span class="p">"notes"</span>:         <span class="s">"Felt good, legs fresh"</span>,
+      <span class="p">"estimatedKcal"</span>: <span class="n">420</span>,              <span class="c">// auto-calculated, written to fuel schedule day</span>
+
+      <span class="c">// Cross-app: which fuel schedule day does this run belong to</span>
+      <span class="p">"fuelDayDate"</span>:   <span class="s">"2026-04-14"</span>      <span class="c">// ref → schedule.json days[].date</span>
+    }
+  ]
+}</pre>
+  </div>
+</section>
+
+
+<!-- CROSS-APP LINKS -->
+<section id="links">
+  <div class="sh">
+    <div>
+      <h2>Cross-app <em>reference map</em></h2>
+      <p>Every link between the seven files. Use this when building the apps — if a field references another file, it's here.</p>
+    </div>
+  </div>
+
+  <table class="ct">
+    <thead><tr><th>From file</th><th>Field</th><th>→ References</th><th>What it enables</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--kitchen)">recipes.json</span></td>
+        <td><code>ingredients[].ingredientId</code></td>
+        <td><code>ingredients.json → id</code></td>
+        <td>Looks up ingredient name, category, nutrition per 100g</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--fuel)">schedule.json</span></td>
+        <td><code>days[].phaseId</code></td>
+        <td><code>phases.json → id</code></td>
+        <td>Gets calorie targets (rest/run/long) for the day's phase</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--fuel)">schedule.json</span></td>
+        <td><code>days[].loggedMeals[].recipeId</code></td>
+        <td><code>recipes.json → id</code></td>
+        <td>Pulls recipe kcal + macros when logging a meal</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--fuel)">schedule.json</span></td>
+        <td><code>days[].trainingRunId</code></td>
+        <td><code>training.json runs[] → id</code></td>
+        <td>Links the fuel day to its training run for calorie burn</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--training)">training.json</span></td>
+        <td><code>runs[].fuelDayDate</code></td>
+        <td><code>schedule.json days[] → date</code></td>
+        <td>Run pushes estimated kcal burn back to the fuel schedule day</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--training)">training.json</span></td>
+        <td><code>events[].tripId</code></td>
+        <td><code>travel.json trips[] → id</code></td>
+        <td>Links a race to its travel trip — activates race trip mode</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--training)">training.json</span></td>
+        <td><code>events[].fuelPhaseId</code></td>
+        <td><code>phases.json → id</code></td>
+        <td>Identifies which fuel phase covers race week</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--travel)">travel.json</span></td>
+        <td><code>trips[].eventId</code></td>
+        <td><code>training.json events[] → id</code></td>
+        <td>Trip knows it's a race trip — shows race logistics UI</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--travel)">travel.json</span></td>
+        <td><code>trips[].budgetTag</code></td>
+        <td><code>budget.json months[].tags[]</code></td>
+        <td>Matches trip to budget months — enables cost-per-trip view</td>
+      </tr>
+      <tr>
+        <td><span class="pill-sm" style="background:var(--pocket)">budget.json</span></td>
+        <td><code>months[].tags[]</code></td>
+        <td><code>travel.json trips[].budgetTag</code></td>
+        <td>Tags a month's spend to a specific trip</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sg">What each file's meta block provides to the homepage</div>
+  <table class="ct">
+    <thead><tr><th>File</th><th>Homepage meta fields</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill-sm" style="background:var(--fuel)">phases.json</span></td><td><code>activePhaseId</code> · <code>todayKcalTarget</code></td></tr>
+      <tr><td><span class="pill-sm" style="background:var(--fuel)">schedule.json</span></td><td><code>todayKcalTarget</code> · <code>todayKcalActual</code> · <code>weekKcalAvg</code> · <code>currentWeight</code></td></tr>
+      <tr><td><span class="pill-sm" style="background:var(--pocket)">budget.json</span></td><td><code>currentActualTotal</code> · <code>currentBudgetTotal</code> · <code>currentVariance</code></td></tr>
+      <tr><td><span class="pill-sm" style="background:var(--travel)">travel.json</span></td><td><code>nextTripLabel</code> · <code>nextTripDate</code> · <code>daysToNextTrip</code></td></tr>
+      <tr><td><span class="pill-sm" style="background:var(--training)">training.json</span></td><td><code>nextEventLabel</code> · <code>weeksToNextEvent</code> · <code>thisWeekPlannedKm</code> · <code>thisWeekActualKm</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cp(btn){
+  const pre=btn.closest('.cb').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    btn.textContent='Copied!'; btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok');},2000);
+  });
+}
+</script>
+</body>
+</html>
