@@ -7,7 +7,7 @@
   "profile": {
     "weeklyTargetKm": 50,
     "longRunDay": "Sunday",
-    "raceGoal": { "name": "Dublin Marathon 2026", "date": "2026-10-26", "targetTime": "3:30:00" }
+    "raceGoal": { "name": "Marathon du Jura 2026", "date": "2026-06-14", "targetTime": "3:30:00" }
   },
   "weeks": [
     {
