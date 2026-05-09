@@ -503,6 +503,11 @@
     .erl-grid { grid-template-columns: 1fr; }
     .cards { grid-template-columns: 1fr; }
   }
+    a,
+    a:visited,
+    a:hover,
+    a:active {
+    color: inherit;
 </style>
 </head>
 <body>
@@ -1156,7 +1161,7 @@
 
     <div class="tl-item now">
       <div class="tl-header">
-        <span class="tl-title">Phase 1 — Data Architecture</span>
+        <span class="tl-title"><a href="phase1-task-list.html">Phase 1 — Data Architecture</a></span>
         <span class="tl-period">DO FIRST · 1–2 WEEKS</span>
       </div>
       <div class="tl-body">Before adding features, lock in your data schema and storage approach. Define the summary JSON contract for the homepage. Migrate existing apps to consistent JSON files if needed. Add export/backup buttons to all three apps. Set up a Git repo.</div>
