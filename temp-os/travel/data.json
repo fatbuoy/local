@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "app": "travel",
+    "currency": "EUR",
+    "version": 1
+  },
+  "trips": [
+    {
+      "id": "t001",
+      "name": "Japan Spring 2027",
+      "status": "planned",
+      "startDate": "2027-04-01",
+      "endDate": "2027-04-14",
+      "countries": ["Japan"],
+      "budget": 5000,
+      "spent": 0,
+      "tags": ["asia", "culture", "food"],
+      "days": [
+        {
+          "date": "2027-04-01",
+          "location": "Tokyo",
+          "activities": [],
+          "accommodation": { "name": "", "cost": 0 },
+          "meals": [],
+          "transport": []
+        }
+      ]
+    }
+  ]
+}

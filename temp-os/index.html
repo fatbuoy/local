@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sahani Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+/* Hub theme — default navy tokens, no override needed */
+.hub-greeting { font-size: var(--t-lg); font-weight: 600; color: var(--text); margin-bottom: 2px }
+.hub-date     { font-size: var(--t-sm); color: var(--muted); margin-bottom: 16px }
+
+/* App card themes — each card carries its own colour */
+.app-card.budget    .app-card-header { background: #1a3a1a }
+.app-card.calories  .app-card-header { background: #0d3535 }
+.app-card.recipes   .app-card-header { background: #3a1020 }
+.app-card.travel    .app-card-header { background: #1a1050 }
+.app-card.training  .app-card-header { background: #1a2535 }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-row">
+      <div class="header-left">
+        <span class="header-title">ⓈⒶⒽⒶⓃⒾ Hub</span>
+      </div>
+      <div class="header-right">
+        <span class="header-badge" id="todayBadge"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="chartTooltip"></div>
+
+<div class="container" id="app">
+  <div id="greeting"></div>
+
+  <div class="sec-lbl">Your Apps</div>
+  <div class="app-grid" id="appGrid"></div>
+
+  <div class="sec-lbl">Quick Stats</div>
+  <div class="grid-2" id="quickStats">
+    <div class="kpi-tile">
+      <div class="kpi-label">Loading…</div>
+      <div class="kpi-value">—</div>
+    </div>
+  </div>
+</div>
+
+<script src="shared/utils.js"></script>
+<script>
+const APPS = [
+  { id: 'budget',   label: 'Pocket Change', icon: '💰', sub: 'Budget & actuals',     path: 'budget/index.html',       dataPath: 'budget/data.json' },
+  { id: 'calories', label: 'Fuel Plan',     icon: '🥗', sub: 'Daily nutrition',      path: 'calorie-planner.html',    dataPath: null },
+  { id: 'recipes',  label: "FatBoy's Kitchen", icon: '📖', sub: 'Recipes & macros', path: 'recipe-book.html',        dataPath: null },
+  { id: 'travel',   label: 'Wanderer',      icon: '✈️',  sub: 'Trips & itineraries', path: 'travel/index.html',       dataPath: 'travel/data.json' },
+  { id: 'training', label: 'Run Log',       icon: '🏃', sub: 'Training & races',     path: 'training/index.html',     dataPath: 'training/data.json' },
+];
+
+function renderGreeting() {
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').innerHTML =
+    `<div class="hub-greeting">${greeting} 👋</div>
+     <div class="hub-date">${now.toLocaleDateString('en-IE', { weekday:'long', day:'numeric', month:'long', year:'numeric' })}</div>`;
+  document.getElementById('todayBadge').textContent =
+    now.toLocaleDateString('en-IE', { day:'numeric', month:'short' });
+}
+
+function renderAppGrid() {
+  const grid = document.getElementById('appGrid');
+  grid.innerHTML = APPS.map(app => `
+    <a class="app-card ${app.id}" href="${app.path}">
+      <div class="app-card-header">
+        <div class="app-card-icon">${app.icon}</div>
+        <div class="app-card-title">${app.label}</div>
+        <div class="app-card-sub">${app.sub}</div>
+      </div>
+      <div class="app-card-body">
+        <div class="app-card-stat" id="stat-${app.id}">Loading…</div>
+      </div>
+    </a>`).join('');
+}
+
+async function loadQuickStats() {
+  // Budget quick stat — data is inline in the HTML, no JSON yet
+  const budEl = document.getElementById('stat-budget');
+  if (budEl) budEl.textContent = 'Open to view spend tracker';
+
+  // Calories quick stat — data is inline in the HTML, no JSON
+  const calEl = document.getElementById('stat-calories');
+  if (calEl) calEl.textContent = 'Open to view today\'s plan';
+
+  // Recipes quick stat — data is inline in the HTML, no JSON
+  const recEl = document.getElementById('stat-recipes');
+  if (recEl) recEl.textContent = 'Browse the kitchen →';
+
+  // Training quick stat
+  try {
+    const d = await fetchData('training/data.json');
+    if (d && d.profile && d.profile.raceGoal) {
+      const race = d.profile.raceGoal;
+      const days = Math.ceil((new Date(race.date) - new Date()) / 86400000);
+      const el = document.getElementById('stat-training');
+      if (el) el.textContent = days > 0 ? `${days} days to ${race.name}` : race.name;
+    }
+  } catch(e) {}
+
+  // Travel quick stat
+  try {
+    const d = await fetchData('travel/data.json');
+    if (d && d.trips) {
+      const upcoming = d.trips.filter(t => t.status === 'planned');
+      const el = document.getElementById('stat-travel');
+      if (el) el.textContent = upcoming.length > 0 ? `${upcoming.length} trip${upcoming.length > 1 ? 's' : ''} planned` : 'No trips planned';
+    }
+  } catch(e) {}
+
+  // Quick stats grid
+  document.getElementById('quickStats').innerHTML = `
+    <div class="kpi-tile">
+      <div class="kpi-label">Apps active</div>
+      <div class="kpi-value">${APPS.length}</div>
+      <div class="kpi-sub">in your suite</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Today</div>
+      <div class="kpi-value">${new Date().toLocaleDateString('en-IE',{day:'numeric',month:'short'})}</div>
+      <div class="kpi-sub">${new Date().toLocaleDateString('en-IE',{year:'numeric'})}</div>
+    </div>`;
+}
+
+renderGreeting();
+renderAppGrid();
+loadQuickStats();
+</script>
+</body>
+</html>

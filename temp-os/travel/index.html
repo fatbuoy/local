@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sahani Wanderer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* ── Travel app theme: deep indigo ── */
+:root {
+  --app-primary:    #1a1050;
+  --app-primary2:   #2a1a80;
+  --app-primary3:   #4030a0;
+  --app-accent:     #5040c0;
+  --app-on-primary:    #ffffff;
+  --app-on-primary2:   #b8b0f0;
+  --app-on-primary3:   #8878d0;
+}
+
+.status-pill-planned   { background:#deeaf7; color:#0c447c }
+.status-pill-completed { background:#e2f0d6; color:#27500a }
+.status-pill-cancelled { background:#fde8e8; color:#7c0c0c }
+
+.trip-card {
+  background:var(--white); border:1.5px solid var(--border);
+  border-radius:var(--r-lg); overflow:hidden; cursor:pointer;
+  margin-bottom:10px; transition:border-color .15s, box-shadow .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.trip-card:hover { border-color:var(--app-accent); box-shadow:0 4px 16px rgba(0,0,0,.08) }
+.tc-header { background:var(--app-primary); padding:12px 14px 10px; display:flex; justify-content:space-between; align-items:flex-start }
+.tc-name   { font-size:14px; font-weight:600; color:var(--app-on-primary) }
+.tc-dates  { font-size:10px; color:var(--app-on-primary3); margin-top:3px }
+.tc-body   { padding:10px 14px; display:flex; justify-content:space-between; align-items:center; gap:12px }
+.tc-stat   { text-align:center }
+.tc-stat-val { font-size:15px; font-weight:600; color:var(--text) }
+.tc-stat-lbl { font-size:9px; color:var(--faint); text-transform:uppercase; letter-spacing:.05em }
+.tc-countries { display:flex; gap:4px; flex-wrap:wrap }
+
+/* Day itinerary */
+.day-card  { background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); margin-bottom:10px; overflow:hidden }
+.day-header { background:var(--app-primary2); padding:8px 14px; display:flex; align-items:center; justify-content:space-between }
+.day-date   { font-size:11px; font-weight:600; color:var(--app-on-primary); }
+.day-loc    { font-size:10px; color:var(--app-on-primary2) }
+.day-body   { padding:10px 14px }
+
+.activity-row { display:flex; align-items:center; gap:10px; padding:5px 0; border-bottom:1px solid var(--border2); font-size:var(--t-sm) }
+.activity-row:last-child { border-bottom:none }
+.activity-icon { font-size:14px; flex-shrink:0 }
+.activity-name { flex:1; color:var(--text) }
+.activity-cost { font-weight:600; color:var(--text); flex-shrink:0 }
+
+.budget-bar-wrap { margin-top:10px }
+.budget-labels   { display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-bottom:4px }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-row">
+      <div class="header-left">
+        <a class="header-home" href="../index.html">⌂</a>
+        <span class="header-title">Wanderer</span>
+      </div>
+      <div class="header-right">
+        <span class="header-badge" id="tripBadge">—</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="chartTooltip"></div>
+
+<div class="container" id="app">
+  <div id="listView">
+    <div class="sec-lbl">Your Trips</div>
+    <div id="tripList"></div>
+
+    <div class="section-sep"></div>
+    <div class="sec-lbl">Spending by Trip</div>
+    <div class="card"><div class="chart-wrap"><canvas id="trendChart"></canvas></div></div>
+  </div>
+  <div id="detailView" style="display:none"></div>
+</div>
+
+<script src="../shared/utils.js"></script>
+<script>
+let ALL_TRIPS = [];
+let CURRENCY  = 'EUR';
+
+function tripDuration(t) {
+  if (!t.startDate || !t.endDate) return '—';
+  const d = Math.round((new Date(t.endDate) - new Date(t.startDate)) / 86400000) + 1;
+  return `${d} day${d !== 1 ? 's' : ''}`;
+}
+
+function daysUntil(t) {
+  const diff = Math.ceil((new Date(t.startDate) - new Date()) / 86400000);
+  if (diff > 0) return `In ${diff} day${diff !== 1 ? 's' : ''}`;
+  if (diff === 0) return 'Today!';
+  return 'Completed';
+}
+
+function renderTripList() {
+  document.getElementById('tripBadge').textContent = `${ALL_TRIPS.length} trip${ALL_TRIPS.length !== 1 ? 's' : ''}`;
+  const list = document.getElementById('tripList');
+  if (!ALL_TRIPS.length) {
+    list.innerHTML = '<div class="card"><p style="color:var(--muted);font-size:13px">No trips in data.json yet.</p></div>';
+    return;
+  }
+  list.innerHTML = ALL_TRIPS.map(t => {
+    const pct = t.budget > 0 ? Math.min(Math.round(t.spent / t.budget * 100), 100) : 0;
+    const statusClass = `status-pill-${t.status || 'planned'}`;
+    return `
+      <div class="trip-card" onclick="showDetail('${t.id}')">
+        <div class="tc-header">
+          <div>
+            <div class="tc-name">${t.name}</div>
+            <div class="tc-dates">${t.startDate || '—'} → ${t.endDate || '—'}</div>
+          </div>
+          <span class="pill ${statusClass}">${t.status || 'planned'}</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-stat">
+            <div class="tc-stat-val">${tripDuration(t)}</div>
+            <div class="tc-stat-lbl">Duration</div>
+          </div>
+          <div class="tc-stat">
+            <div class="tc-stat-val">${(t.countries || []).length}</div>
+            <div class="tc-stat-lbl">Countr${(t.countries || []).length === 1 ? 'y' : 'ies'}</div>
+          </div>
+          <div class="tc-stat">
+            <div class="tc-stat-val">${CURRENCY} ${fmtK(t.budget || 0)}</div>
+            <div class="tc-stat-lbl">Budget</div>
+          </div>
+          <div class="tc-stat">
+            <div class="tc-stat-val" style="color:${t.status === 'planned' ? 'var(--c-info)' : 'var(--text)'}">${daysUntil(t)}</div>
+            <div class="tc-stat-lbl">Timing</div>
+          </div>
+        </div>
+        ${t.budget > 0 ? `<div style="padding:0 14px 10px">
+          <div class="budget-labels"><span>Spent ${CURRENCY} ${fmt(t.spent || 0)}</span><span>Budget ${CURRENCY} ${fmt(t.budget)}</span></div>
+          <div class="progress-bg h-md"><div class="progress-fill fill-accent" style="width:${pct}%"></div></div>
+        </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function renderTrend() {
+  const series = [
+    { name: 'Budget',  data: ALL_TRIPS.map(t => t.budget || 0) },
+    { name: 'Spent',   data: ALL_TRIPS.map(t => t.spent  || 0) }
+  ];
+  const labels = ALL_TRIPS.map(t => t.name.split(' ').slice(0, 2).join(' '));
+  const c = document.getElementById('trendChart');
+  if (c && ALL_TRIPS.length) drawTrendChart(c, series, labels, ['var(--app-accent)', '#ef9f27'], { prefix: CURRENCY + ' ' });
+}
+
+function showDetail(id) {
+  const t = ALL_TRIPS.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('listView').style.display = 'none';
+  const dv = document.getElementById('detailView');
+  dv.style.display = 'block';
+
+  const pct = t.budget > 0 ? Math.min(Math.round(t.spent / t.budget * 100), 100) : 0;
+  const fillClass = pct > 95 ? 'fill-danger' : pct > 80 ? 'fill-warning' : 'fill-accent';
+
+  let html = `
+    <button class="back-btn" onclick="backToList()">‹ All Trips</button>
+    <div class="card-hero">
+      <div class="hero-strip">
+        <div style="flex:1">
+          <div class="hs-title">${t.name}</div>
+          <div class="hs-sub">${(t.countries || []).join(' · ')} · ${tripDuration(t)}</div>
+          <div style="margin-top:6px"><span class="pill status-pill-${t.status || 'planned'}">${t.status || 'planned'}</span></div>
+        </div>
+        <div class="hs-right">
+          <div class="hs-stat">${CURRENCY} ${fmt(t.spent || 0)}</div>
+          <div class="hs-lbl">of ${CURRENCY} ${fmt(t.budget || 0)} budget</div>
+          <div class="hs-lbl" style="margin-top:4px">${daysUntil(t)}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="budget-labels"><span>Spent ${pct}%</span><span>${CURRENCY} ${fmt(t.budget || 0)} budget</span></div>
+        <div class="progress-bg h-lg"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+
+  if (t.days && t.days.length) {
+    html += '<div class="sec-lbl mt-3">Itinerary</div>';
+    t.days.forEach(day => {
+      const label = day.date ? new Date(day.date + 'T12:00:00').toLocaleDateString('en-IE', { weekday:'short', day:'numeric', month:'short' }) : day.date;
+      const items = [
+        ...(day.activities || []).map(a => ({ icon: '📍', name: a.name || a, cost: a.cost || 0 })),
+        ...(day.meals || []).map(m => ({ icon: '🍽', name: m.name || m, cost: m.cost || 0 })),
+        ...(day.transport || []).map(t => ({ icon: '🚌', name: t.name || t, cost: t.cost || 0 })),
+        day.accommodation && day.accommodation.name ? { icon: '🏨', name: day.accommodation.name, cost: day.accommodation.cost || 0 } : null
+      ].filter(Boolean);
+
+      html += `<div class="day-card">
+        <div class="day-header">
+          <span class="day-date">${label}</span>
+          <span class="day-loc">${day.location || ''}</span>
+        </div>
+        <div class="day-body">`;
+
+      if (items.length) {
+        items.forEach(item => {
+          html += `<div class="activity-row">
+            <span class="activity-icon">${item.icon}</span>
+            <span class="activity-name">${item.name}</span>
+            ${item.cost > 0 ? `<span class="activity-cost">${CURRENCY} ${fmt(item.cost)}</span>` : ''}
+          </div>`;
+        });
+      } else {
+        html += `<div style="font-size:11px;color:var(--faint)">No activities planned yet.</div>`;
+      }
+      html += '</div></div>';
+    });
+  }
+
+  if (t.tags && t.tags.length) html += `<div class="tag-list mt-2">${t.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>`;
+
+  dv.innerHTML = html;
+}
+
+function backToList() {
+  document.getElementById('detailView').style.display = 'none';
+  document.getElementById('detailView').innerHTML = '';
+  document.getElementById('listView').style.display = 'block';
+}
+
+(async () => {
+  const raw = await fetchData('./data.json');
+  if (!raw) return;
+  CURRENCY  = (raw.meta && raw.meta.currency) || 'EUR';
+  ALL_TRIPS = raw.trips || [];
+  renderTripList();
+  requestAnimationFrame(renderTrend);
+})();
+</script>
+</body>
+</html>

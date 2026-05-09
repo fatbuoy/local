@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "app": "budget",
+    "currency": "CHF",
+    "privacyPassword": "SundayRunday",
+    "version": 1
+  },
+  "categories": [
+    "Groceries",
+    "Housing",
+    "Recreation",
+    "Shopping",
+    "Transportation",
+    "Utilities & Bills",
+    "Vacation & Travel",
+    "Health",
+    "Other expenses"
+  ],
+  "data": [
+    {
+      "year": 2026,
+      "month": "Jan",
+      "source": "Actuals",
+      "category": "Groceries",
+      "subCategory": "Groceries",
+      "amount": 82.45
+    }
+  ]
+}
