@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sahani Run Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+/* ── Training app theme: dark slate + orange ── */
+:root {
+  --app-primary:    #1a2535;
+  --app-primary2:   #2a3d55;
+  --app-primary3:   #3a5575;
+  --app-accent:     #d06020;
+  --app-on-primary:    #ffffff;
+  --app-on-primary2:   #b8cce0;
+  --app-on-primary3:   #8aaac8;
+}
+
+/* Session type colours */
+.type-easy     { background:#e2f0d6; color:#27500a }
+.type-tempo    { background:#faeeda; color:#633806 }
+.type-long     { background:#deeaf7; color:#0c447c }
+.type-interval { background:#fde8e8; color:#7c0c0c }
+.type-race     { background:#2d0a6e; color:#d4c8ff }
+.type-rest     { background:#f0ede8; color:#888 }
+.type-cross    { background:#e0f5f0; color:#0a5040 }
+
+/* Session type line-chart colours */
+:root {
+  --c-easy:     #3b6d11;
+  --c-tempo:    #ef9f27;
+  --c-long:     #185fa5;
+  --c-interval: #c0392b;
+  --c-rest:     #aaa;
+}
+
+.week-card   { background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); margin-bottom:10px; overflow:hidden }
+.week-header { background:var(--app-primary); padding:10px 14px; display:flex; justify-content:space-between; align-items:center }
+.week-title  { font-size:12px; font-weight:600; color:var(--app-on-primary) }
+.week-phase  { font-size:10px; color:var(--app-on-primary3) }
+.week-km     { font-size:11px; font-weight:600; color:var(--app-on-primary2); text-align:right }
+.week-km-lbl { font-size:9px; color:var(--app-on-primary3) }
+.week-body   { padding:8px 14px }
+
+.session-row { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--border2) }
+.session-row:last-child { border-bottom:none }
+.session-date { font-size:10px; color:var(--muted); width:36px; flex-shrink:0 }
+.session-type { flex-shrink:0 }
+.session-info { flex:1; min-width:0 }
+.session-name { font-size:var(--t-sm); color:var(--text) }
+.session-note { font-size:10px; color:var(--faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.session-km   { font-size:var(--t-sm); font-weight:600; color:var(--text); flex-shrink:0; text-align:right }
+.session-km span { display:block; font-size:9px; font-weight:400; color:var(--faint) }
+
+.race-countdown { background:var(--app-primary); border-radius:var(--r-lg); padding:14px; margin-bottom:14px; display:flex; align-items:center; gap:14px }
+.rc-days  { font-size:var(--t-2xl); font-weight:700; color:var(--app-on-primary); line-height:1 }
+.rc-info  { flex:1; min-width:0 }
+.rc-name  { font-size:13px; font-weight:600; color:var(--app-on-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.rc-date  { font-size:10px; color:var(--app-on-primary3); margin-top:2px }
+.rc-goal  { font-size:10px; color:var(--app-on-primary2); margin-top:2px }
+
+.period-tabs { display:flex; gap:6px; margin-bottom:14px }
+.period-tab {
+  font-size:11px; font-weight:600; padding:4px 12px;
+  border-radius:var(--r-pill); border:1px solid var(--border);
+  background:var(--white); color:var(--muted);
+  cursor:pointer; font-family:inherit; transition:all .12s;
+}
+.period-tab.active { background:var(--app-primary); border-color:var(--app-primary); color:var(--app-on-primary) }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-row">
+      <div class="header-left">
+        <a class="header-home" href="../index.html">⌂</a>
+        <span class="header-title">Run Log</span>
+      </div>
+      <div class="header-right">
+        <span class="header-badge" id="weekBadge">—</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="chartTooltip"></div>
+
+<div class="container" id="app">
+  <div id="raceCountdown"></div>
+
+  <!-- Hero KPIs -->
+  <div class="grid-2 mb-3" id="kpiGrid"></div>
+
+  <div class="section-sep"></div>
+
+  <!-- Weekly km trend chart -->
+  <div class="sec-lbl">Weekly Volume</div>
+  <div class="card"><div class="chart-wrap"><canvas id="trendChart"></canvas></div></div>
+
+  <div class="section-sep"></div>
+
+  <!-- Week cards -->
+  <div class="period-tabs" id="periodTabs"></div>
+  <div id="weekCards"></div>
+</div>
+
+<script src="../shared/utils.js"></script>
+<script>
+const TYPE_LABELS = { easy:'Easy', tempo:'Tempo', long:'Long Run', interval:'Intervals', race:'Race', rest:'Rest', cross:'Cross' };
+const TYPE_COLORS = { easy:'#3b6d11', tempo:'#ef9f27', long:'#185fa5', interval:'#c0392b', race:'#7f77dd', cross:'#20a080', rest:'#aaa' };
+
+let WEEKS    = [];
+let PROFILE  = {};
+let viewMode = 'all'; // 'all' | 'upcoming' | 'done'
+
+/* ── Race countdown ──────────────────────────────────────────────── */
+function renderRaceCountdown() {
+  const goal = PROFILE.raceGoal;
+  if (!goal) return;
+  const days = Math.ceil((new Date(goal.date) - new Date()) / 86400000);
+  document.getElementById('raceCountdown').innerHTML = `
+    <div class="race-countdown">
+      <div>
+        <div class="rc-days">${Math.max(0, days)}</div>
+        <div style="font-size:9px;color:var(--app-on-primary3);margin-top:2px">days to go</div>
+      </div>
+      <div class="rc-info">
+        <div class="rc-name">${goal.name}</div>
+        <div class="rc-date">${new Date(goal.date + 'T12:00:00').toLocaleDateString('en-IE', {day:'numeric',month:'long',year:'numeric'})}</div>
+        ${goal.targetTime ? `<div class="rc-goal">🎯 Target ${goal.targetTime}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+/* ── KPI tiles ───────────────────────────────────────────────────── */
+function renderKPIs() {
+  const allSessions = WEEKS.flatMap(w => w.sessions || []);
+  const done = allSessions.filter(s => (s.actualKm || 0) > 0);
+  const totalKm = done.reduce((s, r) => s + (r.actualKm || 0), 0);
+  const totalPlanned = allSessions.reduce((s, r) => s + (r.plannedKm || 0), 0);
+  const compliance = totalPlanned > 0 ? Math.round(totalKm / totalPlanned * 100) : 0;
+  const weekTarget = PROFILE.weeklyTargetKm || 0;
+  const completedWeeks = WEEKS.filter(w => (w.sessions || []).some(s => (s.actualKm || 0) > 0)).length;
+
+  document.getElementById('kpiGrid').innerHTML = `
+    <div class="kpi-tile">
+      <div class="kpi-label">Total km logged</div>
+      <div class="kpi-value">${Math.round(totalKm)}</div>
+      <div class="kpi-sub">of ${Math.round(totalPlanned)} planned</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Compliance</div>
+      <div class="kpi-value">${compliance}%</div>
+      <div class="kpi-sub">${completedWeeks} of ${WEEKS.length} weeks active</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Weekly target</div>
+      <div class="kpi-value">${weekTarget} km</div>
+      <div class="kpi-sub">${PROFILE.longRunDay ? 'Long run: ' + PROFILE.longRunDay : ''}</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Sessions logged</div>
+      <div class="kpi-value">${done.length}</div>
+      <div class="kpi-sub">of ${allSessions.length} planned</div>
+    </div>`;
+}
+
+/* ── Trend chart ─────────────────────────────────────────────────── */
+function renderTrend() {
+  const series = [
+    { name: 'Planned km', data: WEEKS.map(w => sumBy(w.sessions || [], s => s.plannedKm || 0)) },
+    { name: 'Actual km',  data: WEEKS.map(w => sumBy(w.sessions || [], s => s.actualKm  || 0)) }
+  ];
+  const labels = WEEKS.map((w, i) => `W${i + 1}`);
+  const c = document.getElementById('trendChart');
+  if (c) drawTrendChart(c, series, labels, ['#3a5575', '#d06020'], { suffix: ' km' });
+  registerChartRedraw(() => {
+    const ch = document.getElementById('trendChart');
+    if (ch) drawTrendChart(ch, series, labels, ['#3a5575', '#d06020'], { suffix: ' km' });
+  });
+}
+
+/* ── Period tabs ─────────────────────────────────────────────────── */
+function renderTabs() {
+  document.getElementById('periodTabs').innerHTML = [
+    { id: 'all',      label: 'All weeks' },
+    { id: 'upcoming', label: 'Upcoming' },
+    { id: 'done',     label: 'Completed' }
+  ].map(t => `<button class="period-tab${t.id === viewMode ? ' active' : ''}" onclick="setView('${t.id}')">${t.label}</button>`).join('');
+}
+
+function setView(mode) {
+  viewMode = mode;
+  renderTabs();
+  renderWeeks();
+}
+
+/* ── Week cards ──────────────────────────────────────────────────── */
+function renderWeeks() {
+  document.getElementById('weekBadge').textContent = `${WEEKS.length} week${WEEKS.length !== 1 ? 's' : ''}`;
+
+  let weeks = WEEKS;
+  if (viewMode === 'upcoming') weeks = WEEKS.filter(w => (w.sessions || []).every(s => !(s.actualKm > 0)));
+  if (viewMode === 'done')     weeks = WEEKS.filter(w => (w.sessions || []).some(s => s.actualKm > 0));
+
+  if (!weeks.length) {
+    document.getElementById('weekCards').innerHTML = '<div class="card" style="color:var(--muted);font-size:13px">No weeks match.</div>';
+    return;
+  }
+
+  document.getElementById('weekCards').innerHTML = weeks.map((w, wi) => {
+    const planned = sumBy(w.sessions || [], s => s.plannedKm || 0);
+    const actual  = sumBy(w.sessions || [], s => s.actualKm  || 0);
+    const pct     = planned > 0 ? Math.min(Math.round(actual / planned * 100), 100) : 0;
+    const fillClass = pct >= 90 ? 'fill-success' : pct >= 70 ? 'fill-warning' : pct > 0 ? 'fill-danger' : 'fill-neutral';
+
+    const weekNum = WEEKS.indexOf(w) + 1;
+    const startLabel = w.weekStart ? new Date(w.weekStart + 'T12:00:00').toLocaleDateString('en-IE', {day:'numeric',month:'short'}) : `Week ${weekNum}`;
+
+    const sessionsHtml = (w.sessions || []).map(s => {
+      const dayLabel = s.date ? new Date(s.date + 'T12:00:00').toLocaleDateString('en-IE', {weekday:'short'}) : '—';
+      const typeClass = `type-${s.type || 'easy'}`;
+      const done = (s.actualKm || 0) > 0;
+      return `<div class="session-row">
+        <div class="session-date">${dayLabel}</div>
+        <div class="session-type"><span class="pill ${typeClass}">${TYPE_LABELS[s.type] || s.type}</span></div>
+        <div class="session-info">
+          <div class="session-note">${s.notes || (done ? '✓ Completed' : 'Planned')}</div>
+        </div>
+        <div class="session-km">
+          ${done ? `${s.actualKm} km` : `${s.plannedKm} km`}
+          <span>${done ? 'actual' : 'planned'}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="week-card">
+      <div class="week-header">
+        <div>
+          <div class="week-title">Week ${weekNum} · ${startLabel}</div>
+          ${w.phase ? `<div class="week-phase">${w.phase}</div>` : ''}
+        </div>
+        <div class="week-km">
+          <div>${actual > 0 ? actual + ' / ' + planned : planned} km</div>
+          <div class="week-km-lbl">${actual > 0 ? pct + '% complete' : 'planned'}</div>
+        </div>
+      </div>
+      <div class="week-body">
+        ${actual > 0 ? `<div class="progress-bg h-sm mb-2"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>` : ''}
+        ${sessionsHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Init ────────────────────────────────────────────────────────── */
+(async () => {
+  const raw = await fetchData('../data/training-data.json');
+  if (!raw) return;
+  PROFILE = raw.profile || {};
+  WEEKS   = raw.weeks   || [];
+
+  if (!WEEKS.length) {
+    document.getElementById('app').innerHTML = '<div class="card"><p style="color:var(--muted);font-size:13px">No training weeks in data.json yet.</p></div>';
+    return;
+  }
+
+  renderRaceCountdown();
+  renderKPIs();
+  renderTabs();
+  requestAnimationFrame(() => {
+    renderTrend();
+    renderWeeks();
+  });
+})();
+</script>
+</body>
+</html>

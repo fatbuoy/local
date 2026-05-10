@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "app": "training",
+    "version": 1,
+    "units": "metric"
+  },
+  "profile": {
+    "weeklyTargetKm": 50,
+    "longRunDay": "Sunday",
+    "raceGoal": { "name": "Marathon du Jura 2026", "date": "2026-06-14", "targetTime": "3:30:00" }
+  },
+  "weeks": [
+    {
+      "weekStart": "2026-05-04",
+      "phase": "Base building",
+      "targetKm": 48,
+      "sessions": [
+        { "date": "2026-05-04", "type": "easy",    "plannedKm": 10, "actualKm": 0, "notes": "" },
+        { "date": "2026-05-06", "type": "tempo",   "plannedKm": 10, "actualKm": 0, "notes": "" },
+        { "date": "2026-05-08", "type": "easy",    "plannedKm": 8,  "actualKm": 0, "notes": "" },
+        { "date": "2026-05-10", "type": "long",    "plannedKm": 20, "actualKm": 0, "notes": "" }
+      ]
+    }
+  ]
+}

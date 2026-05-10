@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FatBoy's Kitchen</title>
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+/* ── Recipe Book app theme: deep burgundy ── */
+:root {
+  --app-primary:    #3a1020;
+  --app-primary2:   #5a1830;
+  --app-primary3:   #8a2840;
+  --app-accent:     #a03020;
+  --app-on-primary:    #ffffff;
+  --app-on-primary2:   #f0b8b0;
+  --app-on-primary3:   #c89090;
+}
+
+/* App-specific styles */
+.filters-bar{background:var(--white);border:1px solid var(--border);border-radius:11px;padding:10px 12px;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-group{display:flex;align-items:center;gap:5px}
+.filter-lbl{font-size:10px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.filter-select{font-family:inherit;font-size:11px;color:var(--text);background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:4px 22px 4px 8px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;transition:border-color .15s}
+.filter-select:focus{border-color:var(--app-accent)}
+.search-wrap{flex:1;min-width:160px;position:relative}
+.search-wrap svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);opacity:.35;pointer-events:none}
+.search-input{width:100%;font-family:inherit;font-size:11px;color:var(--text);background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:4px 8px 4px 26px;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--app-accent)}
+.search-input::placeholder{color:var(--faint)}
+.clear-btn{font-family:inherit;font-size:11px;font-weight:500;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:4px 10px;cursor:pointer;color:var(--muted);transition:background .15s}
+.clear-btn:hover{background:var(--border);color:var(--text)}
+.results-info{font-size:10px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:14px}
+.recipe-card{background:var(--white);border:1.5px solid var(--border);border-radius:11px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;animation:fadeUp .3s ease both}
+.recipe-card:hover{border-color:var(--app-accent);box-shadow:0 4px 16px rgba(12,35,64,.1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card-img{width:100%;height:130px;object-fit:cover;display:block;background:var(--surface)}
+.card-img-placeholder{width:100%;height:130px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.card-body{padding:9px 10px 10px;flex:1;display:flex;flex-direction:column}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.tag{font-size:8px;font-weight:600;padding:1.5px 6px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.05em}
+.tag-indian{background:#deeaf7;color:#0c447c}.tag-cocktails{background:#f0ede8;color:#5a5750}
+.tag-mexican{background:#faeeda;color:#633806}.tag-sri-lankan{background:#e2f0d6;color:#27500a}
+.tag-asian{background:#eeedfe;color:#3c3489}.tag-western{background:#f5e8f5;color:#5a0c5a}
+.tag-sub{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+.card-name{font-size:12px;font-weight:600;color:var(--text);line-height:1.35;margin-bottom:6px;flex:1}
+.card-macros{display:flex;gap:6px;margin-top:auto}
+.macro-item{flex:1;text-align:center;background:var(--surface);border-radius:6px;padding:4px 2px}
+.macro-val{font-size:12px;font-weight:600;color:var(--app-primary);line-height:1}
+.macro-val.hl{color:var(--app-accent)}
+.macro-lbl{font-size:8px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin-top:1px}
+.no-results{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--faint);font-size:13px}
+.modal-overlay{position:fixed;inset:0;background:rgba(12,35,64,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(2px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg);border-radius:var(--r-lg);max-width:680px;width:100%;max-height:90vh;overflow-y:auto;transform:scale(.96) translateY(12px);transition:transform .2s;position:relative}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-close{position:absolute;top:12px;right:12px;width:28px;height:28px;background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .15s}
+.modal-close:hover{background:rgba(0,0,0,.65)}
+.modal-img-wrap{position:relative;width:100%;height:220px;overflow:hidden;border-radius:var(--r-lg) var(--r-lg) 0 0;background:var(--surface)}
+.modal-img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;transition:transform .35s}
+.modal-img:hover{transform:scale(1.04)}
+.modal-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+.img-link-hint{position:absolute;bottom:10px;right:10px;background:rgba(12,35,64,.75);color:#a8cfed;padding:3px 9px;border-radius:5px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;pointer-events:none;opacity:0;transition:opacity .15s}
+.modal-img-wrap:hover .img-link-hint{opacity:1}
+.modal-hero{background:var(--app-primary);padding:12px 16px 10px}
+.modal-hero-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.mh-title{font-size:16px;font-weight:600;color:var(--app-on-primary);line-height:1.3}
+.mh-sub{font-size:11px;color:var(--app-on-primary3);margin-top:3px}
+.mh-right{text-align:right;flex-shrink:0}
+.mh-kcal{font-size:26px;font-weight:600;color:var(--app-on-primary);line-height:1}
+.mh-lbl{font-size:10px;color:var(--app-on-primary3);margin-top:2px}
+.modal-body{padding:12px 14px 20px}
+.nut-panel{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.nut-panel-hdr{background:var(--app-primary2);padding:6px 12px;display:flex;align-items:center;justify-content:space-between}
+.nut-panel-lbl{font-size:9.5px;font-weight:600;color:var(--app-on-primary2);text-transform:uppercase;letter-spacing:.07em}
+.nut-panel-servings{font-size:9px;color:var(--app-on-primary3)}
+.nut-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.nut-cell{padding:8px 6px;text-align:center;border-right:1px solid var(--border2);border-bottom:1px solid var(--border2)}
+.nut-cell:nth-child(4n){border-right:none}
+.nut-cell:nth-last-child(-n+4){border-bottom:none}
+.nut-val{font-size:13px;font-weight:600;color:var(--app-primary);line-height:1}
+.nut-val.hl{color:var(--app-accent)}
+.nut-lbl{font-size:8px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.ing-section{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ing-section-hdr{background:var(--app-primary2);padding:6px 12px}
+.ing-section-lbl{font-size:9.5px;font-weight:600;color:var(--app-on-primary2);text-transform:uppercase;letter-spacing:.07em}
+.ing-categories{padding:10px 12px;display:flex;flex-direction:column;gap:10px}
+.ing-cat{border-left:2px solid var(--app-accent);padding-left:10px}
+.ing-cat:nth-child(2){border-color:#ef9f27}.ing-cat:nth-child(2) .ing-cat-name{color:#8a5800}
+.ing-cat:nth-child(3){border-color:#3b6d11}.ing-cat:nth-child(3) .ing-cat-name{color:#3b6d11}
+.ing-cat:nth-child(4){border-color:#7f77dd}.ing-cat:nth-child(4) .ing-cat-name{color:#4c46a0}
+.ing-cat:nth-child(5){border-color:#c04080}.ing-cat:nth-child(5) .ing-cat-name{color:#8c1f56}
+.ing-cat:nth-child(6){border-color:#20a080}.ing-cat:nth-child(6) .ing-cat-name{color:#0a6050}
+.ing-cat-name{font-size:9px;font-weight:600;color:var(--app-accent);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.ing-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+.ing-row{display:flex;align-items:baseline;gap:6px;font-size:11.5px;padding:2px 0;border-bottom:1px solid var(--border2)}
+.ing-row:last-child{border-bottom:none}
+.ing-qty{min-width:56px;font-weight:600;color:var(--app-primary);font-size:11px}
+.ing-name{color:var(--text);flex:1}
+.no-ings{font-size:11px;color:var(--faint);font-style:italic;padding:8px 12px}
+@media(min-width:600px){.container{padding:0 var(--sp-6)}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-row">
+      <div class="header-left">
+        <a class="header-home" href="../../index.html" title="Hub">⌂</a>
+        <span class="header-title">FatBoy's Kitchen</span>
+      </div>
+      <div class="header-right">
+        <span class="header-badge" id="recipeCountBadge"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="sec-lbl">Browse recipes</div>
+
+  <div class="filters-bar">
+    <div class="search-wrap">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="#666" stroke-width="1.4"/><line x1="9" y1="9" x2="11.5" y2="11.5" stroke="#666" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <input class="search-input" id="searchInput" type="text" placeholder="Search dishes or ingredients…">
+    </div>
+    <div class="filter-group">
+      <span class="filter-lbl">Cuisine</span>
+      <select class="filter-select" id="cuisineFilter"></select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-lbl">Category</span>
+      <select class="filter-select" id="subCatFilter"></select>
+    </div>
+    <button class="clear-btn" id="clearBtn">Clear</button>
+  </div>
+
+  <div class="results-info" id="resultsInfo"></div>
+  <div class="recipe-grid" id="recipeGrid"></div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-img-wrap" id="modalImgWrap"></div>
+    <div class="modal-hero" id="modalHero"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const PLACEHOLDER = 'https://www.myfitnesspal.com/images/recipe_image_placeholder.png';
+
+// ─── DATA — loaded from data.json ──────────────────────────────────────────
+let recipes = [];      // flat array, same shape as before
+let ingredients = {};  // {id: [{cat, qty, name}]}
+
+// Maps JSON schema → legacy field names used by renderCards / openModal
+function adaptRecipes(raw) {
+  raw.recipes.forEach(r => {
+    // Flat recipe object matching original field names
+    recipes.push({
+      id:       parseInt(r.id),
+      name:     r.name,
+      cuisine:  r.cuisine,
+      sub:      r.category,
+      servings: r.servings,
+      img:      r.imageUrl,
+      link:     r.pageLink,
+      cal:      r.nutrition.calories,
+      fat:      r.nutrition.fat_g,
+      satFat:   r.nutrition.saturatedFat_g,
+      carb:     r.nutrition.carbs_g,
+      fiber:    r.nutrition.fiber_g,
+      sugar:    r.nutrition.sugars_g,
+      protein:  r.nutrition.protein_g,
+      sodium:   r.nutrition.sodium_mg,
+      chol:     r.nutrition.cholesterol_mg,
+    });
+    // Ingredients: flatten groups into [{cat, qty, name}]
+    ingredients[parseInt(r.id)] = (r.ingredients || []).flatMap(g =>
+      (g.items || []).map(i => ({
+        cat:  g.category,
+        qty:  i.quantity + (i.unit ? ' ' + i.unit : ''),
+        name: i.name
+      }))
+    );
+  });
+}
+
+// ─── POPULATE DROPDOWNS ──────────────────────────────────────────────────────
+const cuisineFilter = document.getElementById('cuisineFilter');
+const subCatFilter  = document.getElementById('subCatFilter');
+const searchInput   = document.getElementById('searchInput');
+const recipeGrid    = document.getElementById('recipeGrid');
+const resultsInfo   = document.getElementById('resultsInfo');
+
+// ─── INIT — fetch recipes.json then wire everything up ───────────────────────
+async function init() {
+  try {
+    const response = await fetch('../../data/recipes.json');
+    if (!response.ok) throw new Error(`HTTP ${response.status} — check the file path`);
+    const raw = await response.json();
+
+    adaptRecipes(raw);
+
+    // Populate dropdowns from loaded data
+    const cuisines = [...new Set(recipes.map(r => r.cuisine))].sort();
+    const subCats  = [...new Set(recipes.map(r => r.sub).filter(Boolean))].sort();
+
+    cuisineFilter.innerHTML = '<option value="">All cuisines</option>' +
+      cuisines.map(c => `<option value="${c}">${c}</option>`).join('');
+    subCatFilter.innerHTML  = '<option value="">All categories</option>' +
+      subCats.map(s => `<option value="${s}">${s}</option>`).join('');
+
+    renderCards(recipes);
+  } catch (err) {
+    console.error('Recipe load failed:', err);
+    document.getElementById('recipeGrid').innerHTML =
+      `<div class="no-results">⚠ Could not load recipes.json — ${err.message}.<br>Make sure you are running via Live Server (not file://), and that <code>data/recipes.json</code> exists.</div>`;
+  }
+}
+
+// ─── TAG CLASSES ─────────────────────────────────────────────────────────────
+const cuisineTagClass = {
+  'Indian':'tag-indian','Cocktails':'tag-cocktails','Mexican':'tag-mexican',
+  'Sri Lankan':'tag-sri-lankan','Asian':'tag-asian','Western':'tag-western'
+};
+const cuisineEmoji = {
+  'Indian':'🍛','Cocktails':'🍹','Mexican':'🌮','Sri Lankan':'🥥','Asian':'🥢','Western':'🍽️'
+};
+
+function isPlaceholder(url){ return !url || url.includes('recipe_image_placeholder'); }
+
+// ─── RENDER CARDS ────────────────────────────────────────────────────────────
+function renderCards(list) {
+  recipeGrid.innerHTML = '';
+  resultsInfo.textContent = `${list.length} recipe${list.length !== 1 ? 's' : ''} found`;
+  const badge = document.getElementById('recipeCountBadge');
+  if (badge) badge.textContent = `${recipes.length} recipes`;
+
+  if (!list.length) {
+    recipeGrid.innerHTML = '<div class="no-results">No recipes match — try a different search or filter.</div>';
+    return;
+  }
+
+  list.forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.style.animationDelay = `${Math.min(i * 0.025, 0.35)}s`;
+
+    const tagCls = cuisineTagClass[r.cuisine] || 'tag-indian';
+    const emoji  = cuisineEmoji[r.cuisine] || '🍴';
+    const imgHTML = isPlaceholder(r.img)
+      ? `<div class="card-img-placeholder">${emoji}</div>`
+      : `<img class="card-img" src="${r.img}" alt="${r.name}" onerror="this.parentNode.innerHTML='<div class=card-img-placeholder>${emoji}</div>'">`;
+
+    card.innerHTML = `
+      ${imgHTML}
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag ${tagCls}">${r.cuisine}</span>
+          ${r.sub ? `<span class="tag tag-sub">${r.sub}</span>` : ''}
+        </div>
+        <div class="card-name">${r.name}</div>
+        <div class="card-macros">
+          <div class="macro-item"><div class="macro-val hl">${r.cal}</div><div class="macro-lbl">kcal</div></div>
+          <div class="macro-item"><div class="macro-val">${r.protein}g</div><div class="macro-lbl">protein</div></div>
+          <div class="macro-item"><div class="macro-val">${r.carb}g</div><div class="macro-lbl">carbs</div></div>
+          <div class="macro-item"><div class="macro-val">${r.fat}g</div><div class="macro-lbl">fat</div></div>
+        </div>
+      </div>`;
+
+    card.addEventListener('click', () => openModal(r));
+    recipeGrid.appendChild(card);
+  });
+}
+
+// ─── FILTER ──────────────────────────────────────────────────────────────────
+function filterRecipes() {
+  const q  = searchInput.value.toLowerCase().trim();
+  const cu = cuisineFilter.value;
+  const sc = subCatFilter.value;
+  return recipes.filter(r => {
+    if (cu && r.cuisine !== cu) return false;
+    if (sc && r.sub !== sc)    return false;
+    if (q) {
+      const ings = (ingredients[r.id] || []).map(i => i.name.toLowerCase()).join(' ');
+      if (!r.name.toLowerCase().includes(q) &&
+          !r.cuisine.toLowerCase().includes(q) &&
+          !r.sub.toLowerCase().includes(q) &&
+          !ings.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function applyFilters(){ renderCards(filterRecipes()); }
+searchInput.addEventListener('input', applyFilters);
+cuisineFilter.addEventListener('change', applyFilters);
+subCatFilter.addEventListener('change', applyFilters);
+document.getElementById('clearBtn').addEventListener('click', () => {
+  searchInput.value = ''; cuisineFilter.value = ''; subCatFilter.value = '';
+  applyFilters();
+});
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+const overlay    = document.getElementById('modalOverlay');
+const modalImgWrap = document.getElementById('modalImgWrap');
+const modalHero  = document.getElementById('modalHero');
+const modalBody  = document.getElementById('modalBody');
+
+const CAT_ORDER = ['Vegetables','Legumes/Dals','Grains/Flour','Dairy','Nuts/Coconut',
+  'Spices (Powder)','Spices (Whole/Seeds)','Fresh Aromatics','Oils/Fats',
+  'Alcohol/Cocktail','Citrus/Acid','Liquids','Fruits','Salt/Seasonings','Other'];
+
+function openModal(r) {
+  const emoji   = cuisineEmoji[r.cuisine] || '🍴';
+  const hasImg  = !isPlaceholder(r.img);
+  const hasLink = !!r.link;
+
+  // Image
+  if (hasImg) {
+    modalImgWrap.innerHTML = `
+      <img class="modal-img" src="${r.img}" alt="${r.name}"
+        ${hasLink ? `onclick="window.open('${r.link}','_blank')" title="Open recipe page"` : ''}
+        onerror="this.parentNode.innerHTML='<div class=modal-img-placeholder>${emoji}</div>'">
+      ${hasLink ? '<div class="img-link-hint">↗ Open recipe page</div>' : ''}`;
+  } else {
+    modalImgWrap.innerHTML = `
+      <div class="modal-img-placeholder"${hasLink ? ` onclick="window.open('${r.link}','_blank')" style="cursor:pointer"` : ''}>${emoji}</div>
+      ${hasLink ? '<div class="img-link-hint">↗ Open recipe page</div>' : ''}`;
+  }
+
+  // Hero band
+  const tagCls = cuisineTagClass[r.cuisine] || 'tag-indian';
+  modalHero.innerHTML = `
+    <div class="modal-hero-row">
+      <div>
+        <div class="mh-title">${r.name}</div>
+        <div class="mh-sub">
+          <span class="tag ${tagCls}" style="font-size:9px">${r.cuisine}</span>
+          ${r.sub ? `&nbsp;<span class="tag tag-sub" style="font-size:9px;background:rgba(255,255,255,.12);color:#a8cfed;border-color:transparent">${r.sub}</span>` : ''}
+          &nbsp;· Serves ${r.servings}
+        </div>
+      </div>
+      <div class="mh-right">
+        <div class="mh-kcal">${r.cal}</div>
+        <div class="mh-lbl">kcal / serving</div>
+      </div>
+    </div>`;
+
+  // Ingredients grouped
+  const ings = ingredients[r.id] || [];
+  const byCat = {};
+  ings.forEach(i => { (byCat[i.cat] = byCat[i.cat] || []).push(i); });
+  const sortedCats = Object.keys(byCat).sort((a, b) => {
+    const ia = CAT_ORDER.indexOf(a), ib = CAT_ORDER.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
+
+  const ingHTML = sortedCats.length
+    ? sortedCats.map(cat => `
+        <div class="ing-cat">
+          <div class="ing-cat-name">${cat}</div>
+          <ul class="ing-list">
+            ${byCat[cat].map(i => `<li class="ing-row"><span class="ing-qty">${i.qty}</span><span class="ing-name">${i.name}</span></li>`).join('')}
+          </ul>
+        </div>`).join('')
+    : '<p class="no-ings">No ingredient details available</p>';
+
+  modalBody.innerHTML = `
+    <div class="sec-lbl" style="margin-bottom:6px">Nutrition per serving</div>
+    <div class="nut-panel">
+      <div class="nut-panel-hdr">
+        <span class="nut-panel-lbl">Macros &amp; Micronutrients</span>
+        <span class="nut-panel-servings">per serving · serves ${r.servings}</span>
+      </div>
+      <div class="nut-grid">
+        <div class="nut-cell"><div class="nut-val hl">${r.cal}</div><div class="nut-lbl">Calories</div></div>
+        <div class="nut-cell"><div class="nut-val">${r.protein}g</div><div class="nut-lbl">Protein</div></div>
+        <div class="nut-cell"><div class="nut-val">${r.carb}g</div><div class="nut-lbl">Carbs</div></div>
+        <div class="nut-cell"><div class="nut-val">${r.fat}g</div><div class="nut-lbl">Fat</div></div>
+        <div class="nut-cell"><div class="nut-val">${r.fiber}g</div><div class="nut-lbl">Fiber</div></div>
+        <div class="nut-cell"><div class="nut-val">${r.sugar}g</div><div class="nut-lbl">Sugar</div></div>
+        <div class="nut-cell"><div class="nut-val">${r.satFat}g</div><div class="nut-lbl">Sat Fat</div></div>
+        <div class="nut-cell"><div class="nut-val">${r.sodium}mg</div><div class="nut-lbl">Sodium</div></div>
+      </div>
+    </div>
+
+    <div class="sec-lbl" style="margin:10px 0 6px">Ingredients by category</div>
+    <div class="ing-section">
+      <div class="ing-section-hdr"><span class="ing-section-lbl">Shopping &amp; Cooking Guide</span></div>
+      <div class="ing-categories">${ingHTML}</div>
+    </div>`;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

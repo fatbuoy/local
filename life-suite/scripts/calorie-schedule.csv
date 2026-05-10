@@ -1,0 +1,78 @@
+date,label,activity,detail,type,kcal,pb_g,alc,tagline,b_kcal,l_kcal,s_kcal,d_kcal,r_kcal,tr_label,tr_detail,zw_note
+2026-04-13,Mon 13,Rest + walk,Easy 8k walk,walk,1750,15,false,"Softest day of the week. Move gently, eat clean.",360,560,360,470,0,,,
+2026-04-14,Tue 14,Easy run,Steady 6.4k,run,1900,20,false,"Short and steady. Fuel the legs, not the ego.",390,590,390,570,0,Pre-run,"Banana + 2 dates, electrolytes during",
+2026-04-15,Wed 15,Short hike,Easy day,hike,1850,25,false,"Legs moving, lungs open. Light fuel, light pace.",380,570,380,520,0,Hike snack,Nuts or PB toast before heading out,
+2026-04-16,Thu 16,Easy run,13k,run,1950,20,false,Longer today — eat the lunch properly.,390,600,400,560,0,Pre-run,"Banana before, electrolytes during",
+2026-04-17,Fri 17,Rest day,Easy recovery,rest,1700,15,false,Full rest. Let the legs repair. Walk if restless.,350,540,340,470,0,,,
+2026-04-18,Sat 18,Weekend hike,10-15k 800-1200m,hike,2100,25,false,Big hike. Pack the trail snacks. Protect tonight — big run tomorrow.,400,640,430,630,0,On-hike fuel,"Nuts, dates, banana mid-hike. Big carb dinner tonight.",
+2026-04-19,Sun 19,Long run,21.1k,longrun,2300,30,true,Half marathon effort. Recover hard — shake within 30 min.,420,660,420,650,150,Recovery (30 min),Chocolate milk or lassi + banana immediately after,Well earned — 1-2 drinks this evening
+2026-04-20,Mon 20,Rest + walk,5-10k walk,walk,1750,15,false,Post-long-run Monday. Move but don't push.,360,560,360,470,0,,,
+2026-04-21,Tue 21,Easy run,10k easy,run,1950,20,false,Shake out the long-run legs. Easy effort.,390,600,390,570,0,Pre-run,"Banana + 2 dates, electrolytes during",
+2026-04-22,Wed 22,Short hike,Easy day,hike,1850,25,false,Midweek breather. Stay loose.,380,570,380,520,0,Hike snack,Nuts or PB toast before heading out,
+2026-04-23,Thu 23,3/1 intervals,10k,run,1950,20,false,Intervals today — quality session. Fuel it properly.,390,600,400,560,0,Pre-run,Banana before. Electrolytes. Intervals need fuel.,
+2026-04-24,Fri 24,Bike ride,30-50k 500-600m,cycle,2200,25,true,Big effort on the bike. Fuel the climb. Zum Wohl tonight.,410,660,450,680,0,On-bike fuel,Banana + dates mid-ride. Extra snack post-ride.,Post-ride reward — 1-2 drinks
+2026-04-25,Sat 25,Weekend hike,10-15k 800-1200m,hike,2150,25,false,Big hike. Big dinner tonight — 25k tomorrow.,400,650,440,660,0,On-hike fuel,Trail snacks. Tonight: big carb pre-load for 25k run.,
+2026-04-26,Sun 26,Long run,25k,longrun,2550,30,true,25k — biggest run so far. Recover aggressively.,450,720,460,770,150,Recovery (non-negotiable),Chocolate milk or lassi + banana within 30 min,Well earned rest evening — 1-2 drinks
+2026-04-27,Mon 27,Rest + walk,5-10k walk,walk,1800,15,false,Post-25k Monday. Mandatory easy day.,370,570,370,490,0,,,
+2026-04-28,Tue 28,Easy run,Steady 6.4k,run,2000,20,false,Short shakeout. Keep it conversational.,400,610,400,590,0,Pre-run,"Banana + dates, light warm-up",
+2026-04-29,Wed 29,Short hike,Easy day,hike,1900,25,false,Midweek easy. Body building while you're walking.,390,580,390,540,0,Hike snack,Nuts or PB toast,
+2026-04-30,Thu 30,Easy run,13k,run,2050,20,false,Thursday 13k. Eat the lunch. Don't skip it.,400,620,410,620,0,Pre-run,"Banana before, electrolytes during",
+2026-05-01,Fri 1,Bike ride,30-50k 500-600m,cycle,2250,25,true,May Day ride. Earn those climbs. Zum Wohl tonight.,420,670,460,700,0,On-bike fuel,Dates + banana mid-ride. Recovery snack after.,Friday post-ride — 1-2 drinks
+2026-05-02,Sat 2,Weekend hike,10-15k 800-1200m,hike,2200,25,false,Long hike. Big pre-load dinner — 21k tomorrow.,410,660,450,680,0,On-hike fuel,Trail snacks. Carb-heavy dinner tonight.,
+2026-05-03,Sun 3,Long run,21.1k,longrun,2350,30,true,"21k to close out the phase. Recover, refuel, relax.",430,680,440,650,150,Recovery (30 min),Chocolate milk or lassi + banana immediately,Phase wrap-up — 1-2 drinks
+2026-05-04,Mon 4,Rest + walk,5-10k walk,walk,1850,15,false,Start of Phase 2. Calories step up on training days.,370,580,380,520,0,,,
+2026-05-05,Tue 5,Easy run,10k easy,run,2100,20,false,Phase 2 run. Feel the extra fuel — use it.,410,650,430,610,0,Pre-run,Banana + dates. Electrolytes.,
+2026-05-06,Wed 6,Short hike,Easy day,hike,2000,25,false,Midweek move. Steady and consistent.,400,620,410,570,0,Hike snack,PB toast or nuts before heading out,
+2026-05-07,Thu 7,3/1 intervals,10k,run,2100,20,false,Interval Thursday. Short but sharp.,410,650,430,610,0,Pre-run,Banana. Intervals need more fuel than easy runs.,
+2026-05-08,Fri 8,Rest day,Easy,rest,1800,15,false,No bike this week — rest and prep for 28k Sunday.,370,570,370,490,0,,,
+2026-05-09,Sat 9,Weekend hike,10-15k 800-1200m,hike,2250,25,false,28k tomorrow. Tonight's dinner is race prep.,420,670,460,700,0,On-hike fuel + pre-load,Trail snacks. Tonight: biggest dinner of the week — 28k fuel.,
+2026-05-10,Sun 10,Long run,28k,longrun,2700,30,true,"28k — new distance high. Recover hard, eat big.",470,780,490,810,150,Recovery (non-negotiable),Within 30 min: chocolate milk or lassi + banana,28k deserves a drink — 1-2 max
+2026-05-11,Mon 11,Rest + walk,5-10k walk,walk,1850,15,false,Post-28k Monday. Keep it very easy.,370,580,380,520,0,,,
+2026-05-12,Tue 12,Easy run,Steady 6.4k,run,2050,20,false,Short shakeout after the big weekend.,410,630,420,590,0,Pre-run,Light snack. Easy effort.,
+2026-05-13,Wed 13,Rest day,Easy day,rest,1800,15,false,Mid-week rest. Body adapting to 28k.,370,570,370,490,0,,,
+2026-05-14,Thu 14,Easy run,16k,run,2200,20,false,16k Thursday — step up mid-week. Eat accordingly.,430,670,450,650,0,Pre-run,Banana + dates. 16k needs proper fuelling.,
+2026-05-15,Fri 15,Rest day,Easy,rest,1800,15,false,Rest before hike and 21k. Bank the energy.,370,570,370,490,0,,,
+2026-05-16,Sat 16,Weekend hike,10-15k 800-1200m,hike,2200,25,false,Hike + pre-load combo. Carbs tonight.,420,660,450,670,0,On-hike fuel + pre-load,Trail snacks. Big carb dinner for 21k tomorrow.,
+2026-05-17,Sun 17,Long run,21.1k,longrun,2400,30,true,"21k. Clean effort, clean recovery.",440,700,460,650,150,Recovery (30 min),Chocolate milk or lassi + banana immediately,Earned — 1-2 drinks
+2026-05-18,Mon 18,Rest + walk,5-10k walk,walk,1950,15,false,Phase 3. Biggest training block. Start well.,380,600,400,570,0,,,
+2026-05-19,Tue 19,Easy run,10k easy,run,2200,20,false,Keep it easy — 32k is coming Sunday.,430,670,450,650,0,Pre-run,Banana + dates. Easy pace.,
+2026-05-20,Wed 20,Rest day,Easy day,rest,1900,15,false,Rest mid-week. Conserve for peak Sunday.,380,590,390,540,0,,,
+2026-05-21,Thu 21,3/1 intervals,10k,run,2200,20,false,Last quality session before 32k. Fuel it well.,430,670,450,650,0,Pre-run,Banana + dates. Intervals need fuel.,
+2026-05-22,Fri 22,Bike ride,30-50k 500-600m,cycle,2400,25,true,Big bike day. Eat the climbs. Light Zum Wohl — big weekend ahead.,450,720,480,750,0,On-bike fuel,Dates + banana mid-ride. Recovery snack after.,1 drink max — 32k Sunday
+2026-05-23,Sat 23,Weekend hike,10-15k 800-1200m,hike,2450,25,false,Pre-load night. 32k tomorrow. Biggest dinner of the plan.,460,730,490,770,0,On-hike fuel + pre-load,Trail snacks. Tonight: pasta/rice + dal + extra roti. Biggest meal of the plan.,
+2026-05-24,Sun 24,Long run,32k PEAK,longrun,3050,30,false,Peak run. Longest of the plan. Recover like a pro.,520,880,540,960,150,Recovery (non-negotiable),Within 30 min: chocolate milk or lassi + banana. Then full recovery meal.,After 32k you've earned it — 1-2 drinks
+2026-05-25,Mon 25,Rest + walk,5-10k walk,walk,1950,15,false,Post-32k recovery Monday. Very easy.,380,600,400,570,0,,,
+2026-05-26,Tue 26,Easy run,Steady 6.4k,run,2150,20,false,Gentle shakeout. Legs will feel it.,420,650,440,640,0,Pre-run,Light snack. Very easy pace.,
+2026-05-27,Wed 27,Short hike,Easy day,hike,2050,25,false,Move and recover. Build nothing new today.,410,630,430,580,0,Hike snack,Nuts or PB toast,
+2026-05-28,Thu 28,Easy run,13k,run,2200,20,false,13k — steady Thursday. Jura is 2.5 weeks away.,430,670,450,650,0,Pre-run,Banana + dates. Electrolytes.,
+2026-05-29,Fri 29,Bike ride,30-50k 500-600m,cycle,2400,25,true,Last big bike before taper. Earn the Zum Wohl.,450,720,480,750,0,On-bike fuel,Banana + dates mid-ride. Recovery snack after.,Friday tradition — 1-2 drinks post-ride
+2026-05-30,Sat 30,Weekend hike,10-15k 800-1200m,hike,2300,25,false,Last big hike. Pre-load for 21k tomorrow.,440,690,460,710,0,On-hike fuel + pre-load,Trail snacks. Big carb dinner — last long run before taper.,
+2026-05-31,Sun 31,Long run,21.1k,longrun,2450,30,true,Last 21k before taper. Strong finish.,450,710,470,670,150,Recovery (30 min),Chocolate milk or lassi + banana immediately,May done. Jura in 2 weeks — 1-2 drinks
+2026-06-01,Mon 1,Rest + walk,5-10k walk,walk,1850,15,false,Taper begins. Legs are loaded — trust the rest.,370,580,380,520,0,,,
+2026-06-02,Tue 2,Easy run,Steady 6.4k,run,2000,20,false,Short and sharp. Quality over quantity now.,400,610,410,580,0,Pre-run,Light snack. Legs should feel fresh.,
+2026-06-03,Wed 3,Short hike,Easy day,hike,1950,25,false,Easy movement. No hero efforts this week.,390,600,400,560,0,Hike snack,Light snack. Easy pace.,
+2026-06-04,Thu 4,3/1 intervals,10k,run,2000,20,false,Intervals to keep sharpness. Not volume.,400,610,410,580,0,Pre-run,Banana + dates. Keep the snap.,
+2026-06-05,Fri 5,Rest day,Easy,rest,1750,15,false,Full rest. Legs will thank you race day.,360,560,360,470,0,,,
+2026-06-06,Sat 6,Short hike,Easy day,hike,1900,25,false,Light legs out. Jura next Sunday.,390,590,390,530,0,Hike snack,Easy walk. Stay loose.,
+2026-06-07,Sun 7,Easy run,13k easy,run,2050,20,true,Last moderate run. Easy effort. Week of Jura starts tomorrow.,400,630,420,600,0,Post-run,Light snack after. Jura week starts Mon.,Last drink before race week — 1 max
+2026-06-08,Mon 8,Rest + walk,5-10k walk,walk,1850,15,false,Race week. No heroics. Walk and hydrate.,370,580,380,520,0,,,
+2026-06-09,Tue 9,Easy run,10k easy,run,2000,20,false,Last proper run. Easy. Feel the sharpness.,400,610,410,580,0,Pre-run,Banana. Easy pace. Last run with intent.,
+2026-06-10,Wed 10,Short hike,Easy day,hike,2100,25,false,Carb load begins. Add rice/pasta/roti at every meal.,400,660,380,660,0,Carb focus,Increase rice/pasta portions. Cut fat slightly.,
+2026-06-11,Thu 11,Taper + stretch,Light stretch only,taper,2400,15,false,Pure carb loading. No running. Eat the pasta.,420,740,380,860,0,Carb load day,"65%+ carbs. Rice, pasta, roti, banana, oats. Cut fat + protein.",
+2026-06-12,Fri 12,Rest day,Full rest,rest,2300,15,false,Rest + carb top-up. Stay off your feet. Eat well.,420,720,360,800,0,Carb load,Keep loading carbs. Plenty of water. Light walk only.,
+2026-06-13,Sat 13,Short hike,Easy legs,hike,2600,15,false,Race eve. Big pasta dinner tonight. Early bed. Alles gut.,430,780,380,1010,0,Pre-race dinner,Biggest carb meal of the week. Pasta/rice + dal. Early to bed.,
+2026-06-14,Sun 14,Jura Marathon,42.2k RACE DAY,marathon,3800,30,true,RACE DAY. You're ready. Trust the training. Bon courage!,650,0,0,900,500,During race,Gels every 40-45 min. Sports drink at stations. Banana if available.,You finished a marathon. Celebrate well tonight.
+2026-06-15,Mon 15,Rest + walk,Very easy,walk,1850,15,false,Post-marathon Monday. Your legs ran 42k yesterday.,370,580,380,520,0,,,
+2026-06-16,Tue 16,Easy run,6.4k recovery,recovery,2000,20,false,First post-race run. Shuffle if you have to.,400,610,410,580,0,Recovery run,No pace pressure. Just move and flush the legs.,
+2026-06-17,Wed 17,Short hike,Easy day,hike,1950,25,false,Easy movement. Body still repairing.,390,600,400,560,0,,,
+2026-06-18,Thu 18,Easy run,10k easy,recovery,2050,20,false,"Building back. No pressure, just consistency.",410,630,420,590,0,Easy run,Comfortable pace. Legs adapting.,
+2026-06-19,Fri 19,Bike ride,30-50k 500-600m,cycle,2200,25,true,Back on the bike. Gentler than pre-race. Zum Wohl!,430,670,450,650,0,On-bike fuel,Easy to moderate effort. Dates + banana.,Post-marathon celebration continues — 1-2 drinks
+2026-06-20,Sat 20,Short hike,Easy day,hike,1900,25,false,Easy hike. Legs coming back.,390,590,390,530,0,,,
+2026-06-21,Sun 21,Easy run,13k easy,recovery,2100,20,true,Recovery long run. Building the base again.,410,640,430,620,0,Post-run,Light recovery snack after.,Sunday rest — 1 drink
+2026-06-22,Mon 22,Rest + walk,5-10k walk,walk,1800,15,false,Recovery week continues. Easy does it.,360,570,370,500,0,,,
+2026-06-23,Tue 23,Easy run,10k easy,recovery,2000,20,false,Steady Tuesday. Back to routine.,400,610,410,580,0,Pre-run,Banana + dates. Easy pace.,
+2026-06-24,Wed 24,Short hike,Easy day,hike,1950,25,false,Midweek move. Feeling more normal.,390,600,400,560,0,,,
+2026-06-25,Thu 25,Easy run,10k easy,recovery,2000,20,false,Easy double-digits. Strength returning.,400,610,410,580,0,Pre-run,Banana. Easy effort.,
+2026-06-26,Fri 26,Rest day,Easy,rest,1750,15,false,Rest and prep for the weekend.,360,560,360,470,0,,,
+2026-06-27,Sat 27,Short hike,Easy day,hike,1900,25,false,Easy hike to close the week.,390,590,390,530,0,,,
+2026-06-28,Sun 28,Easy run,13k easy,recovery,2100,20,true,Sunday run. Routine re-established.,410,640,430,620,0,Post-run,Light snack after. Good week.,Sunday wind-down — 1-2 drinks

@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 — Data Architecture Task List</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0F1117;
+    --surface: #181C24;
+    --surface2: #1E2330;
+    --border: #2A3040;
+    --border2: #353D52;
+    --ink: #E8E4DC;
+    --mid: #7A8099;
+    --dim: #4A5068;
+    --eat: #E8775A;
+    --run: #5AAEC0;
+    --live: #7DB87A;
+    --accent: #E8C96A;
+    --purple: #9D84D4;
+    --code-bg: #0A0D14;
+    --code-border: #1E2840;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 3rem 4rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    background: linear-gradient(135deg, #0F1117 60%, #131820);
+  }
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+   header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  header h1 span { color: var(--accent); }
+  .header-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--mid);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .meta-item::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .meta-item.time::before { background: var(--accent); }
+  .meta-item.offline::before { background: var(--live); }
+  .meta-item.prereq::before { background: var(--run); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 4rem;
+    display: flex;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  nav button {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.9rem 1.1rem;
+    cursor: pointer;
+    color: var(--mid);
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  nav button:hover { color: var(--ink); }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── MAIN ── */
+  main { max-width: 1060px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+  section { display: none; }
+  section.active { display: block; }
+
+  .section-intro {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .section-intro p {
+    font-size: 0.85rem;
+    color: var(--mid);
+    max-width: 620px;
+  }
+
+  /* ── TASK ITEMS ── */
+  .task-group { margin-bottom: 2.5rem; }
+  .group-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.75rem;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .group-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .task {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .task:hover { border-color: var(--border2); }
+  .task.done { opacity: 0.6; }
+  .task.done .task-title { text-decoration: line-through; color: var(--mid); }
+
+  .task-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .checkbox {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .checkbox:hover { border-color: var(--accent); }
+  .checkbox.checked { background: var(--accent); border-color: var(--accent); }
+  .checkbox.checked::after { content: '✓'; font-size: 0.65rem; color: var(--bg); font-weight: 700; }
+
+  .task-body-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+  .task-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .task-title {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .task-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+  }
+  .tag-git    { background: #2A1F10; color: #C08A4A; }
+  .tag-schema { background: #0F1E2A; color: var(--run); }
+  .tag-code   { background: #1A1628; color: var(--purple); }
+  .tag-vscode { background: #0F1E18; color: var(--live); }
+  .tag-offline{ background: #1A1E10; color: #9AB870; }
+  .tag-data   { background: #1E1A0A; color: var(--accent); }
+
+  .task-detail {
+    display: none;
+    padding: 0 1rem 1rem 2.7rem;
+  }
+  .task-detail.open { display: block; }
+  .task-detail p {
+    font-size: 0.8rem;
+    color: var(--mid);
+    margin-bottom: 0.6rem;
+    line-height: 1.6;
+  }
+  .task-detail ul {
+    padding-left: 1rem;
+    font-size: 0.78rem;
+    color: var(--mid);
+  }
+  .task-detail li { margin-bottom: 0.3rem; }
+  .task-detail li strong { color: var(--ink); font-weight: 500; }
+
+  .expand-icon {
+    font-size: 0.7rem;
+    color: var(--dim);
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+    padding-top: 0.15rem;
+  }
+  .expand-icon.open { transform: rotate(90deg); }
+
+  /* ── FOLDER TREE ── */
+  .tree {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+  .tree-line { display: flex; align-items: baseline; gap: 0.5rem; }
+  .t-folder { color: var(--accent); }
+  .t-html   { color: var(--eat); }
+  .t-json   { color: var(--run); }
+  .t-css    { color: var(--live); }
+  .t-git    { color: var(--mid); }
+  .t-note   { color: var(--dim); font-size: 0.68rem; margin-left: 0.5rem; }
+  .t-indent1 { padding-left: 1.4rem; }
+  .t-indent2 { padding-left: 2.8rem; }
+  .t-indent3 { padding-left: 4.2rem; }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--code-border);
+    background: #0D1020;
+  }
+  .code-filename {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--mid);
+    letter-spacing: 0.05em;
+  }
+  .code-lang {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .copy-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--mid);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+  .copy-btn:hover { color: var(--ink); border-color: var(--border2); }
+  .copy-btn.copied { color: var(--live); border-color: var(--live); }
+  pre {
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: #A8B4CC;
+  }
+  /* Syntax colours */
+  .k { color: #C792EA; }   /* keyword */
+  .s { color: #C3E88D; }   /* string */
+  .n { color: #82AAFF; }   /* number */
+  .c { color: #546E7A; font-style: italic; } /* comment */
+  .p { color: #89DDFF; }   /* property / key */
+  .fn{ color: #FFCB6B; }   /* function */
+  .t { color: var(--run); } /* type / tag */
+  .v { color: var(--eat); } /* value accent */
+
+  /* ── SCHEMA CARDS ── */
+  .schema-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .schema-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .schema-card-head {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .schema-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+  }
+  .pill-eat  { background: rgba(232,119,90,0.15); color: var(--eat); }
+  .pill-run  { background: rgba(90,174,192,0.15); color: var(--run); }
+  .pill-live { background: rgba(125,184,122,0.15); color: var(--live); }
+  .schema-card h4 {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .schema-card .fields {
+    padding: 0.75rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    line-height: 1.9;
+  }
+  .field-row { display: flex; gap: 0.75rem; }
+  .field-name { color: var(--run); min-width: 140px; }
+  .field-type { color: var(--mid); }
+  .field-note { color: var(--dim); font-size: 0.62rem; }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--mid);
+    white-space: nowrap;
+  }
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--eat));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .progress-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 680px) {
+    header { padding: 2rem 1.25rem; }
+    nav { padding: 0 0.75rem; }
+    main { padding: 2rem 1rem 4rem; }
+  }
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+  color: inherit;
+
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow"><a class="header-home" href="life-suite-plan.html" title="Hub">Life Suite</a> · Phase 1 of 5</div>
+
+  <h1>Data Architecture <span>&amp; Local Setup</span></h1>
+  <div class="header-meta">
+    <span class="meta-item time">Estimated time: 6–10 hours total</span>
+    <span class="meta-item offline">100% offline-capable once set up</span>
+    <span class="meta-item prereq">VSCode + Git already installed</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="show('setup', this)">1 · Project Setup</button>
+  <button onclick="show('schemas', this)">2 · JSON Schemas</button>
+  <button onclick="show('convert', this)">3 · CSV → JSON</button>
+  <button onclick="show('snippet', this)">4 · Code Snippet</button>
+  <button onclick="show('git', this)">5 · Git Workflow</button>
+</nav>
+
+<main>
+
+<!-- ══ 1. PROJECT SETUP ══ -->
+<section id="setup" class="active">
+  <div class="section-intro">
+    <h2>Project Setup</h2>
+    <p>Create the folder structure on your machine. Everything lives in one root folder. Takes about 20 minutes on the plane before you even open a file.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <span class="progress-label">Section progress</span>
+    <div class="bar-track"><div class="bar-fill" id="bar-setup" style="width:0%"></div></div>
+    <span class="progress-count" id="count-setup">0 / 6</span>
+  </div>
+
+  <div class="task-group">
+    <div class="group-label">Folder Structure</div>
+
+    <div class="task" id="task-s1">
+      <div class="task-header" onclick="toggleTask('s1')">
+        <div class="checkbox" id="cb-s1" onclick="checkTask(event,'s1','setup',6)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Create the root project folder</span>
+            <div class="task-tags"><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-s1">▶</span>
+      </div>
+      <div class="task-detail" id="td-s1">
+        <p>Create a folder called <strong>life-suite</strong> somewhere sensible — your Documents folder or a dedicated projects drive. This is the single root for everything: all apps, all data, all assets.</p>
+        <ul>
+          <li>macOS: <strong>~/Documents/life-suite</strong> or <strong>~/Projects/life-suite</strong></li>
+          <li>Windows: <strong>C:\Users\you\Projects\life-suite</strong></li>
+          <li>Avoid OneDrive / iCloud synced folders for now — can cause issues with Git</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-s2">
+      <div class="task-header" onclick="toggleTask('s2')">
+        <div class="checkbox" id="cb-s2" onclick="checkTask(event,'s2','setup',6)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Create the sub-folder structure below</span>
+            <div class="task-tags"><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-s2">▶</span>
+      </div>
+      <div class="task-detail" id="td-s2">
+        <p>Create these folders inside <strong>life-suite/</strong>. The structure separates app code, shared assets, and data cleanly.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Folder Tree -->
+  <div class="tree">
+    <div class="tree-line"><span class="t-folder">life-suite/</span></div>
+    <div class="tree-line t-indent1"><span class="t-folder">apps/</span><span class="t-note">← one sub-folder per app</span></div>
+    <div class="tree-line t-indent2"><span class="t-folder">01-calorie-planner/</span></div>
+    <div class="tree-line t-indent3"><span class="t-html">calorie-planner.html</span></div>
+    <div class="tree-line t-indent2"><span class="t-folder">02-recipe-book/</span></div>
+    <div class="tree-line t-indent3"><span class="t-html">recipe-book.html</span></div>
+    <div class="tree-line t-indent2"><span class="t-folder">03-budget-tracker/</span></div>
+    <div class="tree-line t-indent3"><span class="t-html">budget-tracker.html</span></div>
+    <div class="tree-line t-indent2"><span class="t-folder">04-travel-planner/</span><span class="t-note">← create now, build later</span></div>
+    <div class="tree-line t-indent2"><span class="t-folder">05-training-planner/</span><span class="t-note">← create now, build later</span></div>
+    <div class="tree-line t-indent1"><span class="t-folder">data/</span><span class="t-note">← all JSON data files live here</span></div>
+    <div class="tree-line t-indent2"><span class="t-json">calories.json</span></div>
+    <div class="tree-line t-indent2"><span class="t-json">recipes.json</span></div>
+    <div class="tree-line t-indent2"><span class="t-json">budget.json</span></div>
+    <div class="tree-line t-indent2"><span class="t-json">travel.json</span><span class="t-note">← empty for now</span></div>
+    <div class="tree-line t-indent2"><span class="t-json">training.json</span><span class="t-note">← empty for now</span></div>
+    <div class="tree-line t-indent2"><span class="t-json">summary.json</span><span class="t-note">← homepage feed, built in Phase 4</span></div>
+    <div class="tree-line t-indent1"><span class="t-folder">shared/</span></div>
+    <div class="tree-line t-indent2"><span class="t-css">style.css</span><span class="t-note">← your existing style guide</span></div>
+    <div class="tree-line t-indent2"><span class="t-html">nav.html</span><span class="t-note">← shared nav snippet (Phase 4)</span></div>
+    <div class="tree-line t-indent1"><span class="t-folder">scripts/</span><span class="t-note">← utility scripts (CSV → JSON converters etc.)</span></div>
+    <div class="tree-line t-indent1"><span class="t-html">index.html</span><span class="t-note">← homepage (Phase 4)</span></div>
+    <div class="tree-line t-indent1"><span class="t-git">.gitignore</span></div>
+    <div class="tree-line t-indent1"><span class="t-git">README.md</span></div>
+  </div>
+
+  <div class="task-group">
+    <div class="group-label">VSCode Setup</div>
+
+    <div class="task" id="task-s3">
+      <div class="task-header" onclick="toggleTask('s3')">
+        <div class="checkbox" id="cb-s3" onclick="checkTask(event,'s3','setup',6)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Open life-suite/ as a VSCode workspace</span>
+            <div class="task-tags"><span class="tag tag-vscode">VSCode</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-s3">▶</span>
+      </div>
+      <div class="task-detail" id="td-s3">
+        <p>File → Open Folder → select <strong>life-suite/</strong>. Then save as a workspace: File → Save Workspace As → save <strong>life-suite.code-workspace</strong> inside the folder. Opening the workspace file next time restores your layout.</p>
+        <p><strong>Recommended extensions to install before the flight:</strong></p>
+        <ul>
+          <li><strong>Prettier</strong> — auto-formats HTML and JSON</li>
+          <li><strong>Live Server</strong> — right-click any HTML file → Open with Live Server. Auto-reloads on save. Essential for local dev.</li>
+          <li><strong>JSON Tools</strong> — prettify and validate JSON files</li>
+          <li><strong>GitLens</strong> — makes Git history visible inline</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-s4">
+      <div class="task-header" onclick="toggleTask('s4')">
+        <div class="checkbox" id="cb-s4" onclick="checkTask(event,'s4','setup',6)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Copy your existing apps and style.css into the folder structure</span>
+            <div class="task-tags"><span class="tag tag-vscode">VSCode</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-s4">▶</span>
+      </div>
+      <div class="task-detail" id="td-s4">
+        <ul>
+          <li>Copy your calorie planner HTML → <strong>apps/01-calorie-planner/calorie-planner.html</strong></li>
+          <li>Copy recipe book HTML → <strong>apps/02-recipe-book/recipe-book.html</strong></li>
+          <li>Copy budget tracker HTML → <strong>apps/03-budget-tracker/budget-tracker.html</strong></li>
+          <li>Copy style guide CSS → <strong>shared/style.css</strong></li>
+          <li>Update the <code>&lt;link&gt;</code> path in each HTML to point to <strong>../../shared/style.css</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-s5">
+      <div class="task-header" onclick="toggleTask('s5')">
+        <div class="checkbox" id="cb-s5" onclick="checkTask(event,'s5','setup',6)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Copy your CSV data files into scripts/</span>
+            <div class="task-tags"><span class="tag tag-data">Data</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-s5">▶</span>
+      </div>
+      <div class="task-detail" id="td-s5">
+        <p>Copy your three CSV files into <strong>scripts/</strong> alongside the conversion tools you'll build in section 3. Name them clearly:</p>
+        <ul>
+          <li><strong>scripts/calories-source.csv</strong></li>
+          <li><strong>scripts/recipes-source.csv</strong></li>
+          <li><strong>scripts/budget-source.csv</strong></li>
+        </ul>
+        <p>Keep the originals. The scripts folder is for working files; the converted JSON output goes into <strong>data/</strong>.</p>
+      </div>
+    </div>
+
+    <div class="task" id="task-s6">
+      <div class="task-header" onclick="toggleTask('s6')">
+        <div class="checkbox" id="cb-s6" onclick="checkTask(event,'s6','setup',6)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Create empty JSON stubs in data/</span>
+            <div class="task-tags"><span class="tag tag-schema">Schema</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-s6">▶</span>
+      </div>
+      <div class="task-detail" id="td-s6">
+        <p>Create each JSON file with its top-level structure but no data yet. This lets you test file loading before the data is ready. Content for each is defined in Section 2.</p>
+        <ul>
+          <li><strong>data/calories.json</strong> → <code>{"meta": {}, "days": []}</code></li>
+          <li><strong>data/recipes.json</strong> → <code>{"meta": {}, "recipes": []}</code></li>
+          <li><strong>data/budget.json</strong> → <code>{"meta": {}, "categories": [], "months": []}</code></li>
+          <li><strong>data/travel.json</strong> → <code>{"meta": {}, "trips": [], "visitors": []}</code></li>
+          <li><strong>data/training.json</strong> → <code>{"meta": {}, "races": [], "runs": []}</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2. JSON SCHEMAS ══ -->
+<section id="schemas">
+  <div class="section-intro">
+    <h2><a href="json-schema-design.html">JSON Schemas</a></h2>
+    <p>Design the data structure for each app before writing any conversion code. Getting this right now prevents rework later. Each schema includes a <code>meta</code> block (for the homepage summary) and the data arrays.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="bar-track"><div class="bar-fill" id="bar-schemas" style="width:0%"></div></div>
+    <span class="progress-count" id="count-schemas">0 / 3</span>
+  </div>
+
+  <div class="task-group">
+    <div class="group-label">Schema Design Tasks (do these on paper / in a notes doc first)</div>
+
+    <div class="task" id="task-sc1">
+      <div class="task-header" onclick="toggleTask('sc1')">
+        <div class="checkbox" id="cb-sc1" onclick="checkTask(event,'sc1','schemas',3)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Map your CSV columns to JSON fields for all 3 apps</span>
+            <div class="task-tags"><span class="tag tag-data">Data</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-sc1">▶</span>
+      </div>
+      <div class="task-detail" id="td-sc1">
+        <p>Open each CSV in VSCode and look at the headers. For each column, decide: what should this field be called in JSON? What type is it (string, number, array)? Are there columns you want to skip or rename? Write this mapping out before coding the converter.</p>
+        <ul>
+          <li>Rename columns to camelCase: <strong>Total Calories</strong> → <strong>totalCalories</strong></li>
+          <li>Decide on date format: use ISO 8601 <strong>"2024-03-15"</strong> consistently across all files</li>
+          <li>Numbers should be numbers in JSON, not strings: <strong>1850</strong> not <strong>"1850"</strong></li>
+          <li>Empty CSV cells become <strong>null</strong> in JSON, not empty strings</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-sc2">
+      <div class="task-header" onclick="toggleTask('sc2')">
+        <div class="checkbox" id="cb-sc2" onclick="checkTask(event,'sc2','schemas',3)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Review the reference schemas below and adapt to your actual CSV columns</span>
+            <div class="task-tags"><span class="tag tag-schema">Schema</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-sc2">▶</span>
+      </div>
+      <div class="task-detail" id="td-sc2">
+        <p>The schemas shown below are reference structures. Your CSVs will have different column names — adjust accordingly. The <code>meta</code> block in each is what the homepage will read; keep it consistent across all files.</p>
+      </div>
+    </div>
+
+    <div class="task" id="task-sc3">
+      <div class="task-header" onclick="toggleTask('sc3')">
+        <div class="checkbox" id="cb-sc3" onclick="checkTask(event,'sc3','schemas',3)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Write your finalised schema as a comment block at the top of each JSON file</span>
+            <div class="task-tags"><span class="tag tag-schema">Schema</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-sc3">▶</span>
+      </div>
+      <div class="task-detail" id="td-sc3">
+        <p>JSON doesn't support comments, so create a companion <strong>data/SCHEMA.md</strong> file that documents the field names, types and purpose for each JSON file. This becomes invaluable when writing the apps or coming back to the data months later.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schema Reference Cards -->
+  <div class="group-label" style="margin-bottom:1rem;">Reference Schemas</div>
+
+  <!-- budget.json -->
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-filename">data/budget.json</span>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <span class="code-lang">JSON</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="c">// Read by homepage summary card</span>
+    <span class="p">"lastUpdated"</span>: <span class="s">"2025-04-30"</span>,
+    <span class="p">"currentMonth"</span>: <span class="s">"2025-04"</span>,
+    <span class="p">"monthBudgetTotal"</span>: <span class="n">4200</span>,
+    <span class="p">"monthActualTotal"</span>: <span class="n">3870</span>,
+    <span class="p">"currency"</span>: <span class="s">"CHF"</span>,
+    <span class="p">"yearsOnRecord"</span>: <span class="n">8</span>
+  },
+  <span class="p">"categories"</span>: [
+    <span class="c">// Define your categories once here — referenced by name in months[]</span>
+    { <span class="p">"id"</span>: <span class="s">"housing"</span>,   <span class="p">"label"</span>: <span class="s">"Housing"</span>,     <span class="p">"colour"</span>: <span class="s">"#5AAEC0"</span> },
+    { <span class="p">"id"</span>: <span class="s">"food"</span>,      <span class="p">"label"</span>: <span class="s">"Food"</span>,         <span class="p">"colour"</span>: <span class="s">"#E8775A"</span> },
+    { <span class="p">"id"</span>: <span class="s">"transport"</span>, <span class="p">"label"</span>: <span class="s">"Transport"</span>,    <span class="p">"colour"</span>: <span class="s">"#9D84D4"</span> },
+    { <span class="p">"id"</span>: <span class="s">"travel"</span>,    <span class="p">"label"</span>: <span class="s">"Travel"</span>,       <span class="p">"colour"</span>: <span class="s">"#7DB87A"</span> },
+    { <span class="p">"id"</span>: <span class="s">"health"</span>,    <span class="p">"label"</span>: <span class="s">"Health"</span>,       <span class="p">"colour"</span>: <span class="s">"#E8C96A"</span> },
+    { <span class="p">"id"</span>: <span class="s">"other"</span>,     <span class="p">"label"</span>: <span class="s">"Other"</span>,        <span class="p">"colour"</span>: <span class="s">"#546E7A"</span> }
+  ],
+  <span class="p">"budgets"</span>: [
+    <span class="c">// Annual budget targets, one object per year</span>
+    {
+      <span class="p">"year"</span>: <span class="n">2025</span>,
+      <span class="p">"housing"</span>: <span class="n">1800</span>, <span class="p">"food"</span>: <span class="n">600</span>, <span class="p">"transport"</span>: <span class="n">400</span>,
+      <span class="p">"travel"</span>: <span class="n">500</span>, <span class="p">"health"</span>: <span class="n">200</span>, <span class="p">"other"</span>: <span class="n">300</span>
+    }
+  ],
+  <span class="p">"months"</span>: [
+    <span class="c">// One object per month, going back 7-8 years</span>
+    <span class="c">// CSV rows map directly to objects in this array</span>
+    {
+      <span class="p">"month"</span>: <span class="s">"2025-04"</span>,         <span class="c">// YYYY-MM format</span>
+      <span class="p">"housing"</span>: <span class="n">1800</span>,
+      <span class="p">"food"</span>: <span class="n">542</span>,
+      <span class="p">"transport"</span>: <span class="n">310</span>,
+      <span class="p">"travel"</span>: <span class="n">820</span>,
+      <span class="p">"health"</span>: <span class="n">185</span>,
+      <span class="p">"other"</span>: <span class="n">213</span>,
+      <span class="p">"notes"</span>: <span class="s">"Travel spike — Amsterdam trip"</span>
+    }
+  ]
+}</pre>
+  </div>
+
+  <!-- recipes.json -->
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-filename">data/recipes.json</span>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <span class="code-lang">JSON</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>: <span class="s">"2025-04-01"</span>,
+    <span class="p">"totalRecipes"</span>: <span class="n">47</span>
+  },
+  <span class="p">"recipes"</span>: [
+    {
+      <span class="p">"id"</span>: <span class="s">"r001"</span>,                    <span class="c">// unique ID — used by Calorie Planner to reference</span>
+      <span class="p">"name"</span>: <span class="s">"Chicken &amp; Rice Bowl"</span>,
+      <span class="p">"category"</span>: <span class="s">"lunch"</span>,             <span class="c">// breakfast | lunch | dinner | snack</span>
+      <span class="p">"tags"</span>: [<span class="s">"high-protein"</span>, <span class="s">"race-week"</span>, <span class="s">"bulk-cook"</span>],
+      <span class="p">"servings"</span>: <span class="n">2</span>,
+      <span class="p">"prepMins"</span>: <span class="n">10</span>,
+      <span class="p">"cookMins"</span>: <span class="n">25</span>,
+      <span class="p">"perServing"</span>: {               <span class="c">// all nutrition values are PER SERVING</span>
+        <span class="p">"calories"</span>: <span class="n">520</span>,
+        <span class="p">"proteinG"</span>: <span class="n">42</span>,
+        <span class="p">"carbsG"</span>: <span class="n">58</span>,
+        <span class="p">"fatG"</span>: <span class="n">9</span>,
+        <span class="p">"fibreG"</span>: <span class="n">4</span>
+      },
+      <span class="p">"ingredients"</span>: [
+        { <span class="p">"name"</span>: <span class="s">"chicken breast"</span>, <span class="p">"amount"</span>: <span class="n">200</span>, <span class="p">"unit"</span>: <span class="s">"g"</span> },
+        { <span class="p">"name"</span>: <span class="s">"basmati rice"</span>,   <span class="p">"amount"</span>: <span class="n">80</span>,  <span class="p">"unit"</span>: <span class="s">"g"</span> }
+      ],
+      <span class="p">"method"</span>: <span class="s">"Season chicken, cook in pan 6 mins each side..."</span>,
+      <span class="p">"notes"</span>: <span class="s">"Great pre-long-run dinner the night before"</span>
+    }
+  ]
+}</pre>
+  </div>
+
+  <!-- calories.json -->
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-filename">data/calories.json</span>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <span class="code-lang">JSON</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <pre>{
+  <span class="p">"meta"</span>: {
+    <span class="p">"lastUpdated"</span>: <span class="s">"2025-05-06"</span>,
+    <span class="p">"currentWeight"</span>: <span class="n">78.4</span>,
+    <span class="p">"goalWeight"</span>: <span class="n">75</span>,
+    <span class="p">"todayTarget"</span>: <span class="n">1950</span>,
+    <span class="p">"todayActual"</span>: <span class="n">1820</span>,
+    <span class="p">"weekAvgCalories"</span>: <span class="n">1890</span>
+  },
+  <span class="p">"targets"</span>: {
+    <span class="c">// Base targets — overridden by training day type</span>
+    <span class="p">"restDay"</span>:    { <span class="p">"calories"</span>: <span class="n">1750</span>, <span class="p">"proteinG"</span>: <span class="n">150</span>, <span class="p">"carbsG"</span>: <span class="n">160</span>, <span class="p">"fatG"</span>: <span class="n">55</span> },
+    <span class="p">"easyRun"</span>:    { <span class="p">"calories"</span>: <span class="n">1950</span>, <span class="p">"proteinG"</span>: <span class="n">155</span>, <span class="p">"carbsG"</span>: <span class="n">200</span>, <span class="p">"fatG"</span>: <span class="n">58</span> },
+    <span class="p">"longRun"</span>:    { <span class="p">"calories"</span>: <span class="n">2400</span>, <span class="p">"proteinG"</span>: <span class="n">160</span>, <span class="p">"carbsG"</span>: <span class="n">280</span>, <span class="p">"fatG"</span>: <span class="n">60</span> }
+  },
+  <span class="p">"days"</span>: [
+    <span class="c">// One object per logged day — from your CSV</span>
+    {
+      <span class="p">"date"</span>: <span class="s">"2025-05-06"</span>,
+      <span class="p">"dayType"</span>: <span class="s">"easyRun"</span>,        <span class="c">// restDay | easyRun | longRun</span>
+      <span class="p">"targetCalories"</span>: <span class="n">1950</span>,
+      <span class="p">"actualCalories"</span>: <span class="n">1820</span>,
+      <span class="p">"proteinG"</span>: <span class="n">148</span>,
+      <span class="p">"carbsG"</span>: <span class="n">195</span>,
+      <span class="p">"fatG"</span>: <span class="n">52</span>,
+      <span class="p">"weight"</span>: <span class="n">78.4</span>,            <span class="c">// null if not measured</span>
+      <span class="p">"meals"</span>: [
+        { <span class="p">"recipeId"</span>: <span class="s">"r001"</span>, <span class="p">"servings"</span>: <span class="n">1</span> },
+        { <span class="p">"recipeId"</span>: <span class="k">null</span>, <span class="p">"name"</span>: <span class="s">"Coffee with milk"</span>, <span class="p">"calories"</span>: <span class="n">45</span> }
+      ]
+    }
+  ]
+}</pre>
+  </div>
+</section>
+
+<!-- ══ 3. CSV → JSON ══ -->
+<section id="convert">
+  <div class="section-intro">
+    <h2>CSV → JSON Conversion</h2>
+    <p>Build one reusable converter tool in your <strong>scripts/</strong> folder. Run it once per CSV file, output lands in <strong>data/</strong>. You'll never need to touch the CSV again.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="bar-track"><div class="bar-fill" id="bar-convert" style="width:0%"></div></div>
+    <span class="progress-count" id="count-convert">0 / 4</span>
+  </div>
+
+  <div class="task-group">
+    <div class="group-label">Conversion Strategy</div>
+
+    <div class="task" id="task-cv1">
+      <div class="task-header" onclick="toggleTask('cv1')">
+        <div class="checkbox" id="cb-cv1" onclick="checkTask(event,'cv1','convert',4)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Audit your CSVs — note any cleaning needed before conversion</span>
+            <div class="task-tags"><span class="tag tag-data">Data</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-cv1">▶</span>
+      </div>
+      <div class="task-detail" id="td-cv1">
+        <p>Open each CSV in VSCode. Check for:</p>
+        <ul>
+          <li><strong>Date formats</strong> — are they consistent? Convert to YYYY-MM-DD</li>
+          <li><strong>Number formats</strong> — commas as thousands separators (1,850 vs 1850)?</li>
+          <li><strong>Missing values</strong> — empty cells, dashes, "N/A"?</li>
+          <li><strong>Column headers</strong> — spaces, special characters, inconsistent casing?</li>
+          <li><strong>Budget CSV specifically</strong> — is it rows=months, cols=categories? Or transposed?</li>
+        </ul>
+        <p>Note every issue. The converter script will handle most of these, but knowing in advance means no surprises.</p>
+      </div>
+    </div>
+
+    <div class="task" id="task-cv2">
+      <div class="task-header" onclick="toggleTask('cv2')">
+        <div class="checkbox" id="cb-cv2" onclick="checkTask(event,'cv2','convert',4)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Create scripts/csv-to-json.html — the converter tool</span>
+            <div class="task-tags"><span class="tag tag-code">Code</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-cv2">▶</span>
+      </div>
+      <div class="task-detail" id="td-cv2">
+        <p>This is a simple browser-based tool: drag a CSV in, configure the column mapping, download the JSON out. No Node.js, no command line — works entirely offline in the browser. The code is in Section 4.</p>
+      </div>
+    </div>
+
+    <div class="task" id="task-cv3">
+      <div class="task-header" onclick="toggleTask('cv3')">
+        <div class="checkbox" id="cb-cv3" onclick="checkTask(event,'cv3','convert',4)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Convert budget CSV → budget.json and validate</span>
+            <div class="task-tags"><span class="tag tag-data">Data</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-cv3">▶</span>
+      </div>
+      <div class="task-detail" id="td-cv3">
+        <p>Start with the budget CSV — it has the most historical rows and will stress-test the converter. After converting:</p>
+        <ul>
+          <li>Open the output JSON in VSCode — does it look right?</li>
+          <li>Count the rows: does JSON months[] count match CSV rows?</li>
+          <li>Check one known month against the CSV to verify values are correct</li>
+          <li>Validate the JSON: Ctrl+Shift+P → "Format Document" — VSCode will flag syntax errors</li>
+          <li>Move the validated file to <strong>data/budget.json</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-cv4">
+      <div class="task-header" onclick="toggleTask('cv4')">
+        <div class="checkbox" id="cb-cv4" onclick="checkTask(event,'cv4','convert',4)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Repeat for calories CSV and recipes CSV</span>
+            <div class="task-tags"><span class="tag tag-data">Data</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-cv4">▶</span>
+      </div>
+      <div class="task-detail" id="td-cv4">
+        <p>Recipes may need manual cleanup after conversion — ingredient lists and methods are likely free text in your CSV, which needs care. Consider whether recipes are better entered by hand into the JSON if the CSV is poorly structured.</p>
+        <ul>
+          <li>Calories: should be straightforward if CSV is rows = days</li>
+          <li>Recipes: check that ingredient data is parseable — may need manual formatting</li>
+          <li>Both: validate, check row counts, spot-check values</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4. CODE SNIPPET ══ -->
+<section id="snippet">
+  <div class="section-intro">
+    <h2>Code Snippets</h2>
+    <p>Drop-in code for the two key tasks: loading JSON into an app, and the CSV→JSON converter tool.</p>
+  </div>
+
+  <!-- A: LOAD JSON -->
+  <div class="group-label" style="margin-bottom:1rem;">A — Replace Inline Data with fetch() from JSON</div>
+  <p style="font-size:0.82rem;color:var(--mid);margin-bottom:1rem;max-width:660px;">This is the pattern to add to each of your three existing apps. Replace whatever hardcoded data array you currently have with this <code>loadData()</code> function.</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-filename">apps/03-budget-tracker/budget-tracker.html — &lt;script&gt; section</span>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <span class="code-lang">JavaScript</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <pre><span class="c">// ── 1. CONFIG ────────────────────────────────────────────────
+// Path from THIS html file to the data folder.
+// Adjust if your folder structure differs.</span>
+<span class="k">const</span> DATA_PATH = <span class="s">'../../data/budget.json'</span>;
+
+<span class="c">// ── 2. LOAD DATA ─────────────────────────────────────────────</span>
+<span class="k">async function</span> <span class="fn">loadData</span>() {
+  <span class="k">try</span> {
+    <span class="k">const</span> response = <span class="k">await</span> <span class="fn">fetch</span>(DATA_PATH);
+
+    <span class="c">// fetch() doesn't throw on 404 — check manually</span>
+    <span class="k">if</span> (!response.ok) {
+      <span class="k">throw new</span> Error(<span class="s">`Could not load data: <span class="v">${response.status}</span> <span class="v">${response.statusText}</span>`</span>);
+    }
+
+    <span class="k">const</span> data = <span class="k">await</span> response.<span class="fn">json</span>();
+    <span class="k">return</span> data;
+
+  } <span class="k">catch</span> (err) {
+    <span class="c">// Show a visible error in the app rather than silent failure</span>
+    <span class="fn">showError</span>(err.message);
+    <span class="k">return null</span>;
+  }
+}
+
+<span class="c">// ── 3. ERROR DISPLAY ─────────────────────────────────────────</span>
+<span class="k">function</span> <span class="fn">showError</span>(message) {
+  <span class="k">const</span> el = document.<span class="fn">getElementById</span>(<span class="s">'app-error'</span>);
+  <span class="k">if</span> (el) {
+    el.textContent = <span class="s">`⚠ Data load failed: <span class="v">${message}</span>`</span>;
+    el.style.display = <span class="s">'block'</span>;
+  }
+  console.<span class="fn">error</span>(<span class="s">'Data load error:'</span>, message);
+}
+
+<span class="c">// ── 4. INIT — runs when page loads ───────────────────────────</span>
+<span class="k">async function</span> <span class="fn">init</span>() {
+  <span class="fn">showLoading</span>(<span class="k">true</span>);
+
+  <span class="k">const</span> data = <span class="k">await</span> <span class="fn">loadData</span>();
+  <span class="k">if</span> (!data) <span class="k">return</span>; <span class="c">// error already shown</span>
+
+  <span class="c">// ── Pull out what you need ────────────────────────────────
+  // These replace whatever was previously hardcoded</span>
+  <span class="k">const</span> { meta, categories, budgets, months } = data;
+
+  <span class="c">// ── Render ────────────────────────────────────────────────</span>
+  <span class="fn">renderSummary</span>(meta);
+  <span class="fn">renderCategories</span>(categories);
+  <span class="fn">renderMonthlyChart</span>(months, budgets);
+  <span class="fn">renderCurrentMonth</span>(months, meta.currentMonth);
+
+  <span class="fn">showLoading</span>(<span class="k">false</span>);
+}
+
+<span class="k">function</span> <span class="fn">showLoading</span>(visible) {
+  <span class="k">const</span> el = document.<span class="fn">getElementById</span>(<span class="s">'loading'</span>);
+  <span class="k">if</span> (el) el.style.display = visible ? <span class="s">'block'</span> : <span class="s">'none'</span>;
+}
+
+<span class="c">// ── 5. SAVE BACK TO JSON (Export button) ─────────────────────
+// Since we can't write files directly from a browser,
+// this creates a download of the updated JSON.</span>
+<span class="k">function</span> <span class="fn">exportData</span>(data) {
+  <span class="k">const</span> json  = JSON.<span class="fn">stringify</span>(data, <span class="k">null</span>, <span class="n">2</span>);
+  <span class="k">const</span> blob  = <span class="k">new</span> <span class="fn">Blob</span>([json], { type: <span class="s">'application/json'</span> });
+  <span class="k">const</span> url   = URL.<span class="fn">createObjectURL</span>(blob);
+  <span class="k">const</span> a     = document.<span class="fn">createElement</span>(<span class="s">'a'</span>);
+  a.href      = url;
+  a.download  = <span class="s">'budget.json'</span>;
+  a.<span class="fn">click</span>();
+  URL.<span class="fn">revokeObjectURL</span>(url); <span class="c">// clean up</span>
+}
+
+<span class="c">// ── 6. START ──────────────────────────────────────────────────</span>
+document.<span class="fn">addEventListener</span>(<span class="s">'DOMContentLoaded'</span>, init);</pre>
+  </div>
+
+  <p style="font-size:0.82rem;color:var(--mid);margin-bottom:1.5rem;max-width:660px;">
+    ⚠ <strong style="color:var(--ink)">Important:</strong> <code>fetch()</code> requires a server — it won't work if you double-click the HTML file directly (the <code>file://</code> protocol blocks it). Always open your app via <strong>Live Server</strong> in VSCode (right-click the HTML → Open with Live Server). It serves on <code>localhost</code>, which fetch supports.
+  </p>
+
+  <!-- B: CSV CONVERTER TOOL -->
+  <div class="group-label" style="margin-bottom:1rem;">B — CSV to JSON Converter Tool</div>
+  <p style="font-size:0.82rem;color:var(--mid);margin-bottom:1rem;max-width:660px;">Save this as <strong>scripts/csv-to-json.html</strong>. Open it in Live Server. Drag your CSV in, see the JSON preview, download the output. Works entirely offline once the page is loaded.</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-filename">scripts/csv-to-json.html</span>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <span class="code-lang">HTML</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <pre><span class="t">&lt;!DOCTYPE html&gt;</span>
+<span class="t">&lt;html</span> lang=<span class="s">"en"</span><span class="t">&gt;</span>
+<span class="t">&lt;head&gt;</span>
+  <span class="t">&lt;meta</span> charset=<span class="s">"UTF-8"</span><span class="t">&gt;</span>
+  <span class="t">&lt;title&gt;</span>CSV → JSON Converter<span class="t">&lt;/title&gt;</span>
+  <span class="t">&lt;style&gt;</span>
+    body { font-family: monospace; background: #0F1117; color: #E8E4DC;
+           padding: 2rem; max-width: 900px; margin: 0 auto; }
+    h1 { margin-bottom: 1.5rem; font-size: 1.2rem; }
+    .drop-zone { border: 2px dashed #2A3040; border-radius: 8px;
+                 padding: 3rem; text-align: center; color: #7A8099;
+                 cursor: pointer; margin-bottom: 1.5rem;
+                 transition: border-color 0.2s; }
+    .drop-zone.over { border-color: #E8C96A; color: #E8C96A; }
+    textarea { width: 100%; height: 300px; background: #0A0D14;
+               border: 1px solid #1E2840; color: #A8B4CC;
+               padding: 1rem; font-size: 0.75rem; border-radius: 6px;
+               font-family: monospace; margin-bottom: 1rem; }
+    button { background: #E8C96A; color: #0F1117; border: none;
+             padding: 0.6rem 1.4rem; border-radius: 4px;
+             font-family: monospace; font-size: 0.8rem;
+             cursor: pointer; font-weight: 700; margin-right: 0.75rem; }
+    button:disabled { opacity: 0.4; cursor: default; }
+    label { font-size: 0.75rem; color: #7A8099; display: block;
+            margin-bottom: 0.3rem; }
+    input[type=text] { background: #0A0D14; border: 1px solid #1E2840;
+                       color: #E8E4DC; padding: 0.4rem 0.6rem;
+                       border-radius: 4px; font-family: monospace;
+                       font-size: 0.75rem; width: 100%; margin-bottom: 1rem; }
+    .status { font-size: 0.75rem; color: #7DB87A; margin-top: 0.5rem; }
+    .err { color: #E8775A; }
+    select { background: #0A0D14; border: 1px solid #1E2840;
+             color: #E8E4DC; padding: 0.4rem; border-radius: 4px;
+             font-family: monospace; font-size: 0.75rem; margin-bottom: 1rem; }
+  <span class="t">&lt;/style&gt;</span>
+<span class="t">&lt;/head&gt;</span>
+<span class="t">&lt;body&gt;</span>
+  <span class="t">&lt;h1&gt;</span>CSV → JSON Converter<span class="t">&lt;/h1&gt;</span>
+
+  <span class="t">&lt;label&gt;</span>Output filename<span class="t">&lt;/label&gt;</span>
+  <span class="t">&lt;input</span> type=<span class="s">"text"</span> id=<span class="s">"filename"</span> value=<span class="s">"budget.json"</span> placeholder=<span class="s">"budget.json"</span><span class="t">&gt;</span>
+
+  <span class="t">&lt;label&gt;</span>Root array key (what to call the array in JSON)<span class="t">&lt;/label&gt;</span>
+  <span class="t">&lt;input</span> type=<span class="s">"text"</span> id=<span class="s">"arrayKey"</span> value=<span class="s">"months"</span> placeholder=<span class="s">"months"</span><span class="t">&gt;</span>
+
+  <span class="t">&lt;label&gt;</span>CSV delimiter<span class="t">&lt;/label&gt;</span>
+  <span class="t">&lt;select</span> id=<span class="s">"delimiter"</span><span class="t">&gt;</span>
+    <span class="t">&lt;option</span> value=<span class="s">","</span><span class="t">&gt;</span>Comma (,)<span class="t">&lt;/option&gt;</span>
+    <span class="t">&lt;option</span> value=<span class="s">";"</span><span class="t">&gt;</span>Semicolon (;)<span class="t">&lt;/option&gt;</span>
+    <span class="t">&lt;option</span> value=<span class="s">"\t"</span><span class="t">&gt;</span>Tab<span class="t">&lt;/option&gt;</span>
+  <span class="t">&lt;/select&gt;</span>
+
+  <span class="t">&lt;div</span> class=<span class="s">"drop-zone"</span> id=<span class="s">"dropZone"</span><span class="t">&gt;</span>
+    Drop CSV file here, or click to browse
+    <span class="t">&lt;input</span> type=<span class="s">"file"</span> id=<span class="s">"fileInput"</span> accept=<span class="s">".csv"</span>
+           style=<span class="s">"display:none"</span><span class="t">&gt;</span>
+  <span class="t">&lt;/div&gt;</span>
+
+  <span class="t">&lt;textarea</span> id=<span class="s">"output"</span> readonly placeholder=<span class="s">"JSON output will appear here..."</span><span class="t">&gt;&lt;/textarea&gt;</span>
+  <span class="t">&lt;div</span> class=<span class="s">"status"</span> id=<span class="s">"status"</span><span class="t">&gt;&lt;/div&gt;</span>
+
+  <span class="t">&lt;button</span> id=<span class="s">"downloadBtn"</span> disabled<span class="t">&gt;</span>Download JSON<span class="t">&lt;/button&gt;</span>
+  <span class="t">&lt;button</span> onclick=<span class="s">"document.getElementById('output').select();
+          document.execCommand('copy')"</span><span class="t">&gt;</span>Copy to clipboard<span class="t">&lt;/button&gt;</span>
+
+  <span class="t">&lt;script&gt;</span>
+  <span class="k">let</span> convertedJSON = <span class="k">null</span>;
+
+  <span class="c">// Drag and drop</span>
+  <span class="k">const</span> zone = document.<span class="fn">getElementById</span>(<span class="s">'dropZone'</span>);
+  zone.<span class="fn">addEventListener</span>(<span class="s">'dragover'</span>, e => { e.<span class="fn">preventDefault</span>(); zone.classList.<span class="fn">add</span>(<span class="s">'over'</span>); });
+  zone.<span class="fn">addEventListener</span>(<span class="s">'dragleave'</span>, () => zone.classList.<span class="fn">remove</span>(<span class="s">'over'</span>));
+  zone.<span class="fn">addEventListener</span>(<span class="s">'drop'</span>, e => {
+    e.<span class="fn">preventDefault</span>(); zone.classList.<span class="fn">remove</span>(<span class="s">'over'</span>);
+    <span class="fn">readFile</span>(e.dataTransfer.files[<span class="n">0</span>]);
+  });
+  zone.<span class="fn">addEventListener</span>(<span class="s">'click'</span>, () => document.<span class="fn">getElementById</span>(<span class="s">'fileInput'</span>).<span class="fn">click</span>());
+  document.<span class="fn">getElementById</span>(<span class="s">'fileInput'</span>).<span class="fn">addEventListener</span>(<span class="s">'change'</span>, e => <span class="fn">readFile</span>(e.target.files[<span class="n">0</span>]));
+
+  <span class="k">function</span> <span class="fn">readFile</span>(file) {
+    <span class="k">if</span> (!file) <span class="k">return</span>;
+    <span class="k">const</span> reader = <span class="k">new</span> <span class="fn">FileReader</span>();
+    reader.onload = e => <span class="fn">convertCSV</span>(e.target.result);
+    reader.<span class="fn">readAsText</span>(file, <span class="s">'UTF-8'</span>);
+  }
+
+  <span class="k">function</span> <span class="fn">convertCSV</span>(csvText) {
+    <span class="k">try</span> {
+      <span class="k">const</span> delim    = document.<span class="fn">getElementById</span>(<span class="s">'delimiter'</span>).value;
+      <span class="k">const</span> arrayKey = document.<span class="fn">getElementById</span>(<span class="s">'arrayKey'</span>).value || <span class="s">'rows'</span>;
+      <span class="k">const</span> lines    = csvText.trim().<span class="fn">split</span>(<span class="s">'\n'</span>);
+      <span class="k">const</span> headers  = lines[<span class="n">0</span>].<span class="fn">split</span>(delim).<span class="fn">map</span>(h => <span class="fn">toKey</span>(h));
+      <span class="k">const</span> rows     = [];
+
+      <span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt; lines.length; i++) {
+        <span class="k">const</span> cells = lines[i].<span class="fn">split</span>(delim);
+        <span class="k">if</span> (cells.<span class="fn">every</span>(c => !c.trim())) <span class="k">continue</span>; <span class="c">// skip blank lines</span>
+        <span class="k">const</span> obj = {};
+        headers.<span class="fn">forEach</span>((key, idx) => {
+          obj[key] = <span class="fn">parseValue</span>(cells[idx]);
+        });
+        rows.<span class="fn">push</span>(obj);
+      }
+
+      convertedJSON = {
+        meta: {
+          lastUpdated:   <span class="k">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>().<span class="fn">split</span>(<span class="s">'T'</span>)[<span class="n">0</span>],
+          rowCount:      rows.length,
+          generatedFrom: <span class="s">"csv-to-json converter"</span>
+        },
+        [arrayKey]: rows
+      };
+
+      <span class="k">const</span> pretty = JSON.<span class="fn">stringify</span>(convertedJSON, <span class="k">null</span>, <span class="n">2</span>);
+      document.<span class="fn">getElementById</span>(<span class="s">'output'</span>).value = pretty;
+      document.<span class="fn">getElementById</span>(<span class="s">'status'</span>).textContent =
+        <span class="s">`✓ Converted <span class="v">${rows.length}</span> rows, <span class="v">${headers.length}</span> columns`</span>;
+      document.<span class="fn">getElementById</span>(<span class="s">'status'</span>).className = <span class="s">'status'</span>;
+      document.<span class="fn">getElementById</span>(<span class="s">'downloadBtn'</span>).disabled = <span class="k">false</span>;
+    } <span class="k">catch</span> (err) {
+      document.<span class="fn">getElementById</span>(<span class="s">'status'</span>).textContent = <span class="s">`Error: <span class="v">${err.message}</span>`</span>;
+      document.<span class="fn">getElementById</span>(<span class="s">'status'</span>).className = <span class="s">'status err'</span>;
+    }
+  }
+
+  <span class="c">// Convert header string to camelCase key</span>
+  <span class="k">function</span> <span class="fn">toKey</span>(str) {
+    <span class="k">return</span> str.trim()
+      .<span class="fn">replace</span>(<span class="v">/[^a-zA-Z0-9 ]/g</span>, <span class="s">''</span>)
+      .<span class="fn">replace</span>(<span class="v">/\s+(.)/g</span>, (_, c) => c.<span class="fn">toUpperCase</span>())
+      .<span class="fn">replace</span>(<span class="v">/^\w/</span>, c => c.<span class="fn">toLowerCase</span>());
+  }
+
+  <span class="c">// Auto-detect and parse value types</span>
+  <span class="k">function</span> <span class="fn">parseValue</span>(val) {
+    <span class="k">if</span> (!val || val.trim() === <span class="s">''</span> || val.trim() === <span class="s">'-'</span> || val.trim() === <span class="s">'N/A'</span>)
+      <span class="k">return null</span>;
+    <span class="k">const</span> clean = val.trim().<span class="fn">replace</span>(<span class="v">/,/g</span>, <span class="s">''</span>); <span class="c">// remove thousands commas</span>
+    <span class="k">if</span> (!<span class="fn">isNaN</span>(clean) &amp;&amp; clean !== <span class="s">''</span>) <span class="k">return</span> <span class="fn">Number</span>(clean);
+    <span class="k">return</span> val.trim();
+  }
+
+  document.<span class="fn">getElementById</span>(<span class="s">'downloadBtn'</span>).<span class="fn">addEventListener</span>(<span class="s">'click'</span>, () => {
+    <span class="k">if</span> (!convertedJSON) <span class="k">return</span>;
+    <span class="k">const</span> name = document.<span class="fn">getElementById</span>(<span class="s">'filename'</span>).value || <span class="s">'output.json'</span>;
+    <span class="k">const</span> blob = <span class="k">new</span> <span class="fn">Blob</span>([JSON.<span class="fn">stringify</span>(convertedJSON, <span class="k">null</span>, <span class="n">2</span>)],
+                             { type: <span class="s">'application/json'</span> });
+    <span class="k">const</span> a = document.<span class="fn">createElement</span>(<span class="s">'a'</span>);
+    a.href = URL.<span class="fn">createObjectURL</span>(blob);
+    a.download = name;
+    a.<span class="fn">click</span>();
+  });
+  <span class="t">&lt;/script&gt;</span>
+<span class="t">&lt;/body&gt;</span>
+<span class="t">&lt;/html&gt;</span></pre>
+  </div>
+</section>
+
+<!-- ══ 5. GIT WORKFLOW ══ -->
+<section id="git">
+  <div class="section-intro">
+    <h2>Git Workflow</h2>
+    <p>Set up version control before the flight if you can. After that, all Git work is offline. Your entire project history — every data update, every app change — is safe and reversible.</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="bar-track"><div class="bar-fill" id="bar-git" style="width:0%"></div></div>
+    <span class="progress-count" id="count-git">0 / 5</span>
+  </div>
+
+  <div class="task-group">
+    <div class="group-label">One-time Setup (do before the flight)</div>
+
+    <div class="task" id="task-g1">
+      <div class="task-header" onclick="toggleTask('g1')">
+        <div class="checkbox" id="cb-g1" onclick="checkTask(event,'g1','git',5)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Initialise the Git repo</span>
+            <div class="task-tags"><span class="tag tag-git">Git</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-g1">▶</span>
+      </div>
+      <div class="task-detail" id="td-g1">
+        <p>Open the VSCode terminal (Ctrl+` or View → Terminal) and run these commands once:</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-filename">Terminal — run from inside life-suite/</span>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <span class="code-lang">Shell</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+    </div>
+    <pre><span class="c"># Navigate to your project (adjust path)</span>
+cd ~/Documents/life-suite
+
+<span class="c"># Initialise Git</span>
+git init
+
+<span class="c"># Set your identity (one-time, if not already set)</span>
+git config user.name <span class="s">"Your Name"</span>
+git config user.email <span class="s">"you@example.com"</span>
+
+<span class="c"># Create .gitignore</span>
+echo <span class="s">".DS_Store
+Thumbs.db
+*.log
+node_modules/"</span> > .gitignore
+
+<span class="c"># Create a README</span>
+echo <span class="s">"# Life Suite
+Personal HTML app suite — EAT · RUN · LIVE"</span> > README.md
+
+<span class="c"># First commit</span>
+git add .
+git commit -m <span class="s">"Phase 1: project structure and initial files"</span>
+
+<span class="c"># ── OPTIONAL: push to GitHub for remote backup ────────────────
+# Create a private repo on github.com first, then:</span>
+git remote add origin https://github.com/yourusername/life-suite.git
+git push -u origin main</pre>
+  </div>
+
+  <div class="task-group">
+    <div class="group-label">Ongoing Commit Rhythm</div>
+
+    <div class="task" id="task-g2">
+      <div class="task-header" onclick="toggleTask('g2')">
+        <div class="checkbox" id="cb-g2" onclick="checkTask(event,'g2','git',5)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Commit after each schema is finalised</span>
+            <div class="task-tags"><span class="tag tag-git">Git</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-g2">▶</span>
+      </div>
+      <div class="task-detail" id="td-g2">
+        <p>After you finish designing and documenting each JSON schema, make a commit. Small, focused commits are much more useful than one big commit at the end.</p>
+        <ul>
+          <li><code>git add data/SCHEMA.md && git commit -m "Schema: budget.json structure defined"</code></li>
+          <li><code>git add data/ && git commit -m "Data: budget.json converted from CSV"</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-g3">
+      <div class="task-header" onclick="toggleTask('g3')">
+        <div class="checkbox" id="cb-g3" onclick="checkTask(event,'g3','git',5)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Commit monthly when you update budget.json with new data</span>
+            <div class="task-tags"><span class="tag tag-git">Git</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-g3">▶</span>
+      </div>
+      <div class="task-detail" id="td-g3">
+        <p>After each monthly budget update, the commit message should include the month. This makes it trivially easy to recover any historical state.</p>
+        <ul>
+          <li><code>git add data/budget.json && git commit -m "Budget update: May 2025 actuals"</code></li>
+          <li>Then push to GitHub: <code>git push</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-g4">
+      <div class="task-header" onclick="toggleTask('g4')">
+        <div class="checkbox" id="cb-g4" onclick="checkTask(event,'g4','git',5)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Use branches for app feature work</span>
+            <div class="task-tags"><span class="tag tag-git">Git</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-g4">▶</span>
+      </div>
+      <div class="task-detail" id="td-g4">
+        <p>When building a new feature, create a branch. This keeps <code>main</code> always in a working state. Merge back when the feature is complete and tested.</p>
+        <ul>
+          <li><code>git checkout -b feature/budget-yoy-charts</code> — create branch</li>
+          <li>... do your work, commit as you go ...</li>
+          <li><code>git checkout main && git merge feature/budget-yoy-charts</code> — merge when done</li>
+          <li><code>git branch -d feature/budget-yoy-charts</code> — clean up</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task" id="task-g5">
+      <div class="task-header" onclick="toggleTask('g5')">
+        <div class="checkbox" id="cb-g5" onclick="checkTask(event,'g5','git',5)"></div>
+        <div class="task-body-wrap">
+          <div class="task-title-row">
+            <span class="task-title">Write a SCHEMA.md documenting all JSON file structures</span>
+            <div class="task-tags"><span class="tag tag-schema">Schema</span><span class="tag tag-offline">Offline</span></div>
+          </div>
+        </div>
+        <span class="expand-icon" id="ei-g5">▶</span>
+      </div>
+      <div class="task-detail" id="td-g5">
+        <p>Create <strong>data/SCHEMA.md</strong>. Document each JSON file: what each field means, the units, the allowed values, and any rules (e.g. dates are always YYYY-MM-DD, calories are always integers). This is invaluable when you return to the project after a few months.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+  // ── NAV ──
+  function show(id, btn) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── TASK TOGGLE (expand detail) ──
+  function toggleTask(id) {
+    const detail = document.getElementById('td-' + id);
+    const icon   = document.getElementById('ei-' + id);
+    const isOpen = detail.classList.toggle('open');
+    icon.classList.toggle('open', isOpen);
+  }
+
+  // ── CHECKBOX + PROGRESS ──
+  const sectionTotals = {};
+  const sectionDone   = {};
+
+  function checkTask(event, id, section, total) {
+    event.stopPropagation();
+    const cb = document.getElementById('cb-' + id);
+    const task = document.getElementById('task-' + id);
+    const isDone = cb.classList.toggle('checked');
+    task.classList.toggle('done', isDone);
+
+    if (!sectionTotals[section]) { sectionTotals[section] = total; sectionDone[section] = 0; }
+    sectionDone[section] = isDone ? sectionDone[section] + 1 : sectionDone[section] - 1;
+
+    const count = document.getElementById('count-' + section);
+    const bar   = document.getElementById('bar-' + section);
+    if (count) count.textContent = `${sectionDone[section]} / ${total}`;
+    if (bar)   bar.style.width = `${(sectionDone[section] / total) * 100}%`;
+  }
+
+  // ── COPY CODE ──
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // Init progress counters
+  ['setup','schemas','convert','git'].forEach(s => {
+    sectionDone[s] = 0;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Image Downloader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .upload-section {
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragover {
+            background: #e0e7ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-area input[type="file"] {
+            display: none;
+        }
+        
+        .upload-label {
+            display: block;
+            cursor: pointer;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 16px;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .upload-hint {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input[type="text"], select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #e8e8e8;
+        }
+        
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .recipe-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        
+        .recipe-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .recipe-image {
+            width: 100%;
+            height: 180px;
+            background: #e0e0e0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .recipe-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .recipe-image.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .recipe-info {
+            padding: 15px;
+        }
+        
+        .recipe-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            min-height: 40px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .recipe-meta {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        
+        .recipe-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .status-icon {
+            font-size: 16px;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .recipe-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .recipe-actions button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 11px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-download {
+            background: #667eea;
+            color: white;
+            border: none;
+        }
+        
+        .btn-download:hover:not(:disabled) {
+            background: #5568d3;
+        }
+        
+        .btn-download:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .message.active {
+            display: block;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #667eea;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        footer {
+            background: #f9f9f9;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .no-results-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .no-results-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖼️ Recipe Image Downloader</h1>
+            <p>Upload your CSV and automatically find & download images for recipes with missing URLs</p>
+        </header>
+
+        <div class="content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <label for="csvFile" class="upload-label">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text">Drop your CSV file here</div>
+                        <div class="upload-hint">or click to browse (recipes-source.csv)</div>
+                    </label>
+                    <input type="file" id="csvFile" accept=".csv" />
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                ℹ️ This tool analyzes your CSV file to find recipes with missing Image URLs, searches for appropriate images, and downloads them locally with filenames matching the dish names.
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="control-group">
+                    <label for="imageSource">Image Source API</label>
+                    <select id="imageSource">
+                        <option value="unsplash">Unsplash (Free, High Quality)</option>
+                        <option value="pexels">Pexels (Free)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="imageSize">Image Size</label>
+                    <select id="imageSize">
+                        <option value="small">Small (400x300)</option>
+                        <option value="medium" selected>Medium (800x600)</option>
+                        <option value="large">Large (1200x800)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button class="btn-primary" id="analyzeBtn" disabled>Analyze CSV</button>
+                <button class="btn-secondary" id="downloadAllBtn" disabled>Download All Images</button>
+            </div>
+
+            <!-- Messages -->
+            <div id="message" class="message"></div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="results-section">
+                <!-- Stats -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCount">0</div>
+                        <div class="stat-label">Missing Images</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="successCount">0</div>
+                        <div class="stat-label">Downloaded</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="errorCount">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+
+                <!-- Recipes Grid -->
+                <div id="recipesGrid" class="recipes-grid"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Recipe Image Downloader v1.0 | Images sourced from Unsplash & Pexels APIs</p>
+        </footer>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const csvFile = document.getElementById('csvFile');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const recipesGrid = document.getElementById('recipesGrid');
+        const message = document.getElementById('message');
+        const imageSource = document.getElementById('imageSource');
+        const imageSize = document.getElementById('imageSize');
+
+        let recipes = [];
+        let missingImageRecipes = [];
+
+        // Upload handler
+        uploadArea.addEventListener('click', () => csvFile.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        csvFile.addEventListener('change', (e) => {
+            handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+            
+            if (!file.name.endsWith('.csv')) {
+                showMessage('Please upload a CSV file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    parseCSV(e.target.result);
+                    showMessage('CSV loaded successfully! Click "Analyze CSV" to find recipes with missing images.', 'success');
+                    analyzeBtn.disabled = false;
+                } catch (error) {
+                    showMessage('Error parsing CSV: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            
+            recipes = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = parseCSVLine(lines[i]);
+                if (values.length < 20) continue;
+
+                const recipe = {
+                    id: values[0],
+                    source: values[1],
+                    cuisine: values[2],
+                    subCategory: values[3],
+                    dishName: values[4],
+                    imageUrl: values[19] || '',
+                    pageLink: values[20] || ''
+                };
+
+                recipes.push(recipe);
+            }
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let insideQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    insideQuotes = !insideQuotes;
+                } else if (char === ',' && !insideQuotes) {
+                    result.push(current.trim().replace(/^"|"$/g, ''));
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim().replace(/^"|"$/g, ''));
+            return result;
+        }
+
+        analyzeBtn.addEventListener('click', () => {
+            missingImageRecipes = recipes.filter(r => !r.imageUrl || r.imageUrl.trim() === '');
+            
+            if (missingImageRecipes.length === 0) {
+                showMessage('All recipes have image URLs!', 'success');
+                return;
+            }
+
+            displayRecipes();
+            resultsSection.classList.add('active');
+            downloadAllBtn.disabled = false;
+            showMessage(`Found ${missingImageRecipes.length} recipes with missing images`, 'info');
+        });
+
+        function displayRecipes() {
+            recipesGrid.innerHTML = '';
+            document.getElementById('totalCount').textContent = missingImageRecipes.length;
+            document.getElementById('successCount').textContent = '0';
+            document.getElementById('errorCount').textContent = '0';
+
+            missingImageRecipes.forEach((recipe, index) => {
+                const card = createRecipeCard(recipe, index);
+                recipesGrid.appendChild(card);
+            });
+        }
+
+        function createRecipeCard(recipe, index) {
+            const card = document.createElement('div');
+            card.className = 'recipe-card';
+            card.innerHTML = `
+                <div class="recipe-image loading" id="image-${index}">
+                    <span class="spinner"></span>
+                </div>
+                <div class="recipe-info">
+                    <div class="recipe-name">${recipe.dishName}</div>
+                    <div class="recipe-meta">
+                        ${recipe.cuisine} • ${recipe.subCategory}
+                    </div>
+                    <div class="recipe-status" id="status-${index}">
+                        <span class="status-icon">⏳</span>
+                        <span>Pending</span>
+                    </div>
+                    <div class="recipe-actions">
+                        <button class="btn-download" id="btn-${index}" onclick="downloadImage(${index})">Search & Download</button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        async function downloadImage(index) {
+            const recipe = missingImageRecipes[index];
+            const btn = document.getElementById(`btn-${index}`);
+            const status = document.getElementById(`status-${index}`);
+            const imageContainer = document.getElementById(`image-${index}`);
+
+            btn.disabled = true;
+            btn.textContent = 'Searching...';
+            status.className = 'recipe-status status-pending';
+            status.innerHTML = '<span class="status-icon"><span class="spinner"></span></span><span>Searching...</span>';
+
+            try {
+                const imageUrl = await searchImage(recipe.dishName, recipe.cuisine);
+                
+                if (imageUrl) {
+                    // Display preview
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    imageContainer.innerHTML = '';
+                    imageContainer.appendChild(img);
+                    imageContainer.classList.remove('loading');
+
+                    // Download the image
+                    await downloadImageFile(imageUrl, recipe.dishName);
+
+                    status.className = 'recipe-status status-success';
+                    status.innerHTML = '<span class="status-icon">✓</span><span>Downloaded</span>';
+                    btn.textContent = 'Downloaded';
+                    document.getElementById('successCount').textContent = 
+                        parseInt(document.getElementById('successCount').textContent) + 1;
+                } else {
+                    throw new Error('No image found');
+                }
+            } catch (error) {
+                status.className = 'recipe-status status-error';
+                status.innerHTML = '<span class="status-icon">✗</span><span>Failed: ' + error.message + '</span>';
+                btn.textContent = 'Retry';
+                btn.disabled = false;
+                document.getElementById('errorCount').textContent = 
+                    parseInt(document.getElementById('errorCount').textContent) + 1;
+            }
+
+            updateProgress();
+        }
+
+        async function searchImage(dishName, cuisine) {
+            const source = imageSource.value;
+            const searchQuery = `${dishName} ${cuisine} food`;
+
+            if (source === 'unsplash') {
+                return await searchUnsplash(searchQuery);
+            } else {
+                return await searchPexels(searchQuery);
+            }
+        }
+
+        async function searchUnsplash(query) {
+            try {
+                const response = await fetch(
+                    `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
+                    {
+                        headers: {
+                            'Authorization': 'Client-ID kkd0ePJSwhh-ZFT8PGDPuPhVH8tQLJcUe9Aw6d2LKdE'
+                        }
+                    }
+                );
+                const data = await response.json();
+                return data.results && data.results[0] ? data.results[0].urls.regular : null;
+            } catch (error) {
+                console.error('Unsplash error:', error);
+                return null;
+            }
+        }
+
+        async function searchPexels(query) {
+            try {
+                const response = await fetch(
+                    `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
+                    {
+                        headers: {
+                            'Authorization': 'mZQJmD4Zhe0nD8iLmJkW6LzVZp0iswqDu2cQHJe0wWUZCLWJCo7n3K5P'
+                        }
+                    }
+                );
+                const data = await response.json();
+                return data.photos && data.photos[0] ? data.photos[0].src.landscape : null;
+            } catch (error) {
+                console.error('Pexels error:', error);
+                return null;
+            }
+        }
+
+        async function downloadImageFile(imageUrl, dishName) {
+            const response = await fetch(imageUrl);
+            if (!response.ok) throw new Error('Failed to fetch image');
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            // Create filename from dish name
+            const filename = sanitizeFilename(dishName) + '.' + getImageExtension(blob.type);
+            a.download = filename;
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function sanitizeFilename(name) {
+            return name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        }
+
+        function getImageExtension(mimeType) {
+            const extensions = {
+                'image/jpeg': 'jpg',
+                'image/jpg': 'jpg',
+                'image/png': 'png',
+                'image/webp': 'webp',
+                'image/gif': 'gif'
+            };
+            return extensions[mimeType] || 'jpg';
+        }
+
+        downloadAllBtn.addEventListener('click', async () => {
+            downloadAllBtn.disabled = true;
+            downloadAllBtn.textContent = 'Downloading...';
+
+            for (let i = 0; i < missingImageRecipes.length; i++) {
+                await downloadImage(i);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Rate limiting
+            }
+
+            downloadAllBtn.disabled = false;
+            downloadAllBtn.textContent = 'Download All Images';
+            showMessage('Image download process completed!', 'success');
+        });
+
+        function updateProgress() {
+            const total = missingImageRecipes.length;
+            const success = parseInt(document.getElementById('successCount').textContent);
+            const error = parseInt(document.getElementById('errorCount').textContent);
+            const completed = success + error;
+            const percentage = (completed / total) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = `message active ${type}`;
+            setTimeout(() => {
+                message.classList.remove('active');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

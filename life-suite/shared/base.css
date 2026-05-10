@@ -1,0 +1,712 @@
+/*
+ * ═══════════════════════════════════════════════════════════════════
+ *  SAHANI SUITE — BASE DESIGN SYSTEM  v1.0
+ * ═══════════════════════════════════════════════════════════════════
+ *  Shared across: Hub · Budget · Calories · Recipes · Travel · Training
+ *
+ *  HOW TO USE IN A NEW APP
+ *  ───────────────────────
+ *  1. Link this file:  <link rel="stylesheet" href="../shared/base.css">
+ *  2. Override the app theme tokens in a <style> block in your HTML:
+ *       :root {
+ *         --app-primary:   #1a3a1a;
+ *         --app-primary2:  #2a5a2a;
+ *         --app-primary3:  #3a8a3a;
+ *         --app-accent:    #2d7a2d;
+ *         --app-on-primary:  #fff;
+ *         --app-on-primary2: #a8d4a8;
+ *         --app-on-primary3: #7ab87a;
+ *       }
+ *  3. Load shared utilities: <script src="../shared/utils.js"></script>
+ *  4. Load your data:        <script src="../shared/utils.js"></script>
+ *                            then call fetchData('../budget/data.json')
+ *
+ *  LAYER MAP
+ *  ─────────
+ *  §1  Neutral tokens         (never change between apps)
+ *  §2  App theme tokens       (overridden per-app — see above)
+ *  §3  Reset & base
+ *  §4  Layout
+ *  §5  Header
+ *  §6  Cards & hero strips
+ *  §7  Stat / KPI tiles
+ *  §8  Progress bars
+ *  §9  Pills & badges
+ *  §10 Notices
+ *  §11 Legend
+ *  §12 Data table
+ *  §13 Row-item pattern       (budget rows, food rows, recipe steps…)
+ *  §14 Period / year strip
+ *  §15 Chart wrapper
+ *  §16 Horizontal scroll strip
+ *  §17 Privacy mode
+ *  §18 Tooltip
+ *  §19 Password modal
+ *  §20 Navigation helpers
+ *  §21 Utilities
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+
+/* ── §1  NEUTRAL TOKENS ───────────────────────────────────────────── */
+:root {
+  /* Page surfaces */
+  --bg:       #f5f4f0;
+  --white:    #ffffff;
+  --surface:  #f8f7f3;
+
+  /* Text */
+  --text:     #1a1a1a;
+  --muted:    #666666;
+  --faint:    #999999;
+
+  /* Borders */
+  --border:   #e0ddd7;
+  --border2:  #e8e6e0;
+
+  /* Radii */
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   13px;
+  --r-pill: 999px;
+
+  /* Spacing */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;
+  --sp-4: 16px;  --sp-5: 20px;  --sp-6: 24px;
+
+  /* Type scale */
+  --t-xs:   9.5px;
+  --t-sm:   11px;
+  --t-base: 13px;
+  --t-md:   14px;
+  --t-lg:   17px;
+  --t-xl:   20px;
+  --t-2xl:  26px;
+
+  /* Status colours — neutral, never override */
+  --c-success:    #3b6d11;
+  --c-warning:    #ef9f27;
+  --c-danger:     #c0392b;
+  --c-info:       #185fa5;
+  --c-neutral:    #888780;
+  --c-purple:     #7f77dd;
+  --c-teal:       #20a080;
+
+  --bg-success:   #e2f0d6;
+  --bg-warning:   #faeeda;
+  --bg-danger:    #fde8e8;
+  --bg-info:      #deeaf7;
+  --bg-neutral:   #f0ede8;
+  --bg-purple:    #eeedfe;
+  --bg-teal:      #e0f5f0;
+}
+
+
+/* ── §2  APP THEME TOKENS (defaults = Hub navy) ───────────────────── */
+/*
+  Every app overrides these in its own <style> :root block.
+  Naming convention:
+    --app-primary   = darkest  (header bg, hero strip bg)
+    --app-primary2  = mid      (badge bg, footer bg)
+    --app-primary3  = lighter  (badge border, grid lines)
+    --app-accent    = action colour (buttons, progress fill, links)
+    --app-on-primary   = text on primary bg   (almost always #fff)
+    --app-on-primary2  = muted text on primary bg
+    --app-on-primary3  = faint text on primary bg
+*/
+:root {
+  --app-primary:    #0c2340;
+  --app-primary2:   #1a3a5c;
+  --app-primary3:   #2d5a8a;
+  --app-accent:     #185fa5;
+  --app-on-primary:    #ffffff;
+  --app-on-primary2:   #a8cfed;
+  --app-on-primary3:   #7fa8cc;
+}
+
+
+/* ── §3  RESET & BASE ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+html { -webkit-text-size-adjust: 100% }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+               Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--t-md);
+  line-height: 1.5;
+  padding-bottom: 48px;
+}
+canvas { display: block; width: 100% !important }
+a { color: var(--app-accent); text-decoration: none }
+a:hover { text-decoration: underline }
+
+
+/* ── §4  LAYOUT ───────────────────────────────────────────────────── */
+.container { max-width: 960px; margin: 0 auto; padding: 0 14px }
+@media (min-width: 600px) { .container { padding: 0 var(--sp-6) } }
+
+.grid-2 { display: grid; grid-template-columns: 1fr; gap: var(--sp-2) }
+.grid-3 { display: grid; grid-template-columns: 1fr; gap: var(--sp-2) }
+@media (min-width: 600px) {
+  .grid-2 { grid-template-columns: 1fr 1fr }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr }
+}
+.col-full { grid-column: 1 / -1 }
+
+.section-sep { height: 1px; background: var(--border); margin: 8px 0 16px }
+
+.sec-lbl {
+  font-size: 10px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: var(--sp-2);
+}
+
+
+/* ── §5  HEADER ───────────────────────────────────────────────────── */
+/*
+  Usage:
+  <header class="header">
+    <div class="container">
+      <div class="header-row">
+        <div class="header-left">
+          <a class="header-home" href="../index.html">⌂</a>
+          <span class="header-title">App Name</span>
+        </div>
+        <div class="header-right">
+          <button class="privacy-btn" onclick="togglePrivacy()">👁</button>
+          <span class="header-badge">2026</span>
+        </div>
+      </div>
+    </div>
+  </header>
+*/
+.header {
+  background: var(--app-primary);
+  padding: 12px var(--sp-4) 10px;
+  margin-bottom: 14px;
+  position: sticky; top: 0; z-index: 100;
+}
+@media (min-width: 600px) { .header { padding: 13px var(--sp-6) 11px } }
+
+.header-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2); flex-wrap: wrap;
+}
+.header-left  { display: flex; align-items: center; gap: 10px }
+.header-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap }
+
+.header-home {
+  color: var(--app-on-primary3); font-size: 18px; line-height: 1;
+  text-decoration: none; transition: color .15s; flex-shrink: 0;
+  padding: 2px 4px;
+}
+.header-home:hover { color: var(--app-on-primary); text-decoration: none }
+
+.header-title {
+  font-size: 17px; font-weight: 600;
+  color: var(--app-on-primary); letter-spacing: -0.3px;
+}
+@media (min-width: 600px) { .header-title { font-size: var(--t-xl) } }
+
+.header-badge {
+  padding: 2px 9px;
+  background: var(--app-primary2);
+  border: 1px solid var(--app-primary3);
+  border-radius: var(--r-pill);
+  font-size: 11px; color: var(--app-on-primary2); font-weight: 500;
+}
+
+/* Generic icon/text button inside header */
+.header-btn {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--r-sm);
+  color: var(--app-on-primary2);
+  font-size: 11px; font-weight: 500;
+  padding: 2px 10px; cursor: pointer;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .15s;
+}
+.header-btn:hover { background: rgba(255,255,255,.15) }
+.header-btn.active {
+  background: rgba(255,255,255,.2);
+  border-color: rgba(255,255,255,.35);
+  color: var(--app-on-primary);
+}
+
+.privacy-btn {
+  background: none; border: none; cursor: pointer;
+  padding: 2px 4px; color: var(--app-on-primary3);
+  font-size: 16px; line-height: 1;
+  transition: color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.privacy-btn:hover { color: var(--app-on-primary) }
+
+
+/* ── §6  CARDS & HERO STRIPS ──────────────────────────────────────── */
+/*
+  .card       — plain white panel
+  .card-hero  — panel with themed hero strip at top
+    .hero-strip — coloured band; inline style="background:var(--app-primary)"
+                  OR pass any hex to allow per-category colour in drill-downs
+    .card-body  — padded content below hero strip
+  .surface    — nested tinted block inside a card
+*/
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-3) 14px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.card-hero {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.hero-strip {
+  background: var(--app-primary);
+  padding: 14px var(--sp-4) 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--sp-2);
+}
+.card-body { padding: var(--sp-3) 14px }
+.surface   { background: var(--surface); border-radius: var(--r-md); padding: 10px 12px }
+
+/* Hero strip typography */
+.hs-title { font-size: var(--t-lg); font-weight: 600; color: var(--app-on-primary) }
+.hs-sub   { font-size: 11px; color: var(--app-on-primary2); margin-top: 2px }
+.hs-right { text-align: right; flex-shrink: 0 }
+.hs-stat  { font-size: var(--t-2xl); font-weight: 600; color: var(--app-on-primary); line-height: 1 }
+.hs-lbl   { font-size: 10px; color: var(--app-on-primary3); margin-top: 2px }
+
+
+/* ── §7  STAT / KPI TILES ─────────────────────────────────────────── */
+/*
+  Usage:
+  <div class="kpi-tile">
+    <div class="kpi-label">Total Spend</div>
+    <div class="kpi-value">CHF 42,300</div>
+    <div class="kpi-sub">of CHF 50,000 budget</div>
+  </div>
+*/
+.kpi-tile  {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 10px 12px;
+}
+.kpi-label { font-size: var(--t-xs); font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px }
+.kpi-value { font-size: var(--t-2xl); font-weight: 600; color: var(--text); line-height: 1; margin-bottom: 3px }
+.kpi-sub   { font-size: 11px; color: var(--muted) }
+
+/* Compact inline stat — e.g. inside a hero strip */
+.kpi-inline       { display: flex; align-items: baseline; gap: 6px }
+.kpi-inline-value { font-size: var(--t-xl); font-weight: 600; color: var(--app-on-primary) }
+.kpi-inline-label { font-size: 10px; color: var(--app-on-primary3) }
+
+
+/* ── §8  PROGRESS BARS ────────────────────────────────────────────── */
+/*
+  Usage:
+  <div class="progress-wrap">
+    <div class="progress-bg h-md">
+      <div class="progress-fill fill-accent" style="width:72%"></div>
+    </div>
+  </div>
+  Heights:  (default 3px)  .h-sm=3px  .h-md=6px  .h-lg=10px
+  Fills:    .fill-accent (uses app theme) | .fill-success | .fill-warning
+            .fill-danger | .fill-neutral | .fill-purple | .fill-teal
+*/
+.progress-wrap    { padding-bottom: 8px }
+.progress-bg      { height: 3px; border-radius: 2px; background: #f0ede8; overflow: hidden }
+.progress-bg.h-sm { height: 3px }
+.progress-bg.h-md { height: 6px }
+.progress-bg.h-lg { height: 10px }
+.progress-fill    { height: 100%; border-radius: 2px; transition: width .3s ease }
+
+.fill-accent   { background: var(--app-accent) }
+.fill-success  { background: var(--c-success) }
+.fill-warning  { background: var(--c-warning) }
+.fill-danger   { background: var(--c-danger) }
+.fill-neutral  { background: var(--c-neutral) }
+.fill-purple   { background: var(--c-purple) }
+.fill-teal     { background: var(--c-teal) }
+
+
+/* ── §9  PILLS & BADGES ───────────────────────────────────────────── */
+/*
+  .pill  — smallest inline label (8px, uppercase weight)
+  .badge — slightly larger, for counts or ownership labels
+  .tag   — plain inline text chip
+
+  Pill variants: status (reuse in any domain)
+    .pill-success .pill-warning .pill-danger .pill-info .pill-neutral .pill-purple .pill-teal
+  Badge variants:
+    .badge-accent .badge-neutral
+*/
+.pill {
+  display: inline-block; font-size: 8px; font-weight: 600;
+  padding: 1.5px 5px; border-radius: var(--r-pill); width: fit-content;
+}
+.pill-success { background: var(--bg-success); color: var(--c-success) }
+.pill-warning { background: var(--bg-warning); color: #633806 }
+.pill-danger  { background: var(--bg-danger);  color: #7c0c0c }
+.pill-info    { background: var(--bg-info);    color: #0c447c }
+.pill-neutral { background: var(--bg-neutral); color: #666 }
+.pill-purple  { background: var(--bg-purple);  color: #3c3489 }
+.pill-teal    { background: var(--bg-teal);    color: #0a5040 }
+/* App-accent pill — uses current app theme */
+.pill-accent  { background: var(--app-primary2); color: var(--app-on-primary2) }
+
+.badge {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  padding: 1px 7px; border-radius: var(--r-pill); margin-top: 4px;
+}
+.badge-accent  { background: var(--app-primary2); color: var(--app-on-primary2) }
+.badge-neutral { background: var(--bg-neutral); color: var(--muted) }
+
+.tag {
+  display: inline-block; font-size: 9px;
+  padding: 1px 6px; border-radius: var(--r-pill);
+  background: var(--bg-neutral); color: #555;
+}
+.tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px }
+
+
+/* ── §10 NOTICES ──────────────────────────────────────────────────── */
+/*
+  Usage:
+  <div class="notice notice-info">
+    <div class="notice-title">Heads up</div>
+    <div class="notice-body">Some contextual information.</div>
+  </div>
+  Variants: .notice-success .notice-info .notice-warning .notice-danger
+*/
+.notice       { border-radius: 9px; padding: 9px 11px; margin-bottom: var(--sp-2) }
+.notice-title { font-size: var(--t-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px }
+.notice-body  { font-size: 10px; line-height: 1.5 }
+
+.notice-success { background: #f0fff4; border: 1px solid #80d090 }
+.notice-success .notice-title { color: #256030 }
+.notice-success .notice-body  { color: #1a4020 }
+
+.notice-info    { background: #fff8e8; border: 1px solid #f0d890 }
+.notice-info .notice-title    { color: #8a6000 }
+.notice-info .notice-body     { color: #6a4800 }
+
+.notice-warning { background: #fff4ec; border: 1px solid #f0c080 }
+.notice-warning .notice-title { color: #8a4000 }
+.notice-warning .notice-body  { color: #6a3000 }
+
+.notice-danger  { background: #fff0f0; border: 1px solid #f0a0a0 }
+.notice-danger .notice-title  { color: #8a0000 }
+.notice-danger .notice-body   { color: #6a0000 }
+
+
+/* ── §11 LEGEND ───────────────────────────────────────────────────── */
+/*
+  Usage:
+  <div class="legend">
+    <div class="legend-item" onclick="...">
+      <div class="legend-dot" style="background:#185fa5"></div>
+      Series name
+    </div>
+  </div>
+*/
+.legend      { display: flex; gap: 10px; flex-wrap: wrap; padding: 8px 12px; background: var(--white); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 14px }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #555; cursor: pointer; user-select: none }
+.legend-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0 }
+
+
+/* ── §12 DATA TABLE ───────────────────────────────────────────────── */
+/*
+  Horizontally scrollable, sticky first column + header.
+  Usage:
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>2026</th>...</tr></thead>
+        <tbody><tr><td>Row</td><td class="num-private">5.2k</td>...</tr></tbody>
+        <tfoot><tr><td>Total</td><td class="num-private">42k</td>...</tr></tfoot>
+      </table>
+    </div>
+  </div>
+*/
+.table-wrap  { overflow-x: auto; -webkit-overflow-scrolling: touch }
+.data-table  { width: 100%; border-collapse: collapse; font-size: var(--t-sm); white-space: nowrap }
+
+.data-table th {
+  background: var(--app-primary); color: var(--app-on-primary);
+  padding: 6px 10px; text-align: right;
+  font-weight: 600; font-size: 10px;
+  text-transform: uppercase; letter-spacing: .05em;
+  position: sticky; top: 0;
+}
+.data-table th:first-child { text-align: left; position: sticky; left: 0; z-index: 2 }
+
+.data-table td {
+  padding: 5px 10px; text-align: right;
+  border-bottom: 1px solid var(--border2); color: var(--text);
+}
+.data-table td:first-child {
+  text-align: left; font-weight: 600;
+  background: var(--white); position: sticky; left: 0;
+  border-right: 1px solid var(--border);
+}
+.data-table tr:nth-child(even) td              { background: var(--surface) }
+.data-table tr:nth-child(even) td:first-child  { background: var(--surface) }
+
+.data-table tfoot td {
+  font-weight: 600;
+  background: var(--app-primary2); color: var(--app-on-primary);
+  border-top: 2px solid var(--app-primary3);
+}
+.data-table tfoot td:first-child { background: var(--app-primary2) }
+
+
+/* ── §13 ROW-ITEM PATTERN ─────────────────────────────────────────── */
+/*
+  Generic horizontal row with dot/icon, label, values, progress bar.
+  Works for: budget categories, food items, recipe ingredients, lap splits…
+
+  Usage:
+  <div class="row-item">
+    <div class="ri-header" onclick="...">     ← optional click for drill-down
+      <div class="ri-left">
+        <div class="ri-dot" style="background:#2d7a2d"></div>
+        <span class="ri-name">Groceries</span>
+      </div>
+      <div class="ri-right">
+        <span class="ri-value num-private">CHF 1,200</span>
+        <span class="ri-meta num-private">/ 1,500</span>
+        <span class="pill pill-success num-private">–300</span>
+        <span class="ri-caret">›</span>
+      </div>
+    </div>
+    <div class="progress-bg h-md">
+      <div class="progress-fill fill-accent" style="width:80%"></div>
+    </div>
+  </div>
+*/
+.row-item    { margin-bottom: 12px }
+.ri-header   { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; gap: 8px }
+.ri-header.clickable { cursor: pointer }
+.ri-left     { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0 }
+.ri-right    { display: flex; gap: 8px; align-items: center; flex-shrink: 0 }
+.ri-dot      { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0 }
+.ri-icon     { font-size: 14px; flex-shrink: 0 }
+.ri-name     { font-size: var(--t-sm); font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.ri-value    { font-size: var(--t-sm); font-weight: 600; color: var(--text) }
+.ri-meta     { font-size: var(--t-sm); color: var(--muted) }
+.ri-caret    { font-size: 9px; color: var(--app-accent) }
+
+/* Detail block — expanded content below a row-item or inside a card */
+.detail-block  { background: var(--surface); border-radius: var(--r-md); padding: 10px 12px; margin-bottom: 8px }
+.db-header     { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px }
+.db-title      { font-size: var(--t-sm); font-weight: 600; color: var(--text) }
+.db-meta       { font-size: 11px; color: var(--muted) }
+.db-body       { font-size: 11px; color: #555; line-height: 1.5 }
+.db-footer     { font-size: 10px; color: var(--faint); margin-top: 4px }
+
+
+/* ── §14 PERIOD / YEAR STRIP ──────────────────────────────────────── */
+/*
+  Pill row for year, week, or any period selector.
+  Usage: <div class="period-strip" id="periodStrip"></div>
+  Rendered by renderPeriodStrip() in utils.js
+*/
+.period-strip { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 14px }
+.period-btn {
+  font-size: 10px; font-weight: 600; padding: 3px 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--white); color: var(--muted);
+  cursor: pointer; font-family: inherit;
+  transition: all .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.period-btn:hover        { border-color: #bbb; color: var(--text) }
+.period-btn.active       { background: var(--app-primary); border-color: var(--app-primary); color: var(--app-on-primary) }
+
+
+/* ── §15 CHART WRAPPER ────────────────────────────────────────────── */
+.chart-wrap { width: 100%; overflow: hidden }
+
+
+/* ── §16 HORIZONTAL SCROLL STRIP ─────────────────────────────────── */
+/*
+  Mobile: horizontal scroll. Desktop: auto-grid.
+  Usage:
+  <div class="hscroll-wrap">
+    <div class="hscroll-inner">
+      <div class="scroll-card sel">
+        <div class="sc-label">Mon</div>
+        <div class="sc-value">4.2k</div>
+        <div class="sc-meta">kcal</div>
+      </div>
+    </div>
+  </div>
+*/
+.hscroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -14px 14px; padding: 4px 14px 8px }
+.hscroll-wrap::-webkit-scrollbar { display: none }
+.hscroll-inner { display: flex; gap: 6px; width: max-content }
+@media (min-width: 600px) {
+  .hscroll-wrap  { overflow: visible; margin: 0 0 14px; padding: 3px 0 6px }
+  .hscroll-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); width: auto }
+}
+.scroll-card {
+  min-width: 80px; flex-shrink: 0;
+  border: 1.5px solid var(--border); border-radius: 11px;
+  padding: 9px 8px 8px; background: var(--white);
+  cursor: pointer; display: flex; flex-direction: column;
+  min-height: 80px; transition: border-color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.scroll-card:hover { border-color: #bbb }
+.scroll-card.sel   { border-color: var(--app-accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--app-accent) 20%, transparent) }
+.sc-label { font-size: var(--t-xs); font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px }
+.sc-value { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px }
+.sc-meta  { font-size: 9px; color: var(--faint); flex: 1 }
+
+
+/* ── §17 PRIVACY MODE ─────────────────────────────────────────────── */
+/*
+  Add class="privacy" to <body> to blur all .num-private elements.
+  Controlled by togglePrivacy() in utils.js.
+*/
+body.privacy .num-private {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+  transition: filter .2s;
+}
+
+
+/* ── §18 TOOLTIP ──────────────────────────────────────────────────── */
+/*
+  One shared <div id="chartTooltip"></div> placed as direct child of <body>.
+  Controlled by showTT() / hideTT() in utils.js.
+  Suppressed automatically when privacy mode is on.
+*/
+#chartTooltip {
+  position: fixed; pointer-events: none;
+  background: var(--app-primary); color: var(--app-on-primary);
+  border: 1px solid var(--app-primary3);
+  border-radius: var(--r-md);
+  padding: 7px 10px; font-size: 11px;
+  font-family: 'Inter', sans-serif;
+  z-index: 9999; opacity: 0; transition: opacity .1s;
+  white-space: nowrap; line-height: 1.6;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+}
+#chartTooltip.visible { opacity: 1 }
+#chartTooltip .tt-title { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--app-on-primary3); margin-bottom: 4px }
+#chartTooltip .tt-row   { display: flex; gap: 8px; align-items: center; justify-content: space-between }
+#chartTooltip .tt-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0 }
+#chartTooltip .tt-label { color: var(--app-on-primary2); flex: 1 }
+#chartTooltip .tt-val   { font-weight: 600; color: var(--app-on-primary) }
+
+
+/* ── §19 PASSWORD MODAL ───────────────────────────────────────────── */
+/*
+  Injected into <body> by showPasswordModal() in utils.js.
+*/
+.pw-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(3px);
+  z-index: 10000; display: flex;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.pw-modal {
+  background: var(--white); border-radius: var(--r-lg);
+  padding: 24px 20px; width: 100%; max-width: 320px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.25);
+}
+.pw-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px }
+.pw-sub   { font-size: 11px; color: var(--muted); margin-bottom: 16px }
+.pw-input {
+  width: 100%; border: 1.5px solid var(--border);
+  border-radius: var(--r-md); padding: 9px 12px;
+  font-size: 14px; font-family: inherit; color: var(--text);
+  outline: none; transition: border-color .15s; letter-spacing: .1em;
+}
+.pw-input:focus { border-color: var(--app-accent) }
+.pw-input.shake { animation: shake .3s }
+.pw-error { font-size: 11px; color: var(--c-danger); margin-top: 6px; min-height: 16px }
+.pw-actions { display: flex; gap: 8px; margin-top: 16px }
+.pw-btn {
+  flex: 1; padding: 8px; border-radius: var(--r-md);
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all .15s; border: none;
+}
+.pw-btn-cancel  { background: var(--surface); border: 1px solid var(--border); color: var(--muted) }
+.pw-btn-cancel:hover  { border-color: #bbb; color: var(--text) }
+.pw-btn-confirm { background: var(--app-primary); color: var(--app-on-primary) }
+.pw-btn-confirm:hover { background: var(--app-primary2) }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0) }
+  25%      { transform: translateX(-6px) }
+  75%      { transform: translateX(6px) }
+}
+
+
+/* ── §20 NAVIGATION HELPERS ───────────────────────────────────────── */
+.back-btn {
+  font-size: 11px; font-weight: 600; padding: 3px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--white); color: var(--muted);
+  cursor: pointer; font-family: inherit;
+  margin-bottom: 12px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.back-btn:hover { border-color: var(--app-accent); color: var(--app-accent) }
+
+/* Hub app grid — used on the homepage only */
+.app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px }
+@media (min-width: 600px) { .app-grid { grid-template-columns: repeat(3, 1fr) } }
+
+.app-card {
+  border-radius: var(--r-lg); overflow: hidden;
+  border: 1px solid var(--border);
+  text-decoration: none; display: block;
+  transition: transform .15s, box-shadow .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.app-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.1); text-decoration: none }
+.app-card-header {
+  padding: 14px 14px 10px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.app-card-icon  { font-size: 22px; line-height: 1 }
+.app-card-title { font-size: 13px; font-weight: 600; color: var(--app-on-primary) }
+.app-card-sub   { font-size: 10px; color: var(--app-on-primary2) }
+.app-card-body  { background: var(--white); padding: 8px 14px 10px }
+.app-card-stat  { font-size: 11px; color: var(--muted) }
+
+
+/* ── §21 UTILITIES ────────────────────────────────────────────────── */
+.flex         { display: flex }
+.flex-between { display: flex; align-items: center; justify-content: space-between }
+.flex-center  { display: flex; align-items: center; justify-content: center }
+.flex-wrap    { flex-wrap: wrap }
+.text-muted   { color: var(--muted) }
+.text-faint   { color: var(--faint) }
+.text-accent  { color: var(--app-accent) }
+.text-success { color: var(--c-success) }
+.text-danger  { color: var(--c-danger) }
+.fw-500       { font-weight: 500 }
+.fw-600       { font-weight: 600 }
+.mt-2 { margin-top: var(--sp-2) }   .mt-3 { margin-top: var(--sp-3) }
+.mb-2 { margin-bottom: var(--sp-2) } .mb-3 { margin-bottom: var(--sp-3) }
+.gap-2 { gap: var(--sp-2) }          .gap-3 { gap: var(--sp-3) }
+.w-full { width: 100% }

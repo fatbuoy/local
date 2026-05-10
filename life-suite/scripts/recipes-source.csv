@@ -1,0 +1,307 @@
+﻿Recipe_ID,Source,Cuisine,Sub-Category,Dish Name,Servings,Calories per Serving,Total Fat (g),Saturated Fat (g),Monounsaturated Fat (g),Polyunsaturated Fat (g),Trans Fat (g),Cholesterol (mg),Sodium (mg),Potassium (mg),Total Carbohydrate (g),Dietary Fiber (g),Sugars (g),Protein (g),Image URL,Item Page Link
+43,Rishi,Western,Dessert,Lotus Custard Crumb,1,135,8,5,2,0,0,0,28,0,13,0,9,2,/images/recipes/lotus-custard.jpg,https://www.myfitnesspal.com/recipe/view/159446268243453
+29,Rishi,Western,Side,Chipppppies,2,168,3,0,1,1,0,0,607,1033,25,6,0,7,/images/recipes/chips.jpg,https://www.myfitnesspal.com/recipe/view/238602507186157
+22,Rishi,Sri Lankan,Curry,Kolamba's polos (young jackfruit curry),4,228,10,4,2,1,0,0,762,635,24,7,6,4,/images/recipes/jackfruit-curry.jpg,https://www.myfitnesspal.com/recipe/view/270374519229949
+27,Rishi,Mexican,,Corn Tacos,4,129,5,1,1,0,0,0,73,0,22,0,0,2,/images/recipes/corn-tacos.jpg,https://www.myfitnesspal.com/recipe/view/203845355252973
+2,Rishi,Indian,Curry,Aaloo Mattar,4,144,2,0,1,0,0,0,444,752,18,7,5,7,/images/recipes/aloo-matar.jpg,https://www.myfitnesspal.com/recipe/view/168508394499693
+7,Marion,Indian,Curry,Ottolenghi Stuffed Aubergines in Curry & Coconut Dal from FLAVOUR,6,287,13,4,5,1,0,0,790,838,19,8,8,16,/images/recipes/stuffed-aubergines.jpg,https://www.myfitnesspal.com/recipe/view/164821261528301
+11,Rishi,Indian,Curry,south indian mushroom peas curry,6,127,7,0,2,1,0,0,408,454,7,4,5,6,/images/recipes/mushroom-peas.jpg,https://www.myfitnesspal.com/recipe/view/273932803329085
+8,Rishi,Indian,Dal,Brinjal Sambar,8,138,2,0,1,1,0,0,329,49,14,7,3,8,/images/recipes/brinjal-sambar.jpg,https://www.myfitnesspal.com/recipe/view/279018132729645
+9,Rishi,Indian,Dal,Dal - Chana,3,173,4,0,1,0,0,0,386,53,21,5,1,9,/images/recipes/chana-dal.jpg,https://www.myfitnesspal.com/recipe/view/278322105732349
+14,Rishi,Indian,Dal,Dal - Maash Chole,2,165,5,2,0,0,0,10,633,247,19,3,2,8,/images/recipes/maash-chole.jpg,https://www.myfitnesspal.com/recipe/view/172930314964013
+54,Rishi,Indian,Rice,Biryani,6,299,6,2,1,1,0,0,688,326,43,7,8,8,/images/recipes/veg-biryani.jpg,https://www.myfitnesspal.com/recipe/view/278740747611325
+31,Rishi,Indian,Rice,Kathal biryani,4,370,13,2,4,2,0,0,869,717,43,8,5,9,/images/recipes/masala-papad.jpg,https://www.myfitnesspal.com/recipe/view/173336050912317
+39,Rishi,Indian,Rice,Khichadi - Moong Chilka,4,364,3,0,1,0,0,0,570,77,66,4,3,14,/images/recipes/green-moong-dal-khichdi.jpg,https://www.myfitnesspal.com/recipe/view/243275172450285
+28,Rishi,Indian,Rice,Vangi Bath,4,342,8,1,1,1,0,0,589,59,51,5,3,9,/images/recipes/vangi-bath.jpg,https://www.myfitnesspal.com/recipe/view/207813912489005
+10,Rishi,Indian,Sabzi,Aloo Gajar,5,83,2,0,0,0,0,0,112,349,10,5,3,2,/images/recipes/aloo-gajar.jpg,https://www.myfitnesspal.com/recipe/view/265555449605293
+5,Rishi,Indian,Sabzi,Arbi Sabzi,6,213,3,0,1,1,0,0,523,1019,37,7,2,3,/images/recipes/arbi-sabzi.jpg,https://www.myfitnesspal.com/recipe/view/230493646499629
+30,Rishi,Indian,Sabzi,Bhindi,4,114,5,1,2,1,0,0,444,162,2,9,8,6,/images/recipes/bhindi-masala.jpg,https://www.myfitnesspal.com/recipe/view/163996815462013
+26,Rishi,Indian,Sabzi,Bombay Pav Bhaji,4,174,7,2,1,1,0,8,770,738,17,7,8,7,/images/recipes/pav-bhaji.jpg,https://www.myfitnesspal.com/recipe/view/230519240199725
+38,Rishi,Indian,Sabzi,Cabbage Upkari,6,129,4,0,1,0,0,0,726,212,8,7,7,7,/images/recipes/cabbage-upkari.jpg,https://www.myfitnesspal.com/recipe/view/238885870193773
+45,Rishi,Indian,Sabzi,Kadai Paneer (Restaurant Style),4,176,8,3,1,1,0,1,615,402,11,3,7,15,/images/recipes/kadai-paneer.jpg,https://www.myfitnesspal.com/recipe/view/199035125116733
+52,Rishi,Indian,Sabzi,Karela fry,4,145,11,1,2,1,0,0,1184,269,8,2,2,1,/images/recipes/karela-sabzi.jpg,https://www.myfitnesspal.com/recipe/view/164658198351037
+33,Rishi,Indian,Sabzi,Lauki Chana Dal,4,136,3,1,1,1,0,0,736,179,7,9,3,6,/images/recipes/lauki-chana-dal.jpg,https://www.myfitnesspal.com/recipe/view/278468418776109
+4,Rishi,Indian,Sabzi,Sabzi - Karela,4,92,4,0,2,1,0,0,589,27,4,5,2,2,/images/recipes/karela-sabzi.jpg,https://www.myfitnesspal.com/recipe/view/269670157159549
+16,Rishi,Indian,Sabzi,Sarson ka Saag,4,127,4,0,2,1,0,0,654,841,14,6,5,5,/images/recipes/sarson-saag.jpg,https://www.myfitnesspal.com/recipe/view/159712430444221
+18,Rishi,Indian,Sabzi,Shlalgam Bharta,8,87,2,0,1,1,0,0,686,424,10,5,9,3,/images/recipes/shalgam-bharta.jpg,https://www.myfitnesspal.com/recipe/view/204122409938285
+1,Rishi,Indian,Sabzi,Tindora/Kovakkai Fry,4,91,4,0,2,1,0,0,440,21,3,5,0,6,/images/recipes/tindora-fry.jpg,https://www.myfitnesspal.com/recipe/view/160011078512173
+37,Rishi,Indian,Side,Boondi Raita,2,150,8,2,0,0,0,0,117,9,12,0,5,6,/images/recipes/Boondi-Raita.jpg,https://www.myfitnesspal.com/recipe/view/159600741363261
+23,Rishi,Indian,Side,Onion Pakora,8,76,4,0,2,1,0,0,166,0,5,1,0,2,/images/recipes/onion-pakora.jpg,https://www.myfitnesspal.com/recipe/view/203441619930989
+24,Rishi,Indian,Side,Potato Masala (for Dosa),8,60,1,0,1,0,0,0,297,246,8,2,1,2,/images/recipes/potato-masala.jpg,https://www.myfitnesspal.com/recipe/view/243831504047405
+51,Rishi,Indian,Snacks,Masala Papad,1,48,0,0,0,0,0,0,3,131,8,1,2,1,/images/recipes/masala-papad.jpg,https://www.myfitnesspal.com/recipe/view/164383198834621
+49,Rishi,Cocktails,Drinks,Aperol Spritz,1,202,0,0,0,0,0,0,23,73,5,0,5,0,/images/recipes/aperol-spritz.jpg,https://www.myfitnesspal.com/recipe/view/195609913929261
+20,Rishi,Cocktails,Drinks,Cocktail: Bitter Jean,1,203,0,0,0,0,0,0,0,0,13,0,11,0,/images/recipes/bitter-jean.jpg,https://www.myfitnesspal.com/recipe/view/238765565857213
+46,Rishi,Cocktails,Drinks,Cocktail: Bourbon Old Fashioned,1,142,0,0,0,0,0,0,0,0,4,0,4,0,/images/recipes/old-fashioned.jpg,https://www.myfitnesspal.com/recipe/view/199312129551533
+34,Rishi,Cocktails,Drinks,Cocktail: Cucumber Martini,1,180,0,0,0,0,0,0,1,38,9,0,8,0,/images/recipes/Cucumber-Martini.jpg,https://www.myfitnesspal.com/recipe/view/207839683276605
+17,Rishi,Cocktails,Drinks,Cocktail: Cynar Rum Negroni,1,129,0,0,0,0,0,0,8,0,4,0,3,0,/images/recipes/cynar-negroni.jpg,https://www.myfitnesspal.com/recipe/view/173608949206189
+35,Rishi,Cocktails,Drinks,Cocktail: Daiquiri No.1 Natural (Embury's 8-2-1),1,177,0,0,0,0,0,0,0,0,9,0,0,0,/images/recipes/daiquiri.jpeg,https://www.myfitnesspal.com/recipe/view/278476875467885
+21,Rishi,Cocktails,Drinks,Cocktail: Fogerty,1,171,0,0,0,0,0,0,0,0,6,0,6,0,/images/recipes/fogerty.jpg,https://www.myfitnesspal.com/recipe/view/168944455159613
+13,Rishi,Cocktails,Drinks,Cocktail: Hunter's Verdict,1,177,0,0,0,0,0,0,13,0,16,0,4,0,/images/recipes/hunters-verdict.jpg,https://www.myfitnesspal.com/recipe/view/278474866486509
+12,Rishi,Cocktails,Drinks,Cocktail: Jaeger Old Fashioned,1,144,0,0,0,0,0,0,1,2,8,0,7,0,/images/recipes/jaeger-old-fashioned.jpg,https://www.myfitnesspal.com/recipe/view/172769265257901
+42,Rishi,Cocktails,Drinks,Cocktail: London Calling,1,166,0,0,0,0,0,0,1,24,9,0,5,0,/images/recipes/london-calling.jpeg,https://www.myfitnesspal.com/recipe/view/199569735331133
+53,Rishi,Cocktails,Drinks,Cocktail: M and M,1,158,0,0,0,0,0,0,0,0,22,0,0,0,/images/recipes/m-and-m.jpg,https://www.myfitnesspal.com/recipe/view/169212886625709
+48,Rishi,Cocktails,Drinks,Cocktail: Moscow Mule,1,182,0,0,0,0,0,0,16,0,16,0,16,0,/images/recipes/moscow-mule.jpg,https://www.myfitnesspal.com/recipe/view/164531484315197
+3,Rishi,Cocktails,Drinks,Cocktail: Negroni Sbagliato,1,174,0,0,0,0,0,0,7,0,12,0,10,0,/images/recipes/negroni-sbagliato.jpg,https://www.myfitnesspal.com/recipe/view/234227965529645
+32,Rishi,Cocktails,Drinks,Cocktail: Pimms & Ginger,6,74,0,0,0,0,0,0,1,0,4,1,1,0,/images/recipes/kathal-biryani.jpg,https://www.myfitnesspal.com/recipe/view/278474824453437
+44,Rishi,Cocktails,Drinks,Cocktail: Prohibition,1,230,0,0,0,0,0,0,2,36,10,0,9,0,/images/recipes/pohibition.jpg,https://www.myfitnesspal.com/recipe/view/159985139805309
+19,Rishi,Cocktails,Drinks,Cocktail: Rum-Pyaari,2,159,0,7,0,0,0,0,19,0,9,0,9,0,/images/recipes/rum-pyaari.jpg,https://www.myfitnesspal.com/recipe/view/234356827180845
+6,Rishi,Cocktails,Drinks,Cocktail: Spritz Al Bitter (Spritz Veneziano),1,133,0,0,0,0,0,0,8,0,11,0,0,0,/images/recipes/spritz-bitter.jpg,https://www.myfitnesspal.com/recipe/view/269824764661677
+25,Rishi,Cocktails,Drinks,Cocktail: The Dirty Martini,1,162,1,0,0,0,0,0,614,14,35,0,1,0,/images/recipes/dirty-martini.jpg,https://www.myfitnesspal.com/recipe/view/265952896708141
+15,Rishi,Cocktails,Drinks,Cocktail: The Right Hand,1,180,0,0,0,0,0,0,12,0,6,0,6,0,/images/recipes/right-hand.jpg,https://www.myfitnesspal.com/recipe/view/208666439372461
+36,Rishi,Asian,Curry,Tempeh Green Beans Curry,6,248,17,12,0,0,0,0,486,278,7,6,7,10,/images/recipes/tempeh-beans.jpg,https://www.myfitnesspal.com/recipe/view/199861776272573
+55,Rishi,Italian/Western,Pasta,Almost Cheeseless Pasta Casserole Recipe - 101 Cookbooks,6,316,8,2,3,1,0,0,276,187,36,4,5,19,https://images.101cookbooks.com/cheeseless_pasta_casserole.jpg?w=680,https://www.myfitnesspal.com/recipe/view/274351685283773
+71,Rishi,Cocktails,Drinks,Cocktail: Honey & Smoke Mezcal,1,154,0,0,0,0,0,0,17,34,13,0,11,0,http://bygabriella.co/wp-content/uploads/2017/01/honeyandsmoke_15-681x1024.jpg,https://www.myfitnesspal.com/recipe/view/265151847403389
+172,Rishi,Asian,Pasta,Rainbow Vegetarian Pad Thai with Peanuts and Basil - Pinch of Yum,4,258,8,1,5,1,0,1,1359,388,36,4,17,7,http://cdn.pinchofyum.com/wp-content/uploads/Vegetarian-Pad-Tha-2-2.jpg,https://www.myfitnesspal.com/recipe/view/243272907623789
+144,Rishi,Western,Dessert,No Bake Chocolate Coconut Oatmeal Cookies,8,307,20,13,4,3,0,0,38,129,22,4,5,7,http://freecoconutrecipes.com/wp-content/uploads/sites/10/2014/08/No_Bake_Chocolate_Coconut_Oatmeal_Cookies_recipe_photo.jpg,https://www.myfitnesspal.com/recipe/view/18863264427901
+83,Rishi,Cocktails,Drinks,Dark Rum Daiquiri Recipe - Cocktails & Bars,1,197,0,0,0,0,0,0,21,0,6,0,6,0,http://www.cocktailsandbars.com/wp-content/uploads/2017/02/dark-rum-daiquiri-cocktailsandbars-IMG_098914-1.jpg,https://www.myfitnesspal.com/recipe/view/238885983431933
+197,Rishi,Indian,Dessert,Punjabi Aate ki Pinni,33,208,12,9,3,0,0,31,24,97,12,9,11,4,https://aahaaramonline.com/wp-content/uploads/2021/11/Aate_ki_Pinni.png,https://www.myfitnesspal.com/recipe/view/203553284869805
+72,Rishi,Western,Side,Roasted Brussels Sprouts with Warm Honey Glaze,4,351,23,7,12,2,0,23,186,702,26,7,23,5,"https://assets.bonappetit.com/photos/5b9a90176534064ad1e2ecc8/16:9/w_1280,c_limit/ba-recipe-roasted-glazy-brussels-sprouts.jpg",https://www.myfitnesspal.com/recipe/view/243831617277117
+204,Rishi,Cocktails,Drinks,Cocktail: El Presidente,1,203,0,0,0,0,0,0,17,25,15,0,5,0,https://cdn-assets.diffords.com/bundle/2020/05/ed703f4542a5b95c08327c21149d8a8b.jpg,https://www.myfitnesspal.com/recipe/view/57343856332285
+108,Rishi,Cocktails,Drinks,Cocktail: Bacardi Special,1,171,0,0,0,0,0,0,0,2,6,0,6,0,https://cdn.diffords.com/contrib/stock-images/2018/05/5af2fc3a782bb.jpg,https://www.myfitnesspal.com/recipe/view/208091051077037
+58,Rishi,Cocktails,Drinks,Cocktail: Easy Speak,1,167,0,0,0,0,0,0,0,0,5,0,4,0,https://cdn.diffords.com/contrib/stock-images/2018/05/5af3029c8cd24.jpg,https://www.myfitnesspal.com/recipe/view/208529184992701
+82,Marion,Italian/Western,,Mushroom Stroganoff,2,432,7,1,3,0,0,0,690,89,60,3,4,15,https://cdn.diffords.com/contrib/stock-images/2018/05/5af30cd2174e9.jpg,https://www.myfitnesspal.com/recipe/view/200007792586237
+56,Rishi,Cocktails,Drinks,Cocktail: Port Old-Fashioned/Prohibition,1,181,0,0,0,0,0,0,4,14,7,0,7,0,https://cdn.diffords.com/contrib/stock-images/2018/05/5af3101a59765.jpg,https://www.myfitnesspal.com/recipe/view/199301438213181
+67,Rishi,Cocktails,Drinks,Cocktail: Count Mast,1,159,0,0,0,0,0,0,0,0,4,0,3,0,https://cdn.diffords.com/contrib/stock-images/2019/10/5db80d7b2a752.jpg,https://www.myfitnesspal.com/recipe/view/172912999836781
+76,Rishi,Cocktails,Drinks,Cocktail: Air Mail,1,191,0,0,0,0,0,0,10,0,26,0,3,0,https://cdn.diffords.com/contrib/stock-images/2020/02/5e3d5c1c8e350.jpg,https://www.myfitnesspal.com/recipe/view/172640290425917
+59,Rishi,Cocktails,Drinks,Cocktail: Cin-Cyn,1,121,0,0,0,0,0,0,7,0,4,0,4,0,https://cdn.diffords.com/contrib/stock-images/2020/07/5f1968069f398.jpg,https://www.myfitnesspal.com/recipe/view/208520456604781
+89,Rishi,Cocktails,Drinks,Cocktail: Dante's Old Fashioned,1,175,0,0,0,0,0,0,2,0,19,0,4,0,https://cdn.diffords.com/contrib/stock-images/2020/08/5f3258db8c51d.jpg,https://www.myfitnesspal.com/recipe/view/195178085174781
+206,Rishi,Cocktails,Drinks,Cocktail: Ricetta Spritz con il Cynar,1,103,0,0,0,0,0,0,7,48,4,1,3,0,https://cdn.ilclubdellericette.it/wp-content/uploads/2021/06/spritz-con-il-cynar-1200x630.jpg,https://www.myfitnesspal.com/recipe/view/61864179174829
+156,Rishi,Italian/Western,Pasta,Roasted Courgette Pesto Pasta  - Cupful of Kale,5,474,18,4,0,0,0,0,281,18,37,11,4,24,https://cupfulofkale.com/wp-content/uploads/2019/05/Roasted-Courgette-Pesto-Pasta.jpeg,https://www.myfitnesspal.com/recipe/view/195461565623725
+88,Rishi,Indian,Snacks,Beetroot Cutlet,10,102,3,0,2,1,0,0,50,201,15,2,2,2,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2012/07/beetroot-tikki-recipe-1a.jpg,https://www.myfitnesspal.com/recipe/view/160262328921965
+66,Rishi,Indian,Side,Green Coriander Coconut Chutney,4,82,6,4,1,0,0,0,150,21,3,1,1,1,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2013/07/coriander-coconut-chutney-1c.jpg,https://www.myfitnesspal.com/recipe/view/207824796651181
+79,Rishi,Indian,Breakfast,Rava Idli (Soft & Fluffy),2,256,7,1,4,2,0,0,412,82,30,1,2,13,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2013/11/rava-idli-4.jpg,https://www.myfitnesspal.com/recipe/view/208372409191981
+69,Rishi,Indian,Snacks,Samosa,12,148,6,1,2,1,0,0,426,129,19,3,1,4,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2013/11/samosa-4.jpg,https://www.myfitnesspal.com/recipe/view/243558907858605
+233,Rishi,Indian,Rice,Curd Rice,2,484,18,4,0,0,0,0,583,80,62,2,8,17,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2016/07/curd-rice-1.jpg,https://www.myfitnesspal.com/recipe/view/160416804908845
+114,Rishi,Indian,Sabzi,Cauliflower Fry,4,116,4,3,0,0,0,0,345,783,14,5,5,4,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2018/07/cauliflower-fry-recipe-1a.jpg,https://www.myfitnesspal.com/recipe/view/164400525700525
+101,Rishi,Indian,Sabzi,Bagara Baingan,4,176,11,3,2,1,0,0,609,93,5,7,5,6,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2018/12/bagara-baingan-recipe-1a.jpg,https://www.myfitnesspal.com/recipe/view/164675261017773
+120,Rishi,Indian,Sabzi,Cabbage Poriyal,4,100,6,0,0,0,0,0,312,226,7,3,5,2,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2018/12/cabbage-poriyal-recipe-1a.jpg,https://www.myfitnesspal.com/recipe/view/234504961608957
+93,Rishi,Indian,Breakfast,Rava Upma,2,254,6,1,3,1,0,0,621,101,43,3,2,7,https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2018/12/upma-recipe-1.jpg,https://www.myfitnesspal.com/recipe/view/265143244861101
+132,Rishi,Indian,Breakfast,Maharashtrain style Sabudana Khichdi,2,310,11,2,1,0,0,0,586,242,47,1,3,7,https://lh4.googleusercontent.com/proxy/nOD07fp4WcS26H_AKVZoKNIriGZsK6OikE5vUP2lKE7zmUoCtxs5AJs0Ayw5HNDicdEvB4r_5iqCpKuKt2Lf3MOLTS47NuIzwY2iJrSud8GY4O8=w1200-h630-p-k-no-nu,https://www.myfitnesspal.com/recipe/view/32725267255101
+60,Rishi,Cocktails,Drinks,Cocktail: Scotch Cobbler,1,139,0,0,0,0,0,0,0,0,4,0,4,0,https://mixthatdrink.com/wp-content/uploads/2010/08/scotch-cobbler-drink-fb.jpg,https://www.myfitnesspal.com/recipe/view/172913012404013
+70,Rishi,Italian/Western,Pasta,Roasted Fennel with Parmesan Bread Crumbs,2,302,16,3,9,3,0,12,1167,1375,23,10,0,9,"https://res.cloudinary.com/hksqkdlah/image/upload/ar_1:1,c_fill,dpr_2.0,f_auto,fl_lossy.progressive.strip_profile,g_faces:auto,q_auto:low,w_270/SFS_RoastedFennelParm-1754_vptdqz",https://www.myfitnesspal.com/recipe/view/173190163713709
+113,Rishi,Cocktails,Drinks,Cocktail: Boulevardier,2,174,0,0,0,0,0,0,2,2,11,0,11,0,https://s3.amazonaws.com/mscwordpresscontent/wa/wp-content/uploads/2018/12/boulevardier-cocktail-recipe_1600.jpg,https://www.myfitnesspal.com/recipe/view/199730754670141
+78,Rishi,Indian,Curry,Zucchini/Courgette Chana dal Curry (Zucchini Senagapappu Kura):,4,142,6,0,1,1,0,0,454,45,8,5,5,8,https://veggibites.blogspot.com//3.bp.blogspot.com/-YVJD-xZboiM/Wpm1MRCCL4I/AAAAAAAABho/_ce1W2fbQDgY0rDFlFpF6cZRxNceyAX7gCK4BGAYYCw/s400/Veggibites%2B%25282%2529.png,https://www.myfitnesspal.com/recipe/view/270093098291133
+215,Marion,Soups/Stews,Soups/Stews,Green Lentil Soup with Coconut Milk and Indian Spices,4,383,19,14,3,0,0,11,13901,633,19,18,4,14,https://www.abeautifulplate.com/wp-content/uploads/2014/10/green-lentil-soup-with-coconut-milk-and-indian-spices-1.jpg,https://www.myfitnesspal.com/recipe/view/18588236771309
+223,Rishi,Indian,Breakfast,Pesarattu recipe,4,145,3,0,1,1,0,0,150,28,22,4,1,9,https://www.indianhealthyrecipes.com/wp-content/uploads/2014/11/pesarattu-recipe.jpg,https://www.myfitnesspal.com/recipe/view/230508511169645
+228,Marion,Italian,,AOP,1,660,42,6,30,4,0,0,592,112,58,3,3,13,https://www.indianhealthyrecipes.com/wp-content/uploads/2021/07/drumstick-leaves-recipe-moringa-leaves-recipe.jpg,https://www.myfitnesspal.com/recipe/view/194344614047293
+104,Rishi,Cocktails,Drinks,Cocktail: The Precision Timepiece,1,220,0,0,0,0,0,0,0,2,20,0,7,0,"https://www.liquor.com/thmb/4C2Epdp1T1-ulvxsawg9Yvdha4k=/1200x628/filters:fill(auto,1)/Precision-Timepiece-fb_1200x628-bf96309343a247f4b0bdd7de8255479a.jpg",https://www.myfitnesspal.com/recipe/view/207951376551533
+63,Rishi,Cocktails,Drinks,Cocktail: Manhattan,1,168,0,0,0,0,0,0,0,0,5,0,4,0,"https://www.liquor.com/thmb/6DfPgZNzIKFZHoG244MCI4Rw0fc=/720x720/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__liquor__2018__05__10144903__Manhattan-720x720-recipe-9497922907c14d91898f557cb51f2ea3.jpg",https://www.myfitnesspal.com/recipe/view/278597255212285
+87,Rishi,Cocktails,Drinks,Cocktail: Proper Manhattan,1,147,0,0,0,0,0,0,0,0,4,0,2,0,"https://www.liquor.com/thmb/6DfPgZNzIKFZHoG244MCI4Rw0fc=/720x720/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__liquor__2018__05__10144903__Manhattan-720x720-recipe-9497922907c14d91898f557cb51f2ea3.jpg",https://www.myfitnesspal.com/recipe/view/159858450894397
+68,Rishi,Cocktails,Drinks,Cocktail: White Rum Daiquiri,1,140,0,0,0,0,0,0,5,0,8,0,8,0,"https://www.liquor.com/thmb/kU5L4WsnCEJY9wyui7cPGSuyvuA=/720x720/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__liquor__2018__04__23143458__daiquiri-720x720-recipe-09f1d5665a794eddbbfb997876736136.jpg",https://www.myfitnesspal.com/recipe/view/243556764577325
+86,Rishi,Cocktails,Drinks,Cocktail: Vodka Martini,1,180,0,0,0,0,0,0,0,10,1,1,2,0,"https://www.liquor.com/thmb/lOVHtbFSI93is2OgiefCoBBmu-c=/1200x628/filters:fill(auto,1)/vodka-martini-1200x628-email-3f495e5c570f4f8581f51c640f1bf6fe.jpg",https://www.myfitnesspal.com/recipe/view/265134545981309
+75,Rishi,Cocktails,Drinks,Cocktail: The French 75,1,211,0,0,0,0,0,0,0,24,4,0,3,0,"https://www.liquor.com/thmb/Q6qMc4iLGImMn9ogqSiuh25BVsc=/1200x628/filters:fill(auto,1)/french-75-1200x628-fb-b9d5c2dedab74ecd84375b8cb117033a.jpg",https://www.myfitnesspal.com/recipe/view/278740981468221
+127,Rishi,Cocktails,Drinks,Cocktail: Rosemary Mezcal Negroni,1,232,0,0,0,0,0,0,2,1,12,0,12,0,"https://www.liquor.com/thmb/yZpeL6qjWx8NWgLkmLDDoh-iZmA=/720x720/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__liquor__2019__06__03081940__Rosemary-Mezcal-Negroni-720x720-article-3b190041440247cd90f9053af65a622c.jpg",https://www.myfitnesspal.com/recipe/view/230791979060285
+85,Rishi,Cocktails,Drinks,Cocktail: Dry Martini,1,177,9,0,0,0,0,0,1,13,21,0,1,0,"https://www.liquor.com/thmb/z7Foq4Yj9MBP_4WNG5_9_flFbc8=/1200x628/filters:fill(auto,1)/dry-martini-1200x628-email-840e2e988cfc4a49940ceb5ad3744d36.jpg",https://www.myfitnesspal.com/recipe/view/195034371510269
+216,Rishi,Cocktails,Drinks,Cocktail: Seedlip Eastside,1,64,0,0,0,0,0,0,1,48,16,0,15,0,https://www.seedlipdrinks.comfalse,https://www.myfitnesspal.com/recipe/view/88937653390781
+150,Rishi,Western,Breakfast,Puy Lentil Galettes Recipe,4,199,17,2,12,2,0,0,897,104,6,2,2,4,https://www.seriouseats.com/recipes/images/20110325-144228-puy-lentil-galettes.jpg,https://www.myfitnesspal.com/recipe/view/265703604006573
+190,Rishi,Italian/Western,Risotto,Pressure Cooker Butternut Squash Risotto With Frizzled Sage and Brown Butter Recipe,4,546,24,8,9,1,0,27,176,913,71,7,8,11,https://www.seriouseats.com/recipes/images/2014/09/20140929-butternut-squash-risotto-vicky-wasik-26-1500x1125.jpg,https://www.myfitnesspal.com/recipe/view/58858109037757
+209,Rishi,Indian,Dal,Keerai Molagootal Recipe,4,179,6,0,1,1,0,0,583,16,18,3,0,11,https://www.subbuskitchen.com/wp-content/uploads/2017/02/keerai-molagootal_finalforweb3.jpg,https://www.myfitnesspal.com/recipe/view/243702672821565
+207,Rishi,Indian,Dal,Panchmel Dal,6,191,3,1,0,0,0,2,794,305,23,7,2,11,https://www.vegrecipesofindia.com/wp-content/uploads/2010/02/rajasthani-panchmel-dal-1a.jpg,https://www.myfitnesspal.com/recipe/view/27227578994093
+238,Rishi,Indian,Curry,Punjabi Kadhi,4,179,7,0,2,1,0,0,617,28,18,2,6,10,https://www.vegrecipesofindia.com/wp-content/uploads/2012/01/punjabi-kadhi-pakora-recipe-1a.jpg,https://www.myfitnesspal.com/recipe/view/160397469175021
+202,Rishi,Indian,Sabzi,Beans Poriyal Recipe (Green Beans with Coconut),4,124,8,0,0,0,0,0,583,1,3,6,4,3,https://www.vegrecipesofindia.com/wp-content/uploads/2018/12/beans-poriyal-1a.jpg,https://www.myfitnesspal.com/recipe/view/96926157385645
+203,Rishi,Indian,Sabzi,Baingan Bharta (Smoky Mashed Eggplant),4,110,4,0,2,1,0,0,595,620,12,7,10,3,https://www.vegrecipesofindia.com/wp-content/uploads/2021/06/baingan-bharta-recipe-2.jpg,https://www.myfitnesspal.com/recipe/view/97469491776893
+194,Rishi,Indian,Bread,Makki Ki Roti (Maize Flour Flatbread),4,205,10,1,3,1,0,0,569,0,30,0,0,3,https://www.vegrecipesofindia.com/wp-content/uploads/2021/12/makki-ki-roti-3.jpg,https://www.myfitnesspal.com/recipe/view/274471814385085
+303,Marion,Western,Breakfast,Basic Breakfast Porridge,1,192,4,1,0,0,0,0,153,3,30,5,1,7,,https://www.myfitnesspal.com/recipe/view/198899430870461
+323,Marion,Western,Breakfast,Basic Breakfast porridge with choose your milk,1,209,4,0,0,0,0,0,145,6,32,5,1,8,,https://www.myfitnesspal.com/recipe/view/233789623020589
+143,Marion,Western,Breakfast,Chia Seed Pudding,5,143,8,4,1,2,0,0,137,86,9,4,7,5,,https://www.myfitnesspal.com/recipe/view/18992235203949
+312,Marion,Western,Breakfast,Frittata - Love and Lemons,1,395,23,10,8,3,0,392,1253,184,13,4,8,30,,https://www.myfitnesspal.com/recipe/view/194353216506941
+163,Rishi,Western,Breakfast,Frozen Berry And Avocado Smoothie,1,392,16,7,5,1,0,0,390,565,37,7,28,21,,https://www.myfitnesspal.com/recipe/view/203701356588845
+220,Rishi,Western,Breakfast,Marion’s Green Smoothie,3,312,9,3,3,1,0,7,155,744,45,6,41,12,,https://www.myfitnesspal.com/recipe/view/167569955614317
+324,Marion,Western,Breakfast,Overnight Porridge,1,318,10,1,0,4,0,0,1,136,36,13,4,14,,https://www.myfitnesspal.com/recipe/view/274205232811773
+147,Rishi,Western,Breakfast,Papaya and spinach smoothie,2,160,1,0,0,0,0,0,70,681,36,6,19,4,,https://www.myfitnesspal.com/recipe/view/98826991808493
+240,Rishi,Western,Breakfast,Porridge - Oats & Water,1,190,4,0,0,0,0,0,9,0,30,4,0,7,,https://www.myfitnesspal.com/recipe/view/160406193483245
+98,Rishi,Western,Breakfast,Smoothie,2,110,1,0,0,0,0,0,121,127,20,2,11,2,,https://www.myfitnesspal.com/recipe/view/204103048170557
+343,Marion,Western,Burger,Broad Bean Burger,7,109,3,0,0,0,0,0,56,234,14,5,0,5,,https://www.myfitnesspal.com/recipe/view/173187869428925
+353,Marion,Western,Dessert,Banana Loaf Pound Cake,12,156,6,2,2,1,0,31,521,166,22,1,8,3,,https://www.myfitnesspal.com/recipe/view/243419174489725
+311,Marion,Western,Dessert,Ginger cake,8,67,5,1,1,0,0,16,50,7,4,1,2,2,,https://www.myfitnesspal.com/recipe/view/233929175960749
+74,Rishi,Western,Dessert,Homemade Carrot Cake,4,320,20,4,9,6,0,47,78,51,29,2,21,4,,https://www.myfitnesspal.com/recipe/view/243833617919165
+288,Marion,Western,Dessert,Lemon-Semolina Almond Cake,10,342,24,3,0,0,0,0,146,26,28,2,21,6,,https://www.myfitnesspal.com/recipe/view/198072758807725
+349,Marion,Western,Pie,Celeriac vegan shepherd's pie,6,255,16,2,5,9,0,0,984,412,14,7,6,9,,https://www.myfitnesspal.com/recipe/view/62411837852845
+200,Rishi,Western,Salad,Casa Salad,4,297,13,1,6,1,0,0,345,515,20,10,8,14,,https://www.myfitnesspal.com/recipe/view/265675868024829
+341,Marion,Western,Salad,Potato Salad with Celery and Mustard,3,264,17,2,11,2,0,0,702,714,19,8,3,4,,https://www.myfitnesspal.com/recipe/view/132224475991165
+185,Marion,Western,Salad,Yotam's Broccolini and Broad bean Salad,4,161,5,1,3,1,0,0,309,54,7,11,4,12,,https://www.myfitnesspal.com/recipe/view/172906407317485
+272,Marion,Western,Snacks,Bryant Terry’s millet Cakes With Smoky Spicy Green Sauce,4,300,10,1,7,2,0,0,24,304,39,4,7,10,,https://www.myfitnesspal.com/recipe/view/278760448208445
+115,Rishi,Western,Snacks,Popcorn,2,127,3,2,0,0,0,0,145,2,16,5,0,4,,https://www.myfitnesspal.com/recipe/view/164812796399037
+91,Rishi,Western,Snacks,Rice Cakes And Peanut Butter,1,91,6,1,4,0,0,0,4,0,6,1,1,3,,https://www.myfitnesspal.com/recipe/view/208784425111085
+310,Marion,Western,Snacks,Spinach Feta Loaf,10,144,6,2,1,1,0,37,39,214,11,2,2,9,,https://www.myfitnesspal.com/recipe/view/197926591606589
+322,Marion,Western,,101 Five Minute Tomato Sauce,8,73,4,1,3,0,0,0,524,12,6,0,4,2,,https://www.myfitnesspal.com/recipe/view/62268086439549
+339,Marion,Western,,"Bean and Mushroom ""Carnitas"" Casserole",6,237,8,3,2,0,0,0,410,211,20,11,4,16,,https://www.myfitnesspal.com/recipe/view/243696375975405
+330,Marion,Western,,Beetroot And Brown Rice Burgers,6,216,12,1,2,3,0,0,195,73,20,5,2,7,,https://www.myfitnesspal.com/recipe/view/168781099814845
+313,Marion,Western,,Beetroot Rice,2,319,8,0,0,0,0,0,855,320,54,3,5,8,,https://www.myfitnesspal.com/recipe/view/269120149875837
+314,Marion,Western,,Black Bean Burgers with Oats,4,124,1,0,0,0,0,0,302,347,18,5,1,6,,https://www.myfitnesspal.com/recipe/view/233652288883773
+344,Marion,Western,,Black Bean Quinoa Burger,4,249,6,1,3,1,0,47,315,566,32,6,2,11,,https://www.myfitnesspal.com/recipe/view/274609081356077
+275,Marion,Western,,Broccoli-Basil Mac and Cheese,4,356,10,6,3,1,0,22,154,201,47,3,5,16,,https://www.myfitnesspal.com/recipe/view/270099654053821
+273,Marion,Western,,Bryant Terry’s Jamaican Veggie Patties,8,376,22,20,0,0,0,0,6,132,35,4,4,6,,https://www.myfitnesspal.com/recipe/view/239579592248813
+284,Marion,Western,,Bucatini Pomodoro,4,391,1,0,0,0,0,0,6,202,76,9,25,17,,https://www.myfitnesspal.com/recipe/view/272841726373437
+289,Marion,Western,,Burger Toppings,1,44,3,0,0,0,0,0,56,73,3,0,3,0,,https://www.myfitnesspal.com/recipe/view/234090274754173
+251,Marion,Western,,Cheesy Crumb,1,111,5,3,1,0,0,0,284,0,10,0,0,6,,https://www.myfitnesspal.com/recipe/view/269818354584749
+315,Marion,Western,,Cottage Cheese Burger Buns,4,254,4,2,0,0,0,0,1385,0,39,3,2,15,,https://www.myfitnesspal.com/recipe/view/233800331095741
+317,Marion,Western,,Cottage Cheese Carrot Seeds,1,147,7,0,0,0,0,0,36,176,8,2,3,12,,https://www.myfitnesspal.com/recipe/view/264447196056877
+319,Marion,Western,,Cottage Cheese Cucumber Nut,1,168,10,3,0,0,0,0,567,124,7,2,3,12,,https://www.myfitnesspal.com/recipe/view/159171017149677
+318,Marion,Western,,Cottage Cheese Cucumber Seeds,1,173,10,3,0,0,0,0,866,161,8,1,6,14,,https://www.myfitnesspal.com/recipe/view/158610603543741
+304,Marion,Western,,Doctor's Daily Bread,10,320,31,2,2,1,0,0,373,50,13,18,1,15,,https://www.myfitnesspal.com/recipe/view/198064051490221
+259,Marion,Western,,Farro with Leeks and Balsamic Roasted Brussels Sprouts Recipe on Food52,3,453,16,2,7,1,0,0,3079,698,44,12,19,15,,https://www.myfitnesspal.com/recipe/view/168369079537341
+270,Marion,Western,,Farro with Leeks and Balsamic Roasted Brussels Sprouts Recipe on Food52,4,333,10,1,6,2,0,0,629,301,40,8,6,13,,https://www.myfitnesspal.com/recipe/view/278889314053629
+308,Marion,Western,,Flapjacks,12,214,11,3,0,0,0,16,22,31,23,2,10,5,,https://www.myfitnesspal.com/recipe/view/198476527783277
+301,Marion,Western,,Fritatta - Leek & Asparagus,1,277,10,3,4,2,0,372,1396,1061,26,7,9,19,,https://www.myfitnesspal.com/recipe/view/229264975597245
+320,Marion,Western,,Fritatta - Mixed Veg,1,404,25,13,4,2,0,488,723,697,15,4,5,28,,https://www.myfitnesspal.com/recipe/view/229265005006013
+295,Marion,Western,,Homemade Vegetable stock,6,21,0,0,0,0,1,0,417,111,3,1,2,1,,https://www.myfitnesspal.com/recipe/view/268314671328877
+293,Marion,Western,,Kumhare ki Subzi,4,92,3,0,1,2,0,0,613,1144,12,3,2,12,,https://www.myfitnesspal.com/recipe/view/197937509281773
+265,Marion,Western,,Marion’s Coffee,1,2,0,0,0,0,0,0,4,34,0,0,0,0,,https://www.myfitnesspal.com/recipe/view/230235805895853
+331,Marion,Western,,Mushroom Stroganoff,4,401,7,1,4,2,0,0,855,710,53,9,6,13,,https://www.myfitnesspal.com/recipe/view/159162511068717
+333,Marion,Western,,Penne arrabiata,2,340,8,1,4,1,0,0,171,13,49,8,10,14,,https://www.myfitnesspal.com/recipe/view/194783002537965
+287,Marion,Western,,Perfect Patatas Bravas,4,148,1,0,0,0,0,0,307,566,29,4,6,4,,https://www.myfitnesspal.com/recipe/view/173061307354669
+298,Marion,Western,,Quick Peanut Chaat (Spicy Indian Peanuts) - The Fiery Vegetarian,2,215,16,3,0,0,0,0,27,481,9,4,5,9,,https://www.myfitnesspal.com/recipe/view/193528595386173
+309,Marion,Western,,Quinoa Pepper Casserole,6,352,14,1,3,2,0,0,960,999,36,10,10,14,,https://www.myfitnesspal.com/recipe/view/268572365410173
+354,Marion,Western,,Rishi’s Quinoa,4,389,18,5,1,0,0,0,792,18,31,7,5,20,,https://www.myfitnesspal.com/recipe/view/163996635106733
+321,Marion,Western,,Samosa Shepards Pie,4,328,2,1,0,0,0,0,1094,944,58,10,12,15,,https://www.myfitnesspal.com/recipe/view/195186867834413
+291,Marion,Western,,Shalgam ki Subzi,4,116,5,1,1,2,0,3,856,430,12,4,7,2,,https://www.myfitnesspal.com/recipe/view/268853853368301
+274,Marion,Western,,Spicy Butternut Squash & Black Bean Burger,8,128,6,1,3,1,0,0,15,299,8,8,4,4,,https://www.myfitnesspal.com/recipe/view/203570506649469
+286,Marion,Western,,Squash With Cardamom And Nigella Seeds,5,261,6,2,0,0,0,6,35,835,52,15,11,7,,https://www.myfitnesspal.com/recipe/view/204249102167613
+249,Marion,Western,,Traditional Brown Soda Bread,6,219,3,0,0,0,0,36,477,12,36,3,1,9,,https://www.myfitnesspal.com/recipe/view/159463468961197
+268,Marion,Western,,Vegan Chile Colorado Recipe on Food52,9,279,19,3,12,2,0,0,4,635,20,2,11,8,,https://www.myfitnesspal.com/recipe/view/269388736187821
+297,Marion,Western,,Vegetable lasagne - gordon ramsay,4,609,27,12,9,2,0,56,1326,523,58,11,17,19,,https://www.myfitnesspal.com/recipe/view/274353811762429
+338,Marion,Western,,Vegetarian Chili,6,308,6,1,4,1,0,0,782,1434,37,16,11,16,,https://www.myfitnesspal.com/recipe/view/199593349197485
+241,Marion,Soups/Stews,Soup,Curried Tomato Tortellini Soup,5,386,11,4,2,1,0,0,542,832,45,9,7,19,,https://www.myfitnesspal.com/recipe/view/124966270693293
+244,Marion,Soups/Stews,,Braised Coconut Spinach & Chickpeas with Lemon,6,222,15,12,0,0,0,4,437,433,7,5,4,6,,https://www.myfitnesspal.com/recipe/view/195186867989565
+283,Marion,Soups/Stews,,Braised Coconut Spinach & Chickpeas with Lemon 2,4,130,3,0,2,1,0,0,606,296,12,5,5,6,,https://www.myfitnesspal.com/recipe/view/243702639284029
+325,Marion,Soups/Stews,,French Onion And Lentil Pie,6,334,7,1,3,0,0,2,1501,1064,45,9,20,12,,https://www.myfitnesspal.com/recipe/view/268432971861693
+266,Marion,Soups/Stews,,"Stewed broad beans, peas and gem lettuce recipe",4,245,16,2,10,2,0,0,883,82,6,8,1,10,,https://www.myfitnesspal.com/recipe/view/265950593854893
+332,Marion,Soups/Stews,,Traditional Lentejas (Spanish Lentil Stew),4,337,7,1,4,1,0,0,61,670,48,12,6,16,,https://www.myfitnesspal.com/recipe/view/264447107960125
+242,Marion,Salads,,Everything Green spring salad,2,207,12,2,3,1,0,0,427,314,7,8,5,9,,https://www.myfitnesspal.com/recipe/view/265005818580925
+350,Marion,Mexican,,Ancho Chile Mushroom Tacos,2,167,11,1,7,1,0,0,712,460,12,4,3,7,,https://www.myfitnesspal.com/recipe/view/229960932240893
+243,Marion,Mexican,,Cauliflower Walnut Meat Taco,6,262,22,2,0,0,0,0,635,322,6,3,2,7,,https://www.myfitnesspal.com/recipe/view/265564051172797
+107,Rishi,Mexican,,Corn tortilla,8,118,4,0,2,1,0,0,73,0,17,1,0,2,,https://www.myfitnesspal.com/recipe/view/278322209533501
+248,Marion,Mexican,,Delicata Squash Tacos,2,228,17,4,0,0,0,0,319,315,12,2,5,3,,https://www.myfitnesspal.com/recipe/view/163850723773629
+352,Marion,Mexican,,Mango and Avocado Salsa,2,154,11,2,7,2,0,0,15,382,9,5,8,2,,https://www.myfitnesspal.com/recipe/view/194914120855421
+95,Rishi,Mexican,,Oomph And Mushroom Tacos,2,399,17,4,6,1,0,0,1044,255,40,7,9,16,,https://www.myfitnesspal.com/recipe/view/274061635529853
+96,Rishi,Mexican,,Portobello Mushroom Tacos,2,301,13,3,4,1,0,0,1035,228,34,5,2,8,,https://www.myfitnesspal.com/recipe/view/273795465006141
+316,Marion,Mexican,,Red Salsa,2,80,1,0,0,0,0,0,587,106,4,1,11,3,,https://www.myfitnesspal.com/recipe/view/204397250162285
+169,Rishi,Mexican,,Spinach Mushroom Quesadilla,1,645,29,12,3,2,0,0,1807,160,55,9,6,30,,https://www.myfitnesspal.com/recipe/view/278321967370157
+305,Marion,Mexican,,Sweet Potato Enchiladas,8,267,10,4,3,1,0,0,195,737,30,7,13,10,,https://www.myfitnesspal.com/recipe/view/194911931436269
+267,Marion,Mexican,,Vegan Enchiladas With Sweet Potato Sauce,5,357,18,2,5,1,0,0,636,191,17,13,11,13,,https://www.myfitnesspal.com/recipe/view/278872112229613
+278,Marion,Mexican,,Vegan Mushroom Taco Meat,4,128,4,1,0,1,0,0,140,827,5,8,5,11,,https://www.myfitnesspal.com/recipe/view/173207226994029
+345,Marion,Mediterranean,Salad,Fregola Salad Recipe with Roast Spiced Cauliflower,3,481,18,2,10,1,0,0,125,281,66,7,27,10,,https://www.myfitnesspal.com/recipe/view/239588052200957
+196,Rishi,Italian/Western,Pasta,"Polenta, mushrooms and broccoli",2,482,25,7,12,2,0,22,1247,210,52,4,2,10,,https://www.myfitnesspal.com/recipe/view/208097372983021
+145,Rishi,Italian/Western,Pasta,Roasted Cauliflower Red Pesto Past,3,501,23,7,1,0,0,0,200,380,54,4,4,19,,https://www.myfitnesspal.com/recipe/view/54863659298029
+155,Rishi,Italian/Western,Pasta,Skinny Eggplant Parmesan,3,397,14,3,4,4,0,7,379,464,49,7,6,16,,https://www.myfitnesspal.com/recipe/view/230517097040957
+102,Rishi,Italian/Western,Risotto,Beetroot Risotto,4,341,8,3,2,0,0,8,27,12,50,8,12,8,,https://www.myfitnesspal.com/recipe/view/278597259390573
+264,Marion,Italian/Mediterranean,Dessert,Tiramisu,16,209,13,8,0,0,0,47,49,41,16,1,11,6,,https://www.myfitnesspal.com/recipe/view/239151882375021
+328,Marion,Italian/Mediterranean,Meal Part,Marinara Sauce,4,141,7,1,3,4,0,0,293,64,3,1,13,3,,https://www.myfitnesspal.com/recipe/view/270101835116477
+355,Marion,Italian/Mediterranean,Meal Part,Pesto,2,384,32,9,17,2,0,33,658,247,8,2,1,14,,https://www.myfitnesspal.com/recipe/view/193941000219949
+300,Marion,Italian/Mediterranean,Meal Part,Stuffed Pasta Shells Stuffing,8,154,11,8,0,0,0,0,319,2,4,0,3,10,,https://www.myfitnesspal.com/recipe/view/235054605127165
+280,Marion,Italian/Mediterranean,Pasta,Brussels Sprout Pasta,4,451,14,3,6,1,0,1,134,456,59,7,5,19,,https://www.myfitnesspal.com/recipe/view/160423361891389
+250,Marion,Italian/Mediterranean,Pasta,Chili Pasta,6,326,2,0,0,0,0,0,86,0,44,11,7,17,,https://www.myfitnesspal.com/recipe/view/164821285506285
+261,Marion,Italian/Mediterranean,Pasta,Chilli Pasta Bake,2,322,9,3,0,0,0,0,65,6,38,0,2,19,,https://www.myfitnesspal.com/recipe/view/194628476128365
+347,Marion,Italian/Mediterranean,Pasta,Iranian Style Pasta,4,629,30,14,5,1,0,0,612,294,62,9,10,21,,https://www.myfitnesspal.com/recipe/view/239012538174589
+348,Marion,Italian/Mediterranean,Pasta,Lemony Green Pasta with Peas & Ricotta,4,482,18,4,11,2,0,16,761,323,15,6,7,9,,https://www.myfitnesspal.com/recipe/view/278870006459517
+326,Marion,Italian/Mediterranean,Pasta,Pasta alla Norma Recipe,4,362,10,1,5,1,0,0,139,667,52,9,10,12,,https://www.myfitnesspal.com/recipe/view/163979442711997
+335,Marion,Italian/Mediterranean,Pasta,Pea Carbonara,2,397,7,2,1,0,0,4,119,77,60,7,7,19,,https://www.myfitnesspal.com/recipe/view/234502546558637
+258,Marion,Italian/Mediterranean,Pasta,Ravioli  & Roasted Tomatoes,2,353,17,4,3,1,0,0,996,8,36,3,10,11,,https://www.myfitnesspal.com/recipe/view/203555452350125
+247,Marion,Italian/Mediterranean,Pasta,Sicilian fennel and parmesan dumplings in tomato sauce,2,438,22,7,4,6,0,0,629,995,33,11,15,18,,https://www.myfitnesspal.com/recipe/view/164127661051069
+337,Marion,Italian/Mediterranean,Rice,"Celery, Pea & Broad Bean Risotto",4,357,11,3,3,1,0,0,417,214,43,3,3,10,,https://www.myfitnesspal.com/recipe/view/279164204477549
+252,Marion,Italian/Mediterranean,Risotto,Brussels Sprout Risotto,4,504,13,7,1,0,0,0,1334,147,70,8,6,16,,https://www.myfitnesspal.com/recipe/view/203424418188477
+276,Marion,Italian/Mediterranean,Risotto,Celeriac And Mushroom Risotto,2,520,12,4,5,1,0,0,1346,300,81,5,2,14,,https://www.myfitnesspal.com/recipe/view/273810372505533
+281,Marion,Italian/Mediterranean,Risotto,Lemon and Pea Risotto,4,356,10,2,6,1,0,6,136,39,54,2,2,9,,https://www.myfitnesspal.com/recipe/view/230646077173357
+246,Marion,Italian/Mediterranean,Risotto,Mushroom Risotto Brown Rice,2,293,13,6,0,0,0,0,353,137,26,5,4,8,,https://www.myfitnesspal.com/recipe/view/164677530070205
+336,Marion,Italian/Mediterranean,Risotto,Pea and Basil Risotto,4,502,24,9,8,1,0,31,1759,190,58,3,5,15,,https://www.myfitnesspal.com/recipe/view/233102407240829
+290,Marion,Italian/Mediterranean,Risotto,Wild Mushroom Risotto,6,256,6,1,4,1,0,0,217,584,50,6,3,7,,https://www.myfitnesspal.com/recipe/view/163835692248301
+346,Marion,Italian/Mediterranean,Salad,Couscous & Apples Recipe,2,401,15,2,10,2,0,0,267,312,56,6,15,8,,https://www.myfitnesspal.com/recipe/view/204122414141181
+340,Marion,Italian/Mediterranean,Salad,Couscous Salad with Sun Dried Tomato and Feta,4,421,19,4,10,2,0,0,1308,203,47,2,5,13,,https://www.myfitnesspal.com/recipe/view/199853329919101
+269,Marion,Italian/Mediterranean,Side,Beetroot Hummus,9,100,5,0,2,0,0,0,223,6,5,1,1,2,,https://www.myfitnesspal.com/recipe/view/168669602589869
+245,Marion,Italian/Mediterranean,,Couscous Salad with Sun Dried Tomato and Feta,4,463,15,9,0,0,0,0,710,75,54,4,3,22,,https://www.myfitnesspal.com/recipe/view/199181040823741
+256,Marion,Italian/Mediterranean,,Curied Tomato Tortellini Soup,4,391,10,3,2,1,0,0,1104,745,50,9,9,20,,https://www.myfitnesspal.com/recipe/view/207962097192557
+282,Marion,Italian/Mediterranean,,Tiramisu (edited Guardian),8,298,22,15,0,0,0,47,89,18,19,0,12,4,,https://www.myfitnesspal.com/recipe/view/265280672435885
+342,Marion,Italian,Pasta,Aubergine & Puy Lentil Bolognese,2,226,8,1,5,1,0,0,379,386,26,5,7,6,,https://www.myfitnesspal.com/recipe/view/172786299342717
+306,Marion,Italian,Pasta,Gigli with chickpeas and za'atar,4,479,12,1,6,1,0,0,99,72,68,9,6,20,,https://www.myfitnesspal.com/recipe/view/238754841070765
+329,Marion,Italian,Pasta,Lasagna w/ Cottage Cheese Mushroom & Spinach,4,447,12,5,1,0,0,0,1152,1854,51,10,13,30,,https://www.myfitnesspal.com/recipe/view/233379436866925
+279,Marion,Italian,Pasta,Pappardelle with Cauliflower and Mustard Brown Butter,4,262,18,5,0,0,0,15,795,578,11,4,6,9,,https://www.myfitnesspal.com/recipe/view/279155588427629
+292,Marion,Italian,Pasta,Roasted Eggplant Lasagna (sauce separate),4,328,17,9,2,1,0,38,1263,695,21,7,8,18,,https://www.myfitnesspal.com/recipe/view/233119725481453
+227,Rishi,Italian,Pasta,Spaghetti AOP,1,382,15,2,0,0,0,0,6,33,50,2,2,11,,https://www.myfitnesspal.com/recipe/view/203288996630333
+334,Marion,Italian,Pasta,Spaghetti with Lentils & Marinara Sauce,4,31,1,0,0,0,0,0,497,8,3,2,0,2,,https://www.myfitnesspal.com/recipe/view/265151725711085
+257,Marion,Italian,Pasta,Spinach Mushroom Lasagna,4,428,18,4,2,0,0,0,834,2413,36,4,29,31,,https://www.myfitnesspal.com/recipe/view/278191225679165
+109,Rishi,Indian,Bread,Dosa Batter,12,105,0,0,0,0,0,0,195,0,18,2,0,4,,https://www.myfitnesspal.com/recipe/view/172906544835949
+201,Rishi,Indian,Bread,Phulka New,1,92,4,0,0,0,0,0,0,0,16,2,1,3,,https://www.myfitnesspal.com/recipe/view/235183596711725
+135,Rishi,Indian,Breakfast,Aaloo Parantha,4,204,10,0,3,1,0,0,143,361,29,5,2,5,,https://www.myfitnesspal.com/recipe/view/243693898173997
+90,Rishi,Indian,Breakfast,Gobhi Paranthas,1,224,13,1,4,2,0,0,319,208,27,5,2,6,,https://www.myfitnesspal.com/recipe/view/199567692713965
+100,Rishi,Indian,Breakfast,Kanda poha,2,295,10,1,2,1,0,0,586,21,45,2,1,7,,https://www.myfitnesspal.com/recipe/view/270374510939581
+94,Rishi,Indian,Breakfast,Methi Parantha,4,183,10,0,3,1,0,0,582,37,24,4,2,6,,https://www.myfitnesspal.com/recipe/view/168783514668269
+159,Rishi,Indian,Breakfast,Moong Dal Paranthas,8,147,3,0,2,1,0,0,213,82,24,1,1,5,,https://www.myfitnesspal.com/recipe/view/195461733411949
+210,Rishi,Indian,Breakfast,MTR  Rava  idli,1,78,3,1,0,0,0,0,0,0,10,0,1,2,,https://www.myfitnesspal.com/recipe/view/31352748297469
+191,Rishi,Indian,Breakfast,Parantha - Lachcha,2,228,11,0,2,1,0,0,291,0,35,5,2,7,,https://www.myfitnesspal.com/recipe/view/194914104946365
+184,Rishi,Indian,Breakfast,Parantha - Missi Roti,8,123,4,0,2,1,0,0,144,18,15,2,1,5,,https://www.myfitnesspal.com/recipe/view/207951092329661
+237,Rishi,Indian,Breakfast,Parantha - Mooli,4,228,6,1,3,1,0,0,303,157,41,6,4,6,,https://www.myfitnesspal.com/recipe/view/173462513315117
+214,Rishi,Indian,Breakfast,Pyaz Paranthas,1,312,13,1,4,2,0,0,474,297,47,8,10,8,,https://www.myfitnesspal.com/recipe/view/195326278201341
+212,Rishi,Indian,Breakfast,Spinach Chila,1,374,12,0,0,0,0,0,593,8,46,0,0,21,,https://www.myfitnesspal.com/recipe/view/137052070735533
+193,Rishi,Indian,Curry,Black Eyes Peas,4,179,2,0,1,0,0,0,586,185,25,5,9,12,,https://www.myfitnesspal.com/recipe/view/238748251893053
+117,Rishi,Indian,Curry,Chickpea Aubergine Coconut Curry,6,181,5,2,2,0,0,0,396,357,12,9,4,9,,https://www.myfitnesspal.com/recipe/view/269403726745533
+271,Marion,Indian,Curry,Curry Laksa,4,375,19,2,9,4,0,0,124,221,43,5,7,7,,https://www.myfitnesspal.com/recipe/view/243556646956285
+178,Rishi,Indian,Curry,Marrow Chickpea Curry,4,269,6,1,2,1,0,0,739,75,32,5,8,14,,https://www.myfitnesspal.com/recipe/view/204102805901165
+173,Rishi,Indian,Curry,Matar Paneer,4,432,26,15,1,1,0,86,610,115,20,2,5,24,,https://www.myfitnesspal.com/recipe/view/173454015843821
+177,Rishi,Indian,Curry,Mushroom Mattar,4,212,8,1,2,1,0,0,660,482,14,8,10,19,,https://www.myfitnesspal.com/recipe/view/172629382024509
+229,Rishi,Indian,Curry,Rajma,4,211,2,0,1,0,0,0,595,163,35,1,7,10,,https://www.myfitnesspal.com/recipe/view/89771031178621
+226,Rishi,Indian,Curry,Sabzi - Lobiya,4,213,3,0,1,1,0,0,572,94,33,6,10,13,,https://www.myfitnesspal.com/recipe/view/278319840742653
+307,Marion,Indian,Curry,Spicy Courgette Curry,4,161,4,2,0,0,0,0,1200,88,20,3,7,11,,https://www.myfitnesspal.com/recipe/view/269120024055789
+302,Marion,Indian,Curry,Tempeh Curry,4,366,14,3,5,1,0,0,599,966,39,9,8,15,,https://www.myfitnesspal.com/recipe/view/268976272576493
+65,Rishi,Indian,Dal,Dal - Moong Masar 2020,4,97,1,0,0,0,0,0,442,209,15,3,2,7,,https://www.myfitnesspal.com/recipe/view/269964236582845
+219,Rishi,Indian,Dal,Dal - Moong Sabut,4,157,3,1,1,0,0,0,728,34,21,6,1,12,,https://www.myfitnesspal.com/recipe/view/272841718017661
+234,Rishi,Indian,Dal,Dal - Mung chilka,4,173,2,0,0,0,0,0,598,100,25,3,3,13,,https://www.myfitnesspal.com/recipe/view/163431586983661
+217,Rishi,Indian,Dal,Dal Bukhara,4,212,7,0,0,0,0,0,602,161,25,6,7,14,,https://www.myfitnesspal.com/recipe/view/93198273547565
+136,Rishi,Indian,Dal,Dal Moong Sabut,4,230,2,1,0,0,0,3,746,750,30,9,4,14,,https://www.myfitnesspal.com/recipe/view/230373244964845
+181,Rishi,Indian,Dal,Train Dal,2,303,4,0,1,1,0,0,569,0,42,1,4,24,,https://www.myfitnesspal.com/recipe/view/208500831415469
+198,Rishi,Indian,Dessert,Besan Ke Laddu,37,115,5,3,1,1,0,9,9,120,14,2,9,3,,https://www.myfitnesspal.com/recipe/view/169066966666285
+239,Rishi,Indian,Rice,Beetroot Rice,4,279,3,0,1,1,0,0,685,580,55,5,11,8,,https://www.myfitnesspal.com/recipe/view/173602217390077
+134,Rishi,Indian,Rice,Brown Rice Pulao,2,314,6,1,2,1,0,0,607,673,48,9,5,9,,https://www.myfitnesspal.com/recipe/view/164262931435453
+285,Marion,Indian,Rice,Lemon And Curry Leaf Rice,4,246,1,0,0,0,0,0,83,60,52,2,1,6,,https://www.myfitnesspal.com/recipe/view/274068069600445
+168,Rishi,Indian,Rice,Masala Khichadi (Moong Chilka),4,391,4,1,1,1,0,0,942,81,72,5,5,16,,https://www.myfitnesspal.com/recipe/view/243137750396845
+224,Rishi,Indian,Rice,Plain(ish) Khichadi,2,319,4,0,2,1,0,0,586,79,59,1,2,11,,https://www.myfitnesspal.com/recipe/view/198210252254893
+165,Rishi,Indian,Sabzi,Achari Baingan,4,120,4,0,2,1,0,0,923,47,6,7,9,3,,https://www.myfitnesspal.com/recipe/view/273786477637501
+213,Rishi,Indian,Sabzi,Amritsari Wadi Aloo,4,222,4,0,0,0,0,0,596,311,31,3,4,12,,https://www.myfitnesspal.com/recipe/view/136923158777853
+122,Rishi,Indian,Sabzi,Baby Aubergine and Potatoes,5,104,2,0,1,0,0,0,486,410,12,6,5,4,,https://www.myfitnesspal.com/recipe/view/199997210398509
+183,Rishi,Indian,Sabzi,Green beans Aaloo Sabzi,8,101,1,0,0,0,0,0,286,49,12,5,5,4,,https://www.myfitnesspal.com/recipe/view/243144155033261
+105,Rishi,Indian,Sabzi,Paneer bhurji,4,172,7,3,1,1,0,0,625,254,9,3,7,15,,https://www.myfitnesspal.com/recipe/view/173325337627757
+139,Rishi,Indian,Sabzi,Punjabi Tinda,4,114,3,0,2,1,0,0,538,351,12,6,4,5,,https://www.myfitnesspal.com/recipe/view/239023426604413
+230,Rishi,Indian,Sabzi,Sabzi - Aloo Gobhi,4,148,3,0,1,1,0,0,898,992,22,7,7,6,,https://www.myfitnesspal.com/recipe/view/173052469726397
+64,Rishi,Indian,Sabzi,Sabzi - Aloo Methi,4,101,3,0,2,1,0,0,461,577,12,4,0,5,,https://www.myfitnesspal.com/recipe/view/169193663008701
+225,Rishi,Indian,Sabzi,Sabzi - Aloo Phaliyaan,4,77,2,0,1,0,0,0,444,352,9,4,1,2,,https://www.myfitnesspal.com/recipe/view/273649146776941
+188,Rishi,Indian,Sabzi,Sabzi - Baingan,6,104,2,0,1,1,0,0,295,424,15,6,6,3,,https://www.myfitnesspal.com/recipe/view/208099402919933
+199,Rishi,Indian,Sabzi,Sabzi - Gobhi Mattar,4,111,3,1,1,0,0,0,639,706,15,5,9,5,,https://www.myfitnesspal.com/recipe/view/238600390004397
+187,Rishi,Indian,Sabzi,Sabzi - Lauki,8,50,1,0,1,0,0,0,285,16,2,2,2,2,,https://www.myfitnesspal.com/recipe/view/172912858165181
+141,Rishi,Indian,Sabzi,Sabzi - Patta Gobhi,6,110,3,1,1,1,0,0,594,218,15,4,5,3,,https://www.myfitnesspal.com/recipe/view/173179141942701
+84,Rishi,Indian,Sabzi,Sabzi - Shimla Mirch,4,120,3,0,1,1,0,0,574,79,18,4,6,3,,https://www.myfitnesspal.com/recipe/view/243144188554301
+153,Rishi,Indian,Sabzi,SDS Shahi Paneer,4,308,16,7,1,1,0,0,22,80,12,2,9,27,,https://www.myfitnesspal.com/recipe/view/160150663884477
+236,Rishi,Indian,Sabzi,Stringless Beans,4,126,3,0,1,1,0,0,586,137,24,2,3,4,,https://www.myfitnesspal.com/recipe/view/160011031301629
+179,Rishi,Indian,Salad,Giant Cous Cous Salad,4,341,9,1,6,1,0,0,228,192,44,6,3,18,,https://www.myfitnesspal.com/recipe/view/173462647623421
+263,Marion,Indian,Salad,Ottolenghi mango and curried chickpea salad,4,264,10,1,4,2,0,0,11002,455,25,10,4,8,,https://www.myfitnesspal.com/recipe/view/265274124127341
+255,Marion,Indian,Side,Curried Chickpea Pancakes Chutney,8,1,0,0,0,0,0,0,19,4,0,0,0,0,,https://www.myfitnesspal.com/recipe/view/279153340305133
+260,Marion,Indian,Side,Curried Chickpea Pancakes Filling,2,329,15,11,0,0,0,0,492,338,21,12,2,12,,https://www.myfitnesspal.com/recipe/view/208234831916781
+125,Rishi,Indian,Side,Tomato Onion Chutney,2,34,2,0,0,0,0,0,149,159,4,2,3,1,,https://www.myfitnesspal.com/recipe/view/230510641876141
+351,Marion,Indian,Snacks,"Butternut Squash, Spinach & Feta Muffins",13,212,10,1,3,0,0,0,148,57,23,5,2,8,,https://www.myfitnesspal.com/recipe/view/269964236688573
+296,Marion,Indian,Snacks,Khatta Dhokla Recipe,14,75,3,1,0,0,0,4,215,1,10,0,0,2,,https://www.myfitnesspal.com/recipe/view/193805578866685
+235,Rishi,Indian,Snacks,Rishi’s Guacamole,2,192,16,2,11,2,0,0,417,665,5,8,3,3,,https://www.myfitnesspal.com/recipe/view/163145967373885
+121,Rishi,Cocktails,Drinks,Bathtub gin And Tonic,1,115,0,0,0,0,0,0,0,0,37,0,5,0,,https://www.myfitnesspal.com/recipe/view/269405991668925
+111,Rishi,Cocktails,Drinks,Boulevardier,2,168,0,0,0,0,0,0,2,0,11,0,11,0,,https://www.myfitnesspal.com/recipe/view/234906721373933
+205,Rishi,Cocktails,Drinks,Cocktail: 100-Year-Old Cigar (Rum),1,217,0,0,0,0,0,0,13,0,3,0,0,0,,https://www.myfitnesspal.com/recipe/view/26669128355757
+208,Rishi,Cocktails,Drinks,Cocktail: Boulevardier,1,179,0,0,0,0,0,0,2,24,8,0,7,0,,https://www.myfitnesspal.com/recipe/view/27227411189181
+77,Rishi,Cocktails,Drinks,Cocktail: Champagne cocktail,1,84,0,0,0,0,0,0,0,0,20,0,2,0,,https://www.myfitnesspal.com/recipe/view/278191213063293
+128,Rishi,Cocktails,Drinks,Cocktail: Classic Negroni,1,151,0,0,0,0,0,0,8,0,27,0,11,0,,https://www.myfitnesspal.com/recipe/view/160150647180861
+116,Rishi,Cocktails,Drinks,Cocktail: Dark & Stormy,1,158,0,0,0,0,0,0,33,34,10,0,8,0,,https://www.myfitnesspal.com/recipe/view/163850744696765
+61,Rishi,Cocktails,Drinks,Cocktail: Easy Spiced Apple,1,167,0,0,0,0,0,0,0,0,20,0,20,0,,https://www.myfitnesspal.com/recipe/view/173464873774397
+130,Rishi,Cocktails,Drinks,Cocktail: Gin Old Fashioned,1,120,0,0,0,0,0,0,0,0,39,0,2,0,,https://www.myfitnesspal.com/recipe/view/265557730242093
+62,Rishi,Cocktails,Drinks,Cocktail: Gingerbread Smash,1,159,0,0,0,0,0,0,1,105,18,0,17,0,,https://www.myfitnesspal.com/recipe/view/243831508225341
+110,Rishi,Cocktails,Drinks,Cocktail: Irish julep,1,147,0,0,0,0,0,0,0,0,16,0,15,0,,https://www.myfitnesspal.com/recipe/view/243283870494013
+97,Rishi,Cocktails,Drinks,Cocktail: Jaeger Bum Bum,2,214,0,0,0,0,0,0,0,0,37,0,11,0,,https://www.myfitnesspal.com/recipe/view/203418135145533
+118,Rishi,Cocktails,Drinks,Cocktail: Kir Royale,1,147,0,0,0,0,0,0,0,0,8,0,9,0,,https://www.myfitnesspal.com/recipe/view/199586894277869
+129,Rishi,Cocktails,Drinks,Cocktail: Mezcal Negroni,1,144,0,0,0,0,0,0,8,0,20,0,11,0,,https://www.myfitnesspal.com/recipe/view/229969505545789
+222,Rishi,Cocktails,Drinks,Cocktail: Negroni,1,160,0,0,0,0,0,0,0,0,8,0,7,0,,https://www.myfitnesspal.com/recipe/view/198484941344685
+80,Rishi,Cocktails,Drinks,Cocktail: Pink Gin,1,92,0,0,0,0,0,0,19,0,32,0,0,0,,https://www.myfitnesspal.com/recipe/view/160416930770349
+126,Rishi,Cocktails,Drinks,Cocktail: Sholay,2,152,0,0,0,0,0,0,7,5,6,0,6,0,,https://www.myfitnesspal.com/recipe/view/160414808435965
+92,Rishi,Cocktails,Drinks,Gin & Diet Tonic,1,128,0,0,0,0,0,0,30,36,12,0,2,0,,https://www.myfitnesspal.com/recipe/view/168231619719149
+211,Rishi,Cocktails,Drinks,Gin&Giselle,1,55,0,0,0,0,0,0,0,0,12,0,0,0,,https://www.myfitnesspal.com/recipe/view/30946887700285
+327,Marion,Asian,Breakfast,Savory Miso Oatmeal with Jammy Egg,1,250,15,3,6,3,0,207,4125,558,15,5,4,12,,https://www.myfitnesspal.com/recipe/view/268838653283517
+253,Marion,Asian,Meal Part,Miso Tare,5,63,1,0,0,0,0,0,704,37,10,0,4,2,,https://www.myfitnesspal.com/recipe/view/278330979823597
+262,Marion,Asian,Noodles,Rice Noodles And Green Veg,2,331,15,2,3,6,0,0,52,42,35,5,3,9,,https://www.myfitnesspal.com/recipe/view/194894806011453
+294,Marion,Asian,Noodles,Veg Ramen (autumn),4,169,7,1,5,1,0,0,40,138,16,5,6,5,,https://www.myfitnesspal.com/recipe/view/278878462340333
+299,Marion,Asian,Noodles,Veg Ramen (spring),2,106,3,0,0,0,0,0,5,219,4,6,4,10,,https://www.myfitnesspal.com/recipe/view/234751955701373
+277,Marion,Asian,Rice,Steamed Eggplant with Sesame and Spring Onion,4,83,2,0,1,1,0,0,577,427,3,6,6,3,,https://www.myfitnesspal.com/recipe/view/274059454491821
+254,Marion,Asian,Side,Spicey Turmeric Oil,12,80,8,0,3,1,0,0,125,12,2,1,2,1,,https://www.myfitnesspal.com/recipe/view/207960067174381
